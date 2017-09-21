@@ -50,6 +50,8 @@ Class Network
         //backProp requires sigmoid_prime function, cost derivative function, activations and weighted inputs already been set
         void backProp()
         {
+            //get the expected truth values from the file p
+            //nabla_b at L = (Difference between activations at L and expected values) hadamard product with the Derivative of activation function at L
             nabla_b at L = calculated error of the output layer
             Looping an index i from L-1 to 1 (the remaining layers)
                 nabla_b at i = ((weights at i + 1 transposed)*(nabla_b at i + 1)) hadamard product with sigmoid_prime at i
