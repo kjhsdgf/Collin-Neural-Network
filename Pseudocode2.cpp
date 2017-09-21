@@ -5,6 +5,7 @@
 #include<dlib/matrixabstract.h>
 
 Class Network
+{
     Data Members:
         double eta;
         int batch_size;
@@ -53,5 +54,15 @@ Class Network
             Looping an index i from L-1 to 1 (the remaining layers)
                 nabla_b at i = ((weights at i + 1 transposed)*(nabla_b at i + 1)) hadamard product with sigmoid_prime at i
         }
+        
+        static void ReadIn();
+};
 
-
+//Just realized we can make ReadIn() to be a static member function of the class Network. It can be called directly in the main(), 
+//before even declaring any object of the class because it is a static function. And, we can read in the required parameters and assign
+//the values before calling the constructor. So, the constructor doesn't need any parameter if we make ReadIn() a static member function 
+//of the class Network.
+void main()
+{
+    Network::ReadIn();      //that's how we can call it before declaring the object of the class
+}
