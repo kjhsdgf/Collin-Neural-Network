@@ -71,8 +71,8 @@ Class Network
         //An epoch will be said to complete once the complete dataset goes through the forwardpass() and then, the backprop()
         void Stochastic_Gradient_Descent()
         {
-            double Total_nabla_w;  //to store the total of cost partials of weights
-            double Total_nabla_b;  //to store the total of cost partials of biases 
+            vector<matrix> Total_nabla_w;  //matrix of size same as of nabla_w to store the total of cost partials of weights
+            vector<matrix> Total_nabla_b;  //matrix of size same as of nabla_b to store the total of cost partials of biases 
             //A loop starts for one epoch and goes till the total number of epochs entered by the user
                 //Total_nabla_w and Total_nabla_b are set to 0
                 //the mini_batch size from the dataset, as entered by the user, will be chosen
@@ -84,9 +84,9 @@ Class Network
                     //updates the Total_nabla_w and Total_nabla_b values
                 
                 //Update Weights, according to the equation:
-                            //w += (eta/n)nabla_w
+                            //w += (eta/n)Total_nabla_w
                 //Update biases
-                            //b += (eta/n)nabla_b
+                            //b += (eta/n)Total_nabla_b
         }
 };
 
