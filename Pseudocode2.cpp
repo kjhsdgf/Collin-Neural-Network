@@ -56,7 +56,7 @@ Class Network
             Loop starts from i = 1 to i = L
                 inner loop which will go from 0 to all the nodes in the layer
                   element in nabla_w matrix=(activations of the node from which the weight is coming from the (i-1) th layer)*(nabla_b value for that node)
-              //doubtful about this (Please chaeck)
+              //doubtful about this (Please check)
         }
         
         static void ReadIn(istream &in)  //accepts input stream as a parameter
