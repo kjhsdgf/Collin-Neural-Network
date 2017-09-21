@@ -1,34 +1,54 @@
 
 //Class Network
    //this will extract the data from the data file as input layer
+   //vector in this context refers to the c++ data structure
+   //vectors can be swapped for c-style arrays wherevever it's more efficient
    
      //Parameters:     
-     //int array, number of neurons per layer (m1, m2, ..., ml, ..., mL)
-         //number of layers L can be derived from this input
-     //hyperparameters
+         //vector of ints (layers), number of neurons per layer 
+         //    (not necessary to be declared as a class data memeber since it's a one use parameter)
+            //number of layers L = layers.size()
+            //layers are 0 indexed so first layer is 0, last layer is L-1
+         //vector of weight matrices (weights) where:
+            // weights.size() = L-1
+            // weights[i] = a matrix of size (layers[i+1] x layers[i])
+            // weights[i] = weights in between layers i, i+1 (weights[2] is w3)
+         //vector of bias matrices (biases) where:
+            // biases.size() = L-1
+            // biases[i] = matrix of size (layers[i+1] x 1)
+            // biases[i] = biases of (i+1)th layer (biases[2] is b3)
+     //hyperparameters:
          //double, learning rate (eta)
          //int, batch size (n)
          //int, number of epochs (E)
-     //array of weight matrices [w2, w3, ..., wL]
-         //each of their sizes is given as ml rows by m(l-1) columns, 1 < l <= L
-         //for easier index arithmetic, consider including w1 in the array
-     //array of bias vectors [b2, b3, ..., bl, ..., bL]
-         //each element has ml rows and 1 column
-         //for easier indexing, monsider including b1
+    
          
 ^^^number of neurons per layer can be discarded after setup, so we may not need it as an attribute, just a method variable^^^           
      
-     //Methods:
-        //Constructor that accepts an int array, three doubles, and a file for testing
+   //Constructors
+      //one that accepts an int array, a doubles (eta), 2 ints (batch size, epochs)
+         //initializes weights, biases based on some normal
+      //default one with default values to be decided at a later time
+      //destructor
+   
+   //Methods:
         //Read-in() which will read all the required parameters from the keyboard (neurons per layer, hyperparameters)
+        //  Read-in should probably be defined by main right before declaring a Network object
+        //  data from read-in translated into parameters for Network constructor
+        
+        //  The reason for this is that when the object is declared in main, it already needs to have its data memebers initialized
+        //  and it wouldn't make sense to call a method of the class after it is declared with default values
+        
+        //  another option is to make read-in a static methiod so it can still retain class membership (probably cleaner solution)
+         
             //this will also [be overloaded to?] extract the required 4-pixel image from the data file
         //CreateVectors() with no. of hidden layers and no. of neurons in each layer as parameters
             //this function will create vectors for the hidden layers
             //and, this function will create weight matrices as well, 
             //then populate the weights with random numbers, normal distribution, mean 0, standard deviation 1/Sqrt[m(l-1)]
-        //Destructor to deallocate virtual memory
  
  //Inherited class from Network: Class Forward Pass
+ // should be a method not a new class
     //this will assign each with the activation values and will get us the outputs for the whole network
     
       //Parameters:
