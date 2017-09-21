@@ -1,19 +1,25 @@
+#include<iostream>
+#include<fstream>
+#include<string.h>
+#include<vector.h>
+#include<dlib>
+
 Class Network
     Data Members:
-        double eta
-        int batch size
-        int epochs
-        int array layer sizes
-        vector<matrix> weights
-        vector<matrix> biases
-        vector<matrix> activations
-        vector<matrix> weighted inputs
-        vector<matrix> nabla_b
-        vector<matrix> nabla_w
-        string training data filename
-        string expected values filename
+        double eta;
+        int batch_size;
+        int epochs;
+        int layer_sizes[];          //array of layer sizes
+        vector<matrix> weights;
+        vector<matrix> biases;
+        vector<matrix> activations;
+        vector<matrix> weighted_inputs;
+        vector<matrix> nabla_b;
+        vector<matrix> nabla_w;
+        string training_data_filename;
+        string expected values_filename;
     Methods:
-        Constructor (requires eta, batch size, layer sizes, file names, and epochs provided by the ReadIn static member function)
+        Constructor(requires eta, batch size, layer sizes, file names, and epochs provided by the ReadIn static member function)
             Generate L,which is the number of layers. This is given by sizeof(layer sizes). 
             Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size L.
                 Everything but the activation vector will have an effective size of L-1, as their first element will be left unused.
