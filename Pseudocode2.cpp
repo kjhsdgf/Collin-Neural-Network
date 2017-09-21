@@ -38,7 +38,7 @@ Class Network
        
         //forwardPass() is a function that sets all activation values for a single test data input. 
         //It needs the layer of activations at 0 to be assigned values from the test data.
-        void forwardPass ()
+        void forwardPass()
         {
             Looping an index i from 1 to L
                 activations at i is equal to the sigmoid function of the weighted inputs at i,
@@ -47,9 +47,11 @@ Class Network
                     
         //backProp() is a function that calculates the nabla_b and nabla_w vectors.
         //backProp requires sigmoid_prime function, cost derivative function, activations and weighted inputs already been set
-        void backProp ()
+        void backProp()
         {
             nabla_b at L = calculated error of the output layer
             Looping an index i from L-1 to 1 (the remaining layers)
                 nabla_b at i = ((weights at i + 1 transposed)*(nabla_b at i + 1)) hadamard product with sigmoid_prime at i
         }
+
+
