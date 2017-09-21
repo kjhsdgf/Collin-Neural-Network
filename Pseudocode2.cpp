@@ -11,6 +11,7 @@ Class Network
         int batch_size;
         int epochs;
         int layer_sizes[];          //array of layer sizes
+        int L;                      //number of layers i.e. sizeof(layer_sizes)
         vector<matrix> weights;
         vector<matrix> biases;
         vector<matrix> activations;
@@ -22,8 +23,8 @@ Class Network
     Methods:
         Constructor(requires eta, batch size, layer sizes, file names, and epochs provided by the ReadIn static member function)
         {
-            //Generate L, which is the number of layers. This is given by sizeof(layer sizes). 
-            //Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size L.
+            //Assign L, which is the number of layers. This is given by sizeof(layer sizes). 
+            //Weights, biases, activations, weighted inputs, nabla_w, nabla_b vectors resized to size L.
             //Everything but the activation vector will have an effective size of L-1, as their first element will be left unused.
             Looping an index i from 1 to L
                 resize the ith element of the weights vector to be layer sizes at i by layer sizes at i-1
@@ -50,7 +51,7 @@ Class Network
         //backProp requires sigmoid_prime function, cost derivative function, activations and weighted inputs already been set
         void backProp()
         {
-            nabla_b at L = calculated error of the output layer
+            nabla_b at L = calculated error of the output layer using cost derivative function
             Looping an index i from L-1 to 1 (the remaining layers)
                 nabla_b at i = ((weights at i + 1 transposed)*(nabla_b at i + 1)) hadamard product with sigmoid_prime at i
         }
@@ -61,7 +62,8 @@ Class Network
 //Just realized we can make ReadIn() to be a static member function of the class Network. It can be called directly in the main(), 
 //before even declaring any object of the class because it is a static function. And, we can read in the required parameters and assign
 //the values before calling the constructor. So, the constructor doesn't need any parameter if we make ReadIn() a static member function 
-//of the class Network.
+//of the class Network. //@Yon- YESS :D that's why i really wanted to make it a static method. It's a separate entity than any specific 
+                        //      instantiation but still retains it's class membership
 void main()
 {
     Network::ReadIn();      //that's how we can call it before declaring the object of the class
