@@ -52,9 +52,18 @@ Class Network
         void backProp()
         {
             nabla_b at L = calculated error of the output layer using cost derivative function
-            Looping an index i from L-1 to 1 (the remaining layers)
-                nabla_b at i = ((weights at i + 1 transposed)*(nabla_b at i + 1)) hadamard product with sigmoid_prime at i
+            Looping an index i from L-1 to 1 (the remaining layers, save for the zeroth)
+                nabla_b at i += ((weights at i + 1 transposed)*(nabla_b at i + 1)) hadamard product with sigmoid_prime at i
+                nabla_w at i += (nabla_b at i)(activations at i-1 transposed)
         }
+        
+        //SGD() is a function that loads a test sample, runs forwardPass() and backProp(), and repeats a number of times equal to the
+        //mini-batch size. Once this is completed, SGD will call update() to update the weights and biases, reset the nabla_b and
+        //nabla_w vectors, and continue until the entirety of the test data from training_data_filename is exhausted. This process
+        //is repeated a number of times equal to 
+        string SGD()
+        
+        
         
         static void ReadIn();
 };
