@@ -14,7 +14,6 @@ Class Network
         int batch_size;
         int epochs;
         int layer_sizes[];          //array of layer sizes
-        int L;                      //number of layers i.e. sizeof(layer_sizes)
         vector<matrix> weights;
         vector<matrix> biases;
         vector<matrix> activations;
@@ -31,7 +30,10 @@ Class Network
         //Everything but the activation vector will have an effective size of L-1, as their first element will be left unused.
         Network(requires eta, batch size, layer sizes, file names, and epochs provided by the ReadIn static member function)
         {
+            //Generate L, which is the number of layers. This is given by sizeof(layer sizes).
             Assign L, which is the number of layers. This is given by sizeof(layer sizes)
+            Weights, biases, activations, weighted inputs, errors, nabla_w, nabla_b vectors resized to size L.
+            //Everything but the activation vector will have an effective size of L-1, as their first element will be left unused.
             Looping an index i from 1 to L
                 resize the ith element of the weights vector to be layer sizes at i by layer sizes at i-1
                 resize the ith element of the nabla_w vector to be layer sizes at i by layer sizes at i-1, fill with zeros
