@@ -1,28 +1,48 @@
+#include<iostream>
+#include<fstream>
+#include<string.h>
+#include<vector.h>
+#include<dlib/matrixabstract.h>
+	
+void main()
+{
+      //Display a menu to ask user if he wants to train the data or classify
+      //If user chooses to train the data:
+            Network n = Network::ReadIn()
+            //Check the validity of the parameters user entered
+			n.Train()
+            //call the train() in the class network
+      //If user chooses to Classify:
+            //call the classify() in the class network
+      //else
+           //display a server error
+}
+
 Class Network
 {
 	Data Members:
-	double eta;
-    int batch_size;
-    int epochs;
-    int layer_sizes[];          //array of layer sizes
-    int L;                      //number of layers i.e. sizeof(layer_sizes)
-    vector<matrix> weights;
-    vector<matrix> biases;
+		double eta;
+		int batch_size;
+		int epochs;
+		int layer_sizes[];          //array of layer sizes
+		int L;                      //number of layers i.e. sizeof(layer_sizes)
+		vector<matrix> weights;
+		vector<matrix> biases;
 
-	vector<matrix> activations;
-	vector<matrix> weighted_inputs;
+		vector<matrix> activations;
+		vector<matrix> weighted_inputs;
 
-	vector<matrix> delta; 
-	vector<matrix> sum_nabla_b;
-	vector<matrix> sum_nabla_w;
+		vector<matrix> delta; 
+		vector<matrix> sum_nabla_b;
+		vector<matrix> sum_nabla_w;
 
-	vector<int> test data indices;
-	vector<int>	mini batch indices;
+		vector<int> test data indices;
+		vector<int>	mini batch indices;
 
-	int number correct;
+		int number correct;
 
-	string training_data_filename;		//consider truncating "filename". unnecessary and unwieldy
-	string expected values_filename;
+		string training_data_filename;		//consider truncating "filename". unnecessary and unwieldy
+		string expected values_filename;
 		
 	Methods:
 		Constructor(requires eta, batch size, layer sizes, file names, and epochs provided by the ReadIn static member function)
@@ -49,7 +69,8 @@ Class Network
             Set object's hyperparameters to values passed to constructor
         }
 		
-		static Network ReadIn()
+		
+		static Network& ReadIn()
          {
              Prompt the user to choose between an existing network file or to make a new network
              If the user opts to choose a file
@@ -119,44 +140,78 @@ Class Network
                 biases[i]  -= eta * (sum_nabla_b[i])
 		}
 		
-		//Train brings all the other methods together and trains the network. It loops through the epochs separating out 
-        //  mini batches from the test data and running sgd on all mini batches for each epoch. Train doesnt actually access the files
-        void Train()
-        {
-            open test data files
-            int test data size = size of test data
-            test data indices resized to test data size and initialized:
-                such that test data indices at i = i    // these values but will be randomized later
-				
-			Loop index i through test data indices
-				test data indices[i] = i
-			
-            int sgd calls = (epochs)/(mini batch size)  // number of times sgd is called to finish one epoch 
-            int leftover = epochs remainder(%) mini batch size     // to see if there's a small mini batch left in the data
-            
-            Looping index i from 0 to epochs
-                Fisher Yates shuffle (test data indices)
-				int batch size = mini batch size
-				
-                Looping index j from 0 to sgd calls
-                    Looping through index k from 0 to (mini batch size - 1)
-                        mini batch indices[k] = test data indices [(j*mini batch size) + k)]
-                    SGD(batch size)
-                if (leftover > 0) //one more sgd call is there was some leftover data that cant fit into a regualr mini batch
-                    Looping through index k from 0 to (leftover - 1)
-                        mini batch[k]  = test data indices [test data size-k-1]
-                    SGD(leftover)
-				cout << "Efficiency at epoch: " << i << " = " << (number correct) / (test data size)
-        }
+	//Train brings all the other methods together and trains the network. It loops through the epochs separating out 
+	//  mini batches from the test data and running sgd on all mini batches for each epoch. Train doesnt actually access the files
+	void Train()
+	{
+		open test data files
+		int test data size = size of test data
+		test data indices resized to test data size and initialized:
+			such that test data indices at i = i    // these values but will be randomized later
+
+		Loop index i through test data indices
+			test data indices[i] = i
+
+		int sgd calls = (epochs)/(mini batch size)  // number of times sgd is called to finish one epoch 
+		int leftover = epochs remainder(%) mini batch size     // to see if there's a small mini batch left in the data
+
+		Looping index i from 0 to epochs
+			Fisher Yates shuffle (test data indices)
+			int batch size = mini batch size
+
+			Looping index j from 0 to sgd calls
+				Looping through index k from 0 to (mini batch size - 1)
+					mini batch indices[k] = test data indices [(j*mini batch size) + k)]
+				SGD(batch size)
+			if (leftover > 0) //one more sgd call is there was some leftover data that cant fit into a regualr mini batch
+				Looping through index k from 0 to (leftover - 1)
+					mini batch[k]  = test data indices [test data size-k-1]
+				SGD(leftover)
+			cout << "Efficiency at epoch: " << i << " = " << (number correct) / (test data size)
+	}
 		
-		void Classify (verification data)
-		{
-			Loop index i from 0 to size of (verification data)
-				set activation[0] = verification data[i]
-				feedforward()
-				int biggest = 0 // index of the biggest activation value
-				Looping index j from 0 to size of (activations[L])
-					if activations[L][j] > activations[L][biggest] then biggest = j
-				print out classification of biggest // 
-		}
-}
+	void Classify (verification data)
+	{
+		Loop index i from 0 to size of (verification data)
+			set activation[0] = verification data[i]
+			feedforward()
+			int biggest = 0 // index of the biggest activation value
+			Looping index j from 0 to size of (activations[L])
+				if activations[L][j] > activations[L][biggest] then biggest = j
+			print out classification of biggest
+			// i.e. what output the network has decided, for our purposes a string  "horizontal" "vertical" or "diagonal"
+	}
+		
+	//Hadamard_Product() is a scalar multiplication of two matrices where we obtain a matrix by multiplying an element in one matrix with 
+    //that respective element in the other matrix.
+	//Hadamard requires  that M1 and M1 are of equal size
+	
+    matrix Hadamard_Product (matrix M1, matrix M2)
+    {
+          matrix M;
+          //check the size of the matrix
+              //if, equal:
+                  //Create a matrix M of same size as that of either M1 or M2
+                  //Start the loop for i = 1 to i = the number of columns in M1 
+                      //Start an inner loop for j = 1 to j = number of rows in M1
+                            //Every element in M, M[j][i] = M1[j][i] * M2[j][i];
+                      //end of the loop
+                  //end of the loop
+                  //return the matrix M
+               
+               //else
+                  //throw an exception or display the error message;
+    }
+	  
+	//Shuffle() will be called at the starting of every epoch to randomize the data provided by the user
+	//This will create a vector<int> of the same size as that of Data Set and every element of the vector will point to 
+	//a particular input data in the data file.
+	//Shuffle() will randomize this array of int by swapping different indices, using fisher yates method
+	//This will assign created vector<int>, once done with the shuffling
+	
+    void Shuffle(vector<T> data)
+    {
+          Loop index i through data
+		  	swap data at i with a random element from (i+1) to (size of data - 1)
+    }
+};
