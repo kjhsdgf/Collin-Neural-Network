@@ -26,10 +26,10 @@ Class Network
         string expected_output_filename;
     Methods:
     
-        //Initializes the neural network using values provided by ReadIn() 
+        //Constructor that initializes the neural network using values provided by ReadIn() 
         //Weights, biases, activations, weighted inputs, nabla_w, nabla_b vectors resized to size L.
         //Everything but the activation vector will have an effective size of L-1, as their first element will be left unused.
-        Constructor(requires eta, batch size, layer sizes, file names, and epochs provided by the ReadIn static member function)
+        Network(requires eta, batch size, layer sizes, file names, and epochs provided by the ReadIn static member function)
         {
             Assign L, which is the number of layers. This is given by sizeof(layer sizes)
             Looping an index i from 1 to L
@@ -39,18 +39,48 @@ Class Network
                 resize the ith element of the nabla_b vector to be layer sizes at i by 1, fill with zeros
                 resize the ith element of the activations vector to be layer sizes at i by 1, fill with zeros
                 resize the ith element of the weighted inputs vector to be layer sizes at i by 1, fill with zeros
+                resize the ith element of the errors vector to be layer sizes at i by 1, fill with zeros
             resize the 0th member of the activations vector to be layer sizes at 0 by 1, fill with zeros
             Populate ith element in the array of weights vector with pseudorandom numbers, mean 0, st. dev. 1/Sqrt[layer sizes at i-1]
             Set object's hyperparameters to values passed to constructor by ReadIn()
         }
         
-        matrix<double> cost_prime() {}
+        //Default Constructor that makes an empty Network
+        Network()
+        {
+            Set all vector<matrix> sizes to 0 by 0;
+            Set _filename strings to empty strings ("")
+            Set remaining int and double member attributes to 0
+        }
         
-        matrix<double> sigmoid() {}
+        //Because we are using quadratic cost C(w, b) = [1/(2n)]Sum(x = 1, n, ||y(x) - a||^2), the first derivative of our cost function
+        //will be a vector of the scalar distances between the output layer and the expected output, evaluated elementwise
+        //Cost_prime returns a matrix of doubles
+        matrix<double> cost_prime(expected output matrix object, activations at L) 
+        {
+            return absolute value of (activations at L - expected output matrix object)
+        }
         
-        matrix<double> sigmoid_prime() {}
+        //Activation function we chose to start with, uses dlib's vectorized sigmoid function
+        matrix<double> sigmoid(matrix<double> object) 
+        {
+            return the output of sigmoid(input matrix)
+        }
         
-        matrix<double> update() {}
+        //First derivative of sigmoid function, takes advantage of the fact that the derivative can be expressed in terms of the
+        //original function, uses dlib's vectorized sigmoid function
+        matrix<double> sigmoid_prime(matrix<double> object) 
+        {
+            return sigmoid(input)*(1 - sigmoid(input))
+        }
+        
+        //Function updates the weights and biases, as per Nielsen's basic algorithm in Ch.1
+        void update() 
+        {
+            Looping an index i from 1 to L
+                weights at i -= (eta/batch_size)*(nabla_w at i)
+                biases at i -= (eta/batch_size)*(nabla_b at i)
+        }
        
         //forwardPass() is a function that sets all activation values for a single test data input. 
         //It needs the layer of activations at 0 to be assigned values from the test data.
@@ -62,11 +92,11 @@ Class Network
         }
                     
         //backProp() is a function that calculates the nabla_b and nabla_w vectors.
-        //backProp requires sigmoid_prime function, cost derivative function, activations and weighted inputs already been set
+        //backProp requires sigmoid_prime function, cost_prime function, activations and weighted inputs already been set
         void backProp(expected output for a given training input)
         {
-            errors at L = hadamard product of Cost_Derivative(expected output for the given training sample, activations at L) with sigmoid_prime of weighted inputs at L 
-            nabla_b at L = calculated error of the output layer using cost derivative function
+            errors at L = hadamard product of cost_prime(expected output for the given training sample, activations at L) with sigmoid_prime of weighted inputs at L 
+            nabla_b at L = calculated error of the output layer using cost_prime function
             Looping an index i from L-1 to 1 (moving backward through the remaining layers, save for the zeroth)
                 errors at i = ((weights at i + 1 transposed)*(errors at i + 1)) hadamard product with sigmoid_prime at i
                 nabla_b at i += errors at i
@@ -107,8 +137,18 @@ Class Network
             Close files
         }
         
-        
-        static void ReadIn();
+        //Instantiates a Network object by file as input to class constructor
+        static Network ReadIn()
+        {
+            Prompt the user to choose between an existing network file or to make a new network
+            If the user opts to choose a file
+                Read in file name
+                Input validation (TBD)
+                Extract Network architecture and hyperparameters from file to temporary variables
+            Else
+                Prompt the user to enter details through the command prompt, storing them in temporary variables
+            Call class constructor, passing temporary variables as arguments
+        }
 };
 
 //Just realized we can make ReadIn() to be a static member function of the class Network. It can be called directly in the main(), 
