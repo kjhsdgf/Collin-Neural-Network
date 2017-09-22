@@ -158,5 +158,5 @@ Class Network
                         //      instantiation but still retains it's class membership
 void main()
 {
-    Network::ReadIn();      //that's how we can call it before declaring the object of the class
+    Network newNetwork = Network::ReadIn();      //that's how we can call it before declaring the object of the class
 }
