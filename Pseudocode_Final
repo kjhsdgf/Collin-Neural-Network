@@ -8,19 +8,23 @@ void main()
 {
       //Display a menu to ask user if he wants to train the data or classify
       //If user chooses to train the data:
-            Network n = Network::ReadIn()
+            Network N;				//ReadIn() will be called inside the default constructor
             //Check the validity of the parameters user entered
 			n.Train()
-            //call the train() in the class network
+            //call the train() in the class Network
       //If user chooses to Classify:
-            //call the classify() in the class network
+            //call the classify() in the class Network
       //else
            //display a server error
 }
 
+#ifdef _DEBUG
+	//TBD
+#endif
+
 Class Network
 {
-	Data Members:
+	Data Members:					//Names of the Data Members can be changed later
 		double eta;
 		int batch_size;
 		int epochs;
@@ -45,9 +49,11 @@ Class Network
 		string expected values_filename;
 		
 	Methods:
-		Constructor(requires eta, batch size, layer sizes, file names, and epochs provided by the ReadIn static member function)
+		Constructor()
         {
-            //Generate L, which is the number of layers. This is given by sizeof(layer sizes). 
+            training_data_filename = ReadIn();
+			//open the training data file
+			//Generate L, which is the number of layers. This is given by sizeof(layer sizes). 
             //Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size L.
             //Everything but the activation vector will have an effective size of L-1, as their first element will be left unused.
             Looping an index i from 1 to L
@@ -69,26 +75,32 @@ Class Network
             Set object's hyperparameters to values passed to constructor
         }
 		
+		~Network()
+		{
+			//make sure to close all the files
+		}
 		
-		static Network& ReadIn()
+		string & ReadIn(istream &in = cin)
          {
              Prompt the user to choose between an existing network file or to make a new network
              If the user opts to choose a file
                  Read in file name
                  Input validation (TBD)
                  Extract Network architecture and hyperparameters from file to temporary variables
+				 //return the file name
              Else
-                 Prompt the user to enter details through the command prompt, storing them in temporary variables
-             Call class constructor, passing temporary variables as arguments
+                 Prompt the user to enter details through the command prompt, storing them in the data members
+				 //return the file name
          }
 	
 		//forwardPass() is a function that sets all activation values for a single test data input. 
         //It needs the layer of activations at 0 to be assigned values from the test data.
         void forwardPass()
         {
-            Looping an index i from 1 to L
-                activations at i is equal to the sigmoid function of the weighted inputs at i,
-                    where the weighted inputs at i is set to be equal to (weights at i * activations at i-1) + biases at i
+            //weighted inputs at 0 = extract the data from the data file
+			Looping an index i from 1 to L
+                weighted inputs at i = (weights at i * activations at i-1) + biases at i;
+				activations at i = Activation_Function(weighted_inputs at i, Layer_Size at i);
         }
 		
 		//backProp() is a function that calculates the nabla_b and nabla_w vectors.
@@ -98,11 +110,11 @@ Class Network
            	compare expected val to activations[L]
 			if they are the same, increment number correct 
 			
-           	delta at L = cost_prime(expected output for the given training sample, activations at L) hadamarded with (sigmoid_prime of weighted inputs at L)
+           	delta at L = Hadamard_Product(Cost_Prime(Activations at L, expectedval, layersize of L), Sigmoid_Prime(weighted inputs at L, 											layersize of L))
            	sum_nabla_b at L += delta at L
  			sum_nabla_w at L += (delta at L) * (activations at L-1 transposed)
         	Looping an index i from L-1 to 1 (the remaining layers)
-                delta at i = ((weights at i + 1 transposed)*(delta at i + 1)) hadamarded with (sigmoid_prime of weighted inputs of at i)
+                delta at i = Hadamard_Product(((weights at i + 1 transposed)*(delta at i + 1)), Sigmoid_Prime(weighted inputs of at i, 					size of layersize at i)
                 sum_nabla_b at i += delta at i 
               	sum_nabla_w at i += (delta at i) * (activations at i-1 transposed)
         }
@@ -144,7 +156,8 @@ Class Network
 	//  mini batches from the test data and running sgd on all mini batches for each epoch. Train doesnt actually access the files
 	void Train()
 	{
-		open test data files
+		//jump to the beginning of the file
+		//open the truth data file 
 		int test data size = size of test data
 		test data indices resized to test data size and initialized:
 			such that test data indices at i = i    // these values but will be randomized later
@@ -152,7 +165,7 @@ Class Network
 		Loop index i through test data indices
 			test data indices[i] = i
 
-		int sgd calls = (epochs)/(mini batch size)  // number of times sgd is called to finish one epoch 
+		int sgd calls = (size of text data)/(mini batch size)  // number of times sgd is called to finish one epoch 
 		int leftover = epochs remainder(%) mini batch size     // to see if there's a small mini batch left in the data
 
 		Looping index i from 0 to epochs
@@ -163,27 +176,30 @@ Class Network
 				Looping through index k from 0 to (mini batch size - 1)
 					mini batch indices[k] = test data indices [(j*mini batch size) + k)]
 				SGD(batch size)
-			if (leftover > 0) //one more sgd call is there was some leftover data that cant fit into a regualr mini batch
-				Looping through index k from 0 to (leftover - 1)
-					mini batch[k]  = test data indices [test data size-k-1]
-				SGD(leftover)
-			cout << "Efficiency at epoch: " << i << " = " << (number correct) / (test data size)
+			
+			cout << "Efficiency at epoch: " << i << " = " << ((number correct) / (test data size))*100;
 	}
 		
 	void Classify (verification data)
 	{
+		int ambiguous_data (0);
 		Loop index i from 0 to size of (verification data)
 			set activation[0] = verification data[i]
 			feedforward()
 			int biggest = 0 // index of the biggest activation value
 			Looping index j from 0 to size of (activations[L])
-				if activations[L][j] > activations[L][biggest] then biggest = j
+				if activations[L][j] > activations[L][biggest] 
+					//then biggest = j
+				else
+					//increment the number of ambiguous data found 				
 			print out classification of biggest
+		
+		//print out the number of data classified, which will be (size of verification data) - ambiguous_data
 			// i.e. what output the network has decided, for our purposes a string  "horizontal" "vertical" or "diagonal"
 	}
 		
-	//Hadamard_Product() is a scalar multiplication of two matrices where we obtain a matrix by multiplying an element in one matrix with 
-    //that respective element in the other matrix.
+	//Hadamard_Product() is a scalar multiplication of two matrices where we obtain a matrix by multiplying an element in one matrix 
+    //with that respective element in the other matrix.
 	//Hadamard requires  that M1 and M1 are of equal size
 	
     matrix Hadamard_Product (matrix M1, matrix M2)
@@ -215,3 +231,27 @@ Class Network
 		  	swap data at i with a random element from (i+1) to (size of data - 1)
     }
 };
+
+//Functions outside of the class will include:
+matrix Activation_Function(matrix weighted_inputs, int Layer_Size)
+{
+	//create a matrix M of size (Layer_Size) by 1
+	//M = sigmoid (weighted_inputs)  
+	//return the M
+}
+
+matrix Cost_Prime(matrix Activations, matrix expectedval, int size_of_output_layer) //just realized we need a new matrix for 																								//expected values
+{
+	//create a matrix M of size (size_of_output_layer) by 1
+	//M = (Activations - expectedval) 
+	//return the M
+}
+
+matrix Sigmoid_Prime(matrix weighted_inputs, int Layer_Size)
+{
+	//create a matrix M of size (Layer_Size) by 1
+	//realized we need to do this by assigning every element in the matrix
+	for(i = 0; i < Layer_Size ; i++)
+		M[i] = Sigmoid( weighted_inputs[i] ) * (1 - Sigmoid( weighted_inputs[i] ));
+	//return the M
+}
