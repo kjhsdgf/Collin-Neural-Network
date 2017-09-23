@@ -4,16 +4,24 @@
 #include<vector.h>
 #include<dlib/matrixabstract.h>
 	
+using namespace std;
+using namespace dlib;
+
 void main()
 {
-      //Display a menu to ask user if he wants to train the data or classify
-      //If user chooses to train the data:
-            Network N;				//ReadIn() will be called inside the default constructor
+      //Display the menu to ask whether the user wants to train or classify the network 
+	  
+	  //If user chooses to train the network:
+	 		Network N;				//ReadIn() will be called inside the default constructor
             //Check the validity of the parameters user entered
-			n.Train()
+				N.Train();
             //call the train() in the class Network
+			
       //If user chooses to Classify:
+	  		//ask the user to enter the file name
+			Network N(file_name);
             //call the classify() in the class Network
+	    		N.classify();
       //else
            //display a server error
 }
@@ -45,13 +53,13 @@ Class Network
 
 		int number correct;
 
-		string training_data_filename;		//consider truncating "filename". unnecessary and unwieldy
-		string expected values_filename;
+		string training_data;		//consider truncating "filename". unnecessary and unwieldy
+		string expected values;
 		
 	Methods:
 		Constructor()
         {
-            training_data_filename = ReadIn();
+            training_data = ReadIn();
 			//open the training data file
 			//Generate L, which is the number of layers. This is given by sizeof(layer sizes). 
             //Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size L.
@@ -78,6 +86,18 @@ Class Network
             Set object's hyperparameters to values passed to constructor
         }
 		
+		//consider overloading the constructor for classification
+		Network (const string& Verification_data)
+		{
+			training_data = Verification_data;
+			//extract data such as L and layer sizes from the Previous_Network file
+			//create the matrices for weights, biases, activations and weighted inputs
+			//Assign the matrices created with the weights and biases from the Previous_Network file
+			//Resize the remaining vector data members of the class to 0
+			//assign null to the string created for truth data file
+			//assign 0 to every other int or double data members
+		}
+		
 		~Network()
 		{
 			//make sure to close all the files
@@ -88,8 +108,9 @@ Class Network
              Prompt the user to choose between an existing network file or to make a new network
              If the user opts to choose a file
                  Read in file name
-                 Input validation (TBD)
-                 Extract Network architecture and hyperparameters from file to temporary variables
+				 Input validation (TBD)
+				 //if the user wants to train,
+                 	Read in the hyperparameters from file and store them in the data members
 				 //return the file name
              Else
                  Prompt the user to enter details through the command prompt, storing them in the data members
@@ -98,7 +119,7 @@ Class Network
 	
 		//forwardPass() is a function that sets all activation values for a single test data input. 
         //It needs the layer of activations at 0 to be assigned values from the test data.
-        void forwardPass(string file)
+        void forwardPass(const string& file)
         {
             //activations at 0 = extract the data from the file
 			Looping an index i from 1 to L
@@ -181,16 +202,30 @@ Class Network
 				SGD(batch size)
 			
 			cout << "Efficiency at epoch: " << i << " = " << ((number correct) / (test data size))*100 <<" %";
+			bool result = Create_Network_File(); 		//this will store the values required for classification
+			if(!result)
+				//Display an error message
+	}
+	
+	bool Create_Network_File()
+	{
+		//create a file named Previous_Network to write the required values 
+		if (is_open(Previous_Network)) 
+			//write the values of L, array of layer sizes, matrices of weights and biases
+			//close the file
+			return true;
+		else
+			return false;
 	}
 		
-	void Classify (const string& verification_data_file) 
+	void Classify () 				//we don't need any parameters here, because constructor stores the name of verification file in the training_data_file
 	{
 		int ambiguous_data (0);
 		int end;		//will tell us the number of the training inputs in the verfification file
 		int biggest;
 		//to calculate end, we can call tellg(), which will give us the size of file in bytes and then, size of file/size of verificationdata
 		Loop index i from 0 to size of (verification data) //from i = 0 to end
-			feedforward(verification data file)			//this will extract the activation[0]
+			feedforward()			//this will extract the activation[0]
 			biggest = 0 // index of the biggest activation value
 			Looping index j from 1 to size of (activations[L]) //at j=0 is assumed to be bigger
 				if activations[L][j] > activations[L][biggest] 
