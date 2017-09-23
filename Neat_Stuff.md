@@ -27,4 +27,4 @@
 	
 ### Rad Variations for Neural Networks
 * #### Parallelization of Neural Network Training for NLP with Hogwild!
-	*##### https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2851230/
+	* ##### https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2851230/
