@@ -176,8 +176,8 @@ Class Network
 	void update()
 	{
 		Looping index i from 1 to L
-	weights[i] -= eta * (sum_nabla_w[i])
-	biases[i]  -= eta * (sum_nabla_b[i])
+			weights[i] -= eta * (sum_nabla_w[i])
+			biases[i]  -= eta * (sum_nabla_b[i])
 	}
 		
 	//Train brings all the other methods together and trains the network. It loops through the epochs separating out 
@@ -197,6 +197,7 @@ Class Network
 		int leftover = epochs remainder(%) mini batch size     // to see if there's a small mini batch left in the data
 								       //we can use leftover later to determine the consequences of not performing SGD(leftover)
 		Looping index i from 0 to epochs
+			number_correct = 0;
 			Fisher Yates shuffle (test data indices)
 			int batch size = mini batch size
 
@@ -206,9 +207,11 @@ Class Network
 				SGD(batch size)
 			
 			cout << "Efficiency at epoch: " << i << " = " << ((number correct) / (test data size))*100 <<" %";
-			bool result = Create_Network_File(); 		//this will store the values required for classification
-			if(!result)
-				//Display an error message
+		//end of the loop
+		
+		bool result = Create_Network_File(); 		//this will store the values required for classification
+		if(!result)
+			//Display an error message
 	}
 	
 	bool Create_Network_File()
