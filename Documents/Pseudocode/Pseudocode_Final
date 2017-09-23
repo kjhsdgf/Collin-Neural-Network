@@ -10,20 +10,19 @@ using namespace dlib;
 void main()
 {
       //Display the menu to ask whether the user wants to train or classify the network 
-	  
 	  //If user chooses to train the network:
-	 		Network N;				//ReadIn() will be called inside the default constructor
-            //Check the validity of the parameters user entered
-				N.Train();
-            //call the train() in the class Network
+		Network N;				//ReadIn() will be called inside the default constructor
+		//Check the validity of the parameters user entered
+		N.Train();
+		//call the train() in the class Network
 			
-      //If user chooses to Classify:
-	  		//ask the user to enter the file name
-			Network N(file_name);
-            //call the classify() in the class Network
-	    		N.classify();
-      //else
-           //display a server error
+      	  //If user chooses to Classify:
+	  	//ask the user to enter the file name
+		Network N(file_name);
+            	//call the classify() in the class Network
+	    	N.classify();
+         //else
+           	//display a server error
 }
 
 #ifdef _DEBUG
@@ -57,11 +56,12 @@ Class Network
 		string expected_values;
 		
 	Methods:
-		Constructor()
+	
+	Constructor()
         {
             training_data = ReadIn();
-			//open the training data file
-			//Generate L, which is the number of layers. This is given by sizeof(layer sizes). 
+	    //open the training data file
+	    //Generate L, which is the number of layers. This is given by sizeof(layer sizes). 
             //Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size L.
             //Everything but the activation vector will have an effective size of L-1, as their first element will be left unused.
             Looping an index i from 1 to L
@@ -70,39 +70,37 @@ Class Network
 				
                 resize the ith element of the biases vector: layer sizes at i by 1, fill with random numbers or zeros (normal dist)
                 resize the ith element of the sum_nabla_b vector: layer sizes at i by 1, fill with zeros
-				resize the ith element of the delta vector: layer sizes at i by 1, fill with zeros				
+		resize the ith element of the delta vector: layer sizes at i by 1, fill with zeros				
                 resize the ith element of the activations vector: layer sizes at i by 1, fill with zeros
                 resize the ith element of the weightedinputs vector: layer sizes at i by 1, fill with zeros
-			//end of the loop
+	    //end of the loop
 			
-			Randomize_Weights();
-            resize the 0th member of the activations vector: layer sizes at 0 by 1, fill with zeros
-			
-			resize mini batch indices to be mini batch size
-			            		
+            Randomize_Weights();
+            resize the 0th member of the activations vector: layer sizes at 0 by 1, fill with zeros			
+	    resize mini batch indices to be mini batch size			            		
             Set object's hyperparameters to values passed to constructor
         }
 				
-		//consider overloading the constructor for classification
-		Network (const string& Verification_data)
-		{
-			training_data = Verification_data;
-			//open the Previous_Network file
-			//open the verification_data file
-			//extract data such as L and layer sizes from the Previous_Network file
-			//create the matrices for weights, biases, activations and weighted inputs
-			//Assign the matrices created with the weights and biases from the Previous_Network file
-			//Resize the remaining vector data members of the class to 0
-			//assign null to the string created for truth data file
-			//assign 0 to every other int or double data members
-		}
-		
-		~Network()
-		{
-			//make sure to close all the files, namely training_data and expected_values
-		}
-		
-		string & ReadIn(istream &in = cin)
+	//consider overloading the constructor for classification
+	Network (const string& Verification_data)
+	{
+		training_data = Verification_data;
+		//open the Previous_Network file
+		//open the verification_data file
+		//extract data such as L and layer sizes from the Previous_Network file
+		//create the matrices for weights, biases, activations and weighted inputs
+		//Assign the matrices created with the weights and biases from the Previous_Network file
+		//Resize the remaining vector data members of the class to 0
+		//assign null to the string created for truth data file
+		//assign 0 to every other int or double data members
+	}
+
+	~Network()
+	{
+		//make sure to close all the files, namely training_data and expected_values
+	}
+
+	string & ReadIn(istream &in = cin)
          {
              Prompt the user to choose between an existing network file or to make a new network
              If the user opts to choose a file
@@ -116,14 +114,14 @@ Class Network
 				 //return the file name
          }
 	
-		void Randomize_Weights()
-		{
-			Looping an index i from 1 to L
-				//Populate ith element in the array of weights vector with pseudorandom numbers, 
-				//mean 0, st. dev. 1/Sqrt[layer sizes at i-1]
-		}
-		
-		//forwardPass() is a function that sets all activation values for a single test data input. 
+	void Randomize_Weights()
+	{
+		Looping an index i from 1 to L
+			//Populate ith element in the array of weights vector with pseudorandom numbers, 
+			//mean 0, st. dev. 1/Sqrt[layer sizes at i-1]
+	}
+
+	//forwardPass() is a function that sets all activation values for a single test data input. 
         //It needs the layer of activations at 0 to be assigned values from the test data.
         void forwardPass()
         {
@@ -133,7 +131,7 @@ Class Network
 				activations at i = Activation_Function(weighted_inputs at i, Layer_Size at i);
         }
 		
-		//backProp() is a function that calculates the nabla_b and nabla_w vectors.
+	//backProp() is a function that calculates the nabla_b and nabla_w vectors.
         //backProp requires sigmoid_prime function, cost derivative function, activations and weighted inputs already been set
         void backProp(matrix of expected output for a given training input (expected val) )
         {
@@ -142,45 +140,45 @@ Class Network
 			
            	delta at L = Hadamard_Product(Cost_Prime(Activations at L, expectedval, layersize of L), Sigmoid_Prime(weighted inputs at L,layersize of L))
            	sum_nabla_b at L += delta at L
- 			sum_nabla_w at L += (delta at L) * (activations at L-1 transposed)
+ 		sum_nabla_w at L += (delta at L) * (activations at L-1 transposed)
         	Looping an index i from L-1 to 1 (the remaining layers)
-                delta at i = Hadamard_Product(((weights at i + 1 transposed)*(delta at i + 1)), Sigmoid_Prime(weighted inputs of at i,size of layersize at i)
-                sum_nabla_b at i += delta at i 
-              	sum_nabla_w at i += (delta at i) * (activations at i-1 transposed)
+			delta at i = Hadamard_Product(((weights at i + 1 transposed)*(delta at i + 1)), Sigmoid_Prime(weighted inputs of at i,size of layersize at i)
+			sum_nabla_b at i += delta at i 
+			sum_nabla_w at i += (delta at i) * (activations at i-1 transposed)
+		//end of the loop
         }
 		
-		//SGD's function is to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and 
-        //  nabla_w vectors over the whole batch. it then updates the weights and biases using the nabla vectors and the learning
-        //  rate eta
+	//SGD's function is to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and 
+        //nabla_w vectors over the whole batch. it then updates the weights and biases using the nabla vectors and the learning
+        //rate eta
         
         //SGD requires an int batch size to iterate over the vector mini batch indices which hold indices of the test data
         //  with respect to the mini batch to be iterated
         //  it is assumed that these indices are randomly generated and won't repeat a test element for the same epoch but that
         //  is outside SGD's scope and it won't need to worry about that.
-		//SGD also requires test data indices to have been resized appropriately
+	//SGD also requires test data indices to have been resized appropriately
 	
         void SGD(int batch size) // may not be the same as mini batch size due to leftover data at end of test data
         {
             //compute average errors for the batch
-            Looping index i from 0 to batch size (0 to batch size)
-            // its important to use batch size and not mini batch size here
+	    //create a vector for expected val and read the truth values from the file
+            Looping index i from 0 to batch size 
                 assign activations[0] with test data (test data[mini batch indices[i]]) //forward pass() is already performing this operation 
                 //haven't yet thought through how test data will be accessed. not familiar with the ifstream operations
                 perform forward pass() 
-                perform backward pass // sums of nablas computed here
+                perform backward pass( expected_val) // sums of nablas computed here
             
             //apply error information to weights and biases
-            update()
-                
+            update();                
             zero out sum_nabla vectors
         }
 		
-		void update()
-		{
-			Looping index i from 1 to L
-                weights[i] -= eta * (sum_nabla_w[i])
-                biases[i]  -= eta * (sum_nabla_b[i])
-		}
+	void update()
+	{
+		Looping index i from 1 to L
+	weights[i] -= eta * (sum_nabla_w[i])
+	biases[i]  -= eta * (sum_nabla_b[i])
+	}
 		
 	//Train brings all the other methods together and trains the network. It loops through the epochs separating out 
 	//mini batches from the test data and running sgd on all mini batches for each epoch. Train doesnt actually access the files
@@ -251,25 +249,25 @@ Class Network
 	}
 		
 	//Hadamard_Product() is a scalar multiplication of two matrices where we obtain a matrix by multiplying an element in one matrix 
-    //with that respective element in the other matrix.
+    	//with that respective element in the other matrix.
 	//Hadamard requires  that M1 and M1 are of equal size
 	
-    matrix& Hadamard_Product (const matrix& M1, const matrix& M2)
-    {
-          matrix M;
-          //check the size of the matrix
-              //if, equal:
-                  //Create a matrix M of same size as that of either M1 or M2
-                  //Start the loop for i = 1 to i = the number of columns in M1 
-                      //Start an inner loop for j = 1 to j = number of rows in M1
-                            //Every element in M, M[j][i] = M1[j][i] * M2[j][i];
-                      //end of the loop
-                  //end of the loop
-                  //return the matrix M
-               
-               //else
-                  //throw an exception or display the error message;
-    }
+   	matrix& Hadamard_Product (const matrix& M1, const matrix& M2)
+	{
+	  matrix M;
+	  //check the size of the matrix
+	      //if, equal:
+		  //Create a matrix M of same size as that of either M1 or M2
+		  //Start the loop for i = 1 to i = the number of columns in M1 
+		      //Start an inner loop for j = 1 to j = number of rows in M1
+			    //Every element in M, M[j][i] = M1[j][i] * M2[j][i];
+		      //end of the loop
+		  //end of the loop
+		  //return the matrix M
+
+	       //else
+		  //throw an exception or display the error message;
+	}
 	  
 	//Shuffle() will be called at the starting of every epoch to randomize the data provided by the user
 	//This will create a vector<int> of the same size as that of Data Set and every element of the vector will point to 
@@ -277,11 +275,11 @@ Class Network
 	//Shuffle() will randomize this array of int by swapping different indices, using fisher yates method
 	//This will assign created vector<int>, once done with the shuffling
 	
-    void Shuffle(vector<T> data)
-    {
-          Loop index i through data
-		  	swap data at i with a random element from (i+1) to (size of data - 1)
-    }
+	void Shuffle(vector<T> data)
+	{
+	  Loop index i through data
+			swap data at i with a random element from (i+1) to (size of data - 1)
+	}
 };
 
 //Functions outside of the class will include:
