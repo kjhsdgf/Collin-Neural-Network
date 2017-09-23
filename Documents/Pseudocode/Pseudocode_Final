@@ -76,20 +76,20 @@ Class Network
                 resize the ith element of the weightedinputs vector: layer sizes at i by 1, fill with zeros
 			//end of the loop
 			
+			Randomize_Weights();
             resize the 0th member of the activations vector: layer sizes at 0 by 1, fill with zeros
 			
 			resize mini batch indices to be mini batch size
-			
-            //we can have a function for this: to randomize the weights, which will be called while in the loop
-				//Populate ith element in the array of weights vector with pseudorandom numbers, 
-				//mean 0, st. dev. 1/Sqrt[layer sizes at i-1]
+			            		
             Set object's hyperparameters to values passed to constructor
         }
-		
+				
 		//consider overloading the constructor for classification
 		Network (const string& Verification_data)
 		{
 			training_data = Verification_data;
+			//open the Previous_Network file
+			//open the verification_data file
 			//extract data such as L and layer sizes from the Previous_Network file
 			//create the matrices for weights, biases, activations and weighted inputs
 			//Assign the matrices created with the weights and biases from the Previous_Network file
@@ -117,11 +117,18 @@ Class Network
 				 //return the file name
          }
 	
+		void Randomize_Weights()
+		{
+			Looping an index i from 1 to L
+				//Populate ith element in the array of weights vector with pseudorandom numbers, 
+				//mean 0, st. dev. 1/Sqrt[layer sizes at i-1]
+		}
+		
 		//forwardPass() is a function that sets all activation values for a single test data input. 
         //It needs the layer of activations at 0 to be assigned values from the test data.
-        void forwardPass(const string& file)
+        void forwardPass()
         {
-            //activations at 0 = extract the data from the file
+            //activations at 0 = extract the data from the training_data file
 			Looping an index i from 1 to L
                 weighted inputs at i = (weights at i * activations at i-1) + biases at i;
 				activations at i = Activation_Function(weighted_inputs at i, Layer_Size at i);
@@ -160,7 +167,7 @@ Class Network
             // its important to use batch size and not mini batch size here
                 assign activations[0] with test data (test data[mini batch indices[i]]) //forward pass() is already performing this operation 
                 //haven't yet thought through how test data will be accessed. not familiar with the ifstream operations
-                perform forward pass(data file name) 
+                perform forward pass() 
                 perform backward pass // sums of nablas computed here
             
             //apply error information to weights and biases
