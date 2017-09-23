@@ -54,7 +54,7 @@ Class Network
 		int number correct;
 
 		string training_data;		//consider truncating "filename". unnecessary and unwieldy
-		string expected values;
+		string expected_values;
 		
 	Methods:
 		Constructor()
@@ -70,8 +70,7 @@ Class Network
 				
                 resize the ith element of the biases vector: layer sizes at i by 1, fill with random numbers or zeros (normal dist)
                 resize the ith element of the sum_nabla_b vector: layer sizes at i by 1, fill with zeros
-				resize the ith element of the delta vector: layer sizes at i by 1, fill with zeros
-				
+				resize the ith element of the delta vector: layer sizes at i by 1, fill with zeros				
                 resize the ith element of the activations vector: layer sizes at i by 1, fill with zeros
                 resize the ith element of the weightedinputs vector: layer sizes at i by 1, fill with zeros
 			//end of the loop
@@ -100,7 +99,7 @@ Class Network
 		
 		~Network()
 		{
-			//make sure to close all the files
+			//make sure to close all the files, namely training_data and expected_values
 		}
 		
 		string & ReadIn(istream &in = cin)
@@ -109,8 +108,8 @@ Class Network
              If the user opts to choose a file
                  Read in file name
 				 Input validation (TBD)
-				 //if the user wants to train,
-                 	Read in the hyperparameters from file and store them in the data members
+                 Read in the hyperparameters from file and store them in the data members
+				 //Read in the name of expected_values file and store the name in truth_data
 				 //return the file name
              Else
                  Prompt the user to enter details through the command prompt, storing them in the data members
@@ -308,3 +307,5 @@ matrix& Sigmoid_Prime(const matrix& weighted_inputs, const int Layer_Size)
 		M[i] = Sigmoid( weighted_inputs[i] ) * (1 - Sigmoid( weighted_inputs[i] ));
 	//return M
 }
+
+//doubtful about including Randomize_Weights() outside the class
