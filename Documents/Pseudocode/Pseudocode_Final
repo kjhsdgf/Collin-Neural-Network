@@ -24,7 +24,7 @@ void main()
 
 Class Network
 {
-	Data Members:					//Names of the Data Members can be changed later
+	Data Members:			//Names of the Data Members can be changed later
 		double eta;
 		int batch_size;
 		int epochs;
@@ -41,7 +41,7 @@ Class Network
 		vector<matrix> sum_nabla_w;
 
 		vector<int> test data indices;
-		vector<int>	mini batch indices;
+		vector<int> mini batch indices;
 
 		int number correct;
 
@@ -57,21 +57,24 @@ Class Network
             //Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size L.
             //Everything but the activation vector will have an effective size of L-1, as their first element will be left unused.
             Looping an index i from 1 to L
-                resize the ith element of the weights vector 		to be layer sizes at i by layer sizes at i-1, fill w/ rand #s
-                resize the ith element of the sum_nabla_w vector 	to be layer sizes at i by layer sizes at i-1, fill with zeros
+                resize the ith element of the weights vector: layer sizes at i by layer sizes at i-1, fill w/ rand #s
+                resize the ith element of the sum_nabla_w vector: layer sizes at i by layer sizes at i-1, fill with zeros
 				
-                resize the ith element of the biases vector 		to be layer sizes at i by 1, fill with random numbers (normal dist)
-                resize the ith element of the sum_nabla_b vector 	to be layer sizes at i by 1, fill with zeros
-				resize the ith element of the delta vector 			to be layer sizes at i by 1, fill with zeros
+                resize the ith element of the biases vector: layer sizes at i by 1, fill with random numbers or zeros (normal dist)
+                resize the ith element of the sum_nabla_b vector: layer sizes at i by 1, fill with zeros
+				resize the ith element of the delta vector: layer sizes at i by 1, fill with zeros
 				
-                resize the ith element of the activations vector 	to be layer sizes at i by 1, fill with zeros
-                resize the ith element of the weightedinputs vector to be layer sizes at i by 1, fill with zeros	
+                resize the ith element of the activations vector: layer sizes at i by 1, fill with zeros
+                resize the ith element of the weightedinputs vector: layer sizes at i by 1, fill with zeros
+			//end of the loop
 			
-            resize the 0th member of the activations vector to be layer sizes at 0 by 1, fill with zeros
+            resize the 0th member of the activations vector: layer sizes at 0 by 1, fill with zeros
 			
 			resize mini batch indices to be mini batch size
 			
-            //Populate ith element in the array of weights vector with pseudorandom numbers, mean 0, st. dev. 1/Sqrt[layer sizes at i-1]
+            //we can have a function for this: to randomize the weights, which will be called while in the loop
+				//Populate ith element in the array of weights vector with pseudorandom numbers, 
+				//mean 0, st. dev. 1/Sqrt[layer sizes at i-1]
             Set object's hyperparameters to values passed to constructor
         }
 		
@@ -95,9 +98,9 @@ Class Network
 	
 		//forwardPass() is a function that sets all activation values for a single test data input. 
         //It needs the layer of activations at 0 to be assigned values from the test data.
-        void forwardPass()
+        void forwardPass(string file)
         {
-            //weighted inputs at 0 = extract the data from the data file
+            //activations at 0 = extract the data from the file
 			Looping an index i from 1 to L
                 weighted inputs at i = (weights at i * activations at i-1) + biases at i;
 				activations at i = Activation_Function(weighted_inputs at i, Layer_Size at i);
@@ -110,11 +113,11 @@ Class Network
            	compare expected val to activations[L]
 			if they are the same, increment number correct 
 			
-           	delta at L = Hadamard_Product(Cost_Prime(Activations at L, expectedval, layersize of L), Sigmoid_Prime(weighted inputs at L, 											layersize of L))
+           	delta at L = Hadamard_Product(Cost_Prime(Activations at L, expectedval, layersize of L), Sigmoid_Prime(weighted inputs at L,layersize of L))
            	sum_nabla_b at L += delta at L
  			sum_nabla_w at L += (delta at L) * (activations at L-1 transposed)
         	Looping an index i from L-1 to 1 (the remaining layers)
-                delta at i = Hadamard_Product(((weights at i + 1 transposed)*(delta at i + 1)), Sigmoid_Prime(weighted inputs of at i, 					size of layersize at i)
+                delta at i = Hadamard_Product(((weights at i + 1 transposed)*(delta at i + 1)), Sigmoid_Prime(weighted inputs of at i,size of layersize at i)
                 sum_nabla_b at i += delta at i 
               	sum_nabla_w at i += (delta at i) * (activations at i-1 transposed)
         }
@@ -132,11 +135,11 @@ Class Network
         void SGD(int batch size) // may not be the same as mini batch size due to leftover data at end of test data
         {
             //compute average errors for the batch
-            Looping index i through mini batch indices (0 to batch size)
+            Looping index i from 0 to batch size (0 to batch size)
             // its important to use batch size and not mini batch size here
-                assign activations[0] with test data (test data[mini batch indices[i]])
+                assign activations[0] with test data (test data[mini batch indices[i]]) //forward pass() is already performing this operation 
                 //haven't yet thought through how test data will be accessed. not familiar with the ifstream operations
-                perform forward pass 
+                perform forward pass(data file name) 
                 perform backward pass // sums of nablas computed here
             
             //apply error information to weights and biases
@@ -153,7 +156,7 @@ Class Network
 		}
 		
 	//Train brings all the other methods together and trains the network. It loops through the epochs separating out 
-	//  mini batches from the test data and running sgd on all mini batches for each epoch. Train doesnt actually access the files
+	//mini batches from the test data and running sgd on all mini batches for each epoch. Train doesnt actually access the files
 	void Train()
 	{
 		//jump to the beginning of the file
@@ -165,9 +168,9 @@ Class Network
 		Loop index i through test data indices
 			test data indices[i] = i
 
-		int sgd calls = (size of text data)/(mini batch size)  // number of times sgd is called to finish one epoch 
+		int sgd calls = (size of test data)/(mini batch size)  // number of times sgd is called to finish one epoch 
 		int leftover = epochs remainder(%) mini batch size     // to see if there's a small mini batch left in the data
-
+								       //we can use leftover later to determine the consequences of not performing SGD(leftover)
 		Looping index i from 0 to epochs
 			Fisher Yates shuffle (test data indices)
 			int batch size = mini batch size
@@ -177,21 +180,29 @@ Class Network
 					mini batch indices[k] = test data indices [(j*mini batch size) + k)]
 				SGD(batch size)
 			
-			cout << "Efficiency at epoch: " << i << " = " << ((number correct) / (test data size))*100;
+			cout << "Efficiency at epoch: " << i << " = " << ((number correct) / (test data size))*100 <<" %";
 	}
 		
-	void Classify (verification data)
+	void Classify (const string& verification_data_file) 
 	{
 		int ambiguous_data (0);
-		Loop index i from 0 to size of (verification data)
-			set activation[0] = verification data[i]
-			feedforward()
-			int biggest = 0 // index of the biggest activation value
-			Looping index j from 0 to size of (activations[L])
+		int end;		//will tell us the number of the training inputs in the verfification file
+		int biggest;
+		//to calculate end, we can call tellg(), which will give us the size of file in bytes and then, size of file/size of verificationdata
+		Loop index i from 0 to size of (verification data) //from i = 0 to end
+			feedforward(verification data file)			//this will extract the activation[0]
+			biggest = 0 // index of the biggest activation value
+			Looping index j from 1 to size of (activations[L]) //at j=0 is assumed to be bigger
 				if activations[L][j] > activations[L][biggest] 
 					//then biggest = j
+				else if activations[L][j] < activations[L][biggest]
+					//continue;
 				else
-					//increment the number of ambiguous data found 				
+					if (activations[L][j] < activations[L][j+1])
+						//if yes, 
+						continue;
+					else
+						//increment the number of ambiguous data found 				
 			print out classification of biggest
 		
 		//print out the number of data classified, which will be (size of verification data) - ambiguous_data
@@ -202,7 +213,7 @@ Class Network
     //with that respective element in the other matrix.
 	//Hadamard requires  that M1 and M1 are of equal size
 	
-    matrix Hadamard_Product (matrix M1, matrix M2)
+    matrix& Hadamard_Product (const matrix& M1, const matrix& M2)
     {
           matrix M;
           //check the size of the matrix
@@ -233,25 +244,25 @@ Class Network
 };
 
 //Functions outside of the class will include:
-matrix Activation_Function(matrix weighted_inputs, int Layer_Size)
+matrix& Activation_Function(const matrix& weighted_inputs, const int Layer_Size)
 {
 	//create a matrix M of size (Layer_Size) by 1
-	//M = sigmoid (weighted_inputs)  
-	//return the M
+	//M = sigmoid (weighted_inputs)  				//not sure, if dlib has sigmoid func for a complete matrix
+	//return M									//otherwise, we'll have to do it element-wise
 }
 
-matrix Cost_Prime(matrix Activations, matrix expectedval, int size_of_output_layer) //just realized we need a new matrix for 																								//expected values
+matrix& Cost_Prime(const matrix& Activations,const matrix& expectedval, const int size_of_output_layer) //just realized we need a new matrix for expected values
 {
 	//create a matrix M of size (size_of_output_layer) by 1
 	//M = (Activations - expectedval) 
-	//return the M
+	//return M
 }
 
-matrix Sigmoid_Prime(matrix weighted_inputs, int Layer_Size)
+matrix& Sigmoid_Prime(const matrix& weighted_inputs, const int Layer_Size)
 {
 	//create a matrix M of size (Layer_Size) by 1
-	//realized we need to do this by assigning every element in the matrix
+	//realized we need to do this by assigning every element in M
 	for(i = 0; i < Layer_Size ; i++)
 		M[i] = Sigmoid( weighted_inputs[i] ) * (1 - Sigmoid( weighted_inputs[i] ));
-	//return the M
+	//return M
 }
