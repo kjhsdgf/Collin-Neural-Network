@@ -8,7 +8,7 @@ Type | Name | Description
 `int` | `epochs` | number of times to "train" the network
 `int` | `layer_sizes[]` | int array containing sizes of each layer
 `int` | `num_Layers` | number of layers in the network // was L
-`int` | `num_correct_outputs` | number of times netowrk output matches truth values for test data 
+`int` | `num_correct_outputs` | number of times network output matches truth values for test data 
 `vector<matrix>` | `weights` | vector of (j x k) matrices containing all the weights for the network
 `vector<matrix>` | `biases` | vector of (j x 1) matrices containing all the biases for the network
 `vector<matrix>` | `activations` | vector of (j x 1) matrices containing all the activation values of the network
@@ -22,10 +22,12 @@ Type | Name | Description
 `string` | `expected_values_file` | name of file of expected values that correspond to the test data inputs
 
 ## Constructor Summary
-	Network	(istream& in = cin)		// constructs an untrained Network object that represents the data read from the "in" istream
-	Network	(ifstream& network_file, ifstream& classification_data_file)
-									// reconstructs a [trained] network from network file and calls classify on classification data
-	~Network ()						// destructs a Network objects dynamic memory and closes all files
+Constructor | Description
+------------- | -------------
+`Network (istream& in = cin)` | constructs an untrained Network object that represents the data read from the "in" istream
+`Network (ifstream& network_file, ifstream& classification_data_file)` |
+reconstructs a [trained] network and classifies it
+`~Network ()` | destructs a Network objects dynamic memory and closes all files
 	
 ## Method Summary
 	string&		ReadInit (istream& in)
