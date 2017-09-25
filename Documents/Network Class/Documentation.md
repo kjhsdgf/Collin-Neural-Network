@@ -38,10 +38,11 @@ Return type | Name | Description
 `void` | `SGD (const int batch_size)` | Stochastic Gradient Descent method to perform forward pass and backpropagation once for the mini batch and update the weights and biases
 `void` | `Train()` | A method which loops through the epochs performing SGD for all the mini batches in the test data for each epoch
 `void` | `Update()` | A method called by SGD() to update the weights and biases in the network
-
-// helper methods
-	
-
+`void` | `Classify ()` | A method to classify the data file provided by the user and display the efficiency based on the classified data 
+`void` | `Randomize_Weights()` | A method called by the default constructor to randomly assign the weights to the weight matrices
+`bool` | `Create_Network_File()` | A method to create a file for storing in the required values of the network built	
+`matrix&` | `Hadamard_Product (const matrix& M1, const matrix& M2)` | A method to perform the Hadamard Product operation on any two matrices 
+`void` | `Shuffle(vector<int> data)` | A method to shuffle the indices at the beginning of every epoch
 
 ## Member Details
 
