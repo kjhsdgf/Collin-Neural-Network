@@ -33,9 +33,6 @@ Return type | Name | Description
 -------------|------|-------------
 `string&` | `ReadInit (istream& in)` | A method to read the required hyperparameters of the class from the file provided by the user
 `string&` | `ReadInit ()` | An overloaded method to read the required parameters from the console
-
-// main algorithm methods
-
 `void` | `ForwardPass()` | A method that sets all activation values and weighted inputs for a single test data input
 `void` | `BackProp (const matrix& Expected_values)` | A method to backpropagate the error and to get the sum of cost partials
 `void` | `SGD (const int batch_size)` | Stochastic Gradient Descent method to perform forward pass and backpropagation once for the mini batch and update the weights and biases
