@@ -23,18 +23,24 @@ Member Summary
 	string expected_values_file		// name of file of expected values that correspond to the test data inputs
 
 Constructor Summary
-	Network	(istream& in = cin)		// constructs a Network objects that represents the data read from the "in" istream
+	Network	(istream& in = cin)		// constructs an untrained Network object that represents the data read from the "in" istream
+	Network	(ifstream& network_file, ifstream& classification_data_file)
+									// reconstructs a [trained] network from network file and calls classify on classification data
 	~Network ()						// destructs a Network objects dynamic memory and closes all files
 	
 Method Summary
 	string&		ReadInit (istream& in)
 	string&		ReadInit ()
 	
+	// main algorithm methods	
 	void		ForwardPass()
 	void		BackwardPass()
 	void		SGD()
 	void		Train
 	void 		updata
+	
+	// helper methods
+	
 
 
 Member Details
