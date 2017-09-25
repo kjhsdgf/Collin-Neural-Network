@@ -6,7 +6,7 @@ Type | Name | Description
 `double` | `learning_rate` | multiplier for updating weights and biases // was eta
 `int` | `batch_size` | size of mini batches to take from test data
 `int` | `epochs` | number of times to "train" the network
-`int` | `layer_sizes[]` | int array containing sizes of each layer
+`int*` | `layer_sizes` | int array containing sizes of each layer
 `int` | `num_Layers` | number of layers in the network // was L
 `int` | `num_correct_outputs` | number of times network output matches truth values for test data 
 `vector<matrix>` | `weights` | vector of (j x k) matrices containing all the weights for the network
@@ -25,9 +25,8 @@ Type | Name | Description
 Constructor | Description
 ------------- | -------------
 `Network (istream& in = cin)` | constructs an untrained Network object that represents the data read from the "in" istream
-`Network (ifstream& network_file, ifstream& classification_data_file)` |
-reconstructs a [trained] network and classifies it
-`~Network ()` | destructs a Network objects dynamic memory and closes all files
+`Network (const string& network_file, const string& classification_data_file)` | reconstructs a [trained] network and classifies it
+`~Network ()` | deallocates the Network object's dynamic memory and closes all files
 	
 ## Method Summary
 	string&		ReadInit (istream& in)
