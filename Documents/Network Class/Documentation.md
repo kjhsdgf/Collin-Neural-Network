@@ -1,6 +1,6 @@
 Tabs; 4; No Wrap
 
-Member Summary
+## Member Summary
 	double 	learning_rate 			// multiplier for updating weights and biases // was eta
 	int 	batch_size				// size of mini batches to take from test data
 	int 	epochs					// number of times to "train" the network
@@ -22,13 +22,13 @@ Member Summary
 	string test_data_file			// name of file of test data inputs
 	string expected_values_file		// name of file of expected values that correspond to the test data inputs
 
-Constructor Summary
+## Constructor Summary
 	Network	(istream& in = cin)		// constructs an untrained Network object that represents the data read from the "in" istream
 	Network	(ifstream& network_file, ifstream& classification_data_file)
 									// reconstructs a [trained] network from network file and calls classify on classification data
 	~Network ()						// destructs a Network objects dynamic memory and closes all files
 	
-Method Summary
+## Method Summary
 	string&		ReadInit (istream& in)
 	string&		ReadInit ()
 	
@@ -43,8 +43,8 @@ Method Summary
 	
 
 
-Member Details
+## Member Details
 
-Constructor Details
+## Constructor Details
 
-Method Details
+## Method Details
