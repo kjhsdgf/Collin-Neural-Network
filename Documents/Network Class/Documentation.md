@@ -49,7 +49,8 @@ Return type | Name | Description
 ### learning_rate
 	double learning_rate;  
 Positive multiplier for updating weights and biases.  
-Generally < 1.
+Generally < 1
+
 ### batch_size
 	int batch_size;
 
