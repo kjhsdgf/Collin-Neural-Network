@@ -93,16 +93,16 @@ The weighted sums of all layers in a network are stored in a vector of matrices 
 
 ### errors
 	vector<matrix> errors;
-The errors for all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. The errors will be calculated for every layer using the backprogation equations.
-The errors for the ouput layer will be calculated first using the expected values and the derivative of the activation function. Then, the errors will be back propagated to all the hidden layers which will help us in calculating the cost partials.
+The errors for all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. The errors for the ouput layer will be calculated first using the expected values and the derivative of the activation function. Then, the errors will be back propagated to all the hidden layers.
 	
 ### sum_nabla_b
 	vector<matrix> sum_nabla_b;
-The sum of the cost partials with respect to biases for all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. This stores the sum of the dC/db values for all the layers in the network. It helps in updating the biases after going through a certain batch size and thus, helps in minimizing the value of our cost function. 
+The sum of the cost partials with respect to biases for all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. This stores the sum of the dC/db values for all the layers in the network. The cost partial, dC/db for a specific layer is directly equal to the error in that specific layer.
 
 ### sum_nabla_w
 	vector<matrix> sum_nabla_w;
-The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. It helps in updating the weights after going through a certain batch size and thus, helps in minimizing the value of our cost function. 
+The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. 
+#### dC/dw at any ith layer = Hadamard Product of ((error at ith layer) . (Transpose of the activations at (i-1)th layer)) and Sigmoid Prime of weighted_sums at ith layer
 	
 ### Expected_Values
 	vector<matrix> Expected_values;
