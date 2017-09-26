@@ -45,11 +45,10 @@ Return type | Name | Description
 `void` | `Shuffle(vector<T> data)` | Applies Fisher-Yates shuffle to randomize elements in a vector
 
 ## Member Details
-hello
 ### learning_rate
-	`hello`
-	this is descriptive
-	more description
+	double learning_rate  
+Multiplier for updating weights and biases.  
+Generally < 1.
 ### batch_size
 ### epochs
 ### layer_sizes
