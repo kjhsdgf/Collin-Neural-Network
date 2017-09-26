@@ -83,8 +83,7 @@ The biases of all the layers in a network are stored in a vector of matrices eac
 	
 ### activations
 	vector<matrix> activations;
-The activations of a particular layer in a network are stored in a matrix of size (j x 1), where j is the layer size of that layer. Declaring this results in creation of vector of matrices, sufficient for all the layers in the network.
-Activation values are calculated by the activation function declared outside the class. It requires the weighted sums to perform the calculation.
+The activations of a particular layer in a network are stored in a matrix of size (j x 1), where j is the layer size of that layer. Activation values are calculated by the activation function declared outside the class. It requires the weighted sums to perform the calculation.
 However, for every training input, the first layer of activations will be the training input data extracted from the file.
 	
 ### weighted_sums
@@ -103,7 +102,7 @@ The sum of the cost partials with respect to biases for all the layers in a netw
 
 ### sum_nabla_w
 	vector<matrix> sum_nabla_w;
-The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. It helps in updating the weights after going through a certain batch size and thus,helping us in minimizing the value of our cost function. 
+The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. It helps in updating the weights after going through a certain batch size and thus, helps in minimizing the value of our cost function. 
 	
 ### Expected_Values
 	vector<matrix> Expected_values;
@@ -119,9 +118,11 @@ A vector of the size same as the batch size. This parameter stores in the indice
 	
 ### test_data_file
 	string test_data_file;
+The name of the file containing the test data is the file from which the activation values at the first layer is extracted. This also gives the size to the test_data_indices.	
 	
 ### expected_values_file
 	string expected_values_file;
+The expected_values_file gives the expected values for each training data input in the test_data_file. It helps in getting the values of errors and helps the network to learn faster.
 
 ## Constructor Details
 
