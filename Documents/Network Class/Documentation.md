@@ -102,7 +102,7 @@ The sum of the cost partials with respect to biases for all the layers in a netw
 ### sum_nabla_w
 	vector<matrix> sum_nabla_w;
 The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. For any _ith_ layer in the network,
-##### dC/dw = Hadamard Product [((errors at _ith_ layer) . ((activations at _(i-1)th_ layer)<sup>T</sup>))] and [Sigmoid Prime of weighted_sums at _ith_ layer]
+##### dC/dw = Hadamard Product of [((errors at _ith_ layer) . ((activations at _(i-1)th_ layer)<sup>T</sup>))] and [Sigmoid Prime of weighted_sums at _ith_ layer]
 	
 ### Expected_Values
 	vector<matrix> Expected_values;
@@ -125,5 +125,16 @@ The name of the file containing the test data is the file from which the activat
 The expected_values_file gives the expected values for each training data input in the test_data_file. It helps in getting the values of errors and helps the network to learn faster.
 
 ## Constructor Details
+	Network::Network (istream& in = cin);
+#### Parameters:
+It takes one parameter, which is the input stream. Although, this input stream is by default set to **cin**. 
+#### Function:
+This constructor assigns values to all the data members, based on the values of some data members entered by the user. It takes the values from the ReadInit() method, and creates all the required matrices for the class. This constructor gets called when the user chooses to train the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value.  
+
+	Network::Network (const string& network_filename, const string& data_filename);
+#### Parameters:
+It takes two parameters, the filename of the previous network that needs to used and the other parameter is the data file name, which needs to be classified. 
+#### Function:
+This constructor assigns values to all the data members of the class. It takes the required values for classification from the previous network file and creates the required matrices. This constructor gets called when the user chooses to classify the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value, if needed and to null, if not needed.
 
 ## Method Details
