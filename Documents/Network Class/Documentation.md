@@ -102,7 +102,7 @@ The sum of the cost partials with respect to biases for all the layers in a netw
 ### sum_nabla_w
 	vector<matrix> sum_nabla_w;
 The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. For any _ith_ layer in the network,
-##### dC/dw = Hadamard Product of ((error at _ith_ layer) . (Transpose of the activations at _(i-1)th_ layer)) and Sigmoid Prime of weighted_sums at _ith_ layer
+##### dC/dw = Hadamard Product of [((error at _ith_ layer) . (Transpose of the activations at _(i-1)th_ layer))] and [Sigmoid Prime of weighted_sums at		 _ith_ layer]
 	
 ### Expected_Values
 	vector<matrix> Expected_values;
