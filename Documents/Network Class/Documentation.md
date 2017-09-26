@@ -3,20 +3,20 @@ Tabs; 4; No Wrap
 ## Member Summary
 Type | Name | Description
 ----- | ------- | -------------
-`double` | `learning_rate` | Multiplier for updating weights and biases // was eta
+`double` | `learning_rate` | Multiplier for updating weights and biases 
 `int` | `batch_size` | Size of mini batches to take from test data
 `int` | `epochs` | Number of times to "train" the network // consider changing name to more descriptive one
 `vector<int>` | `layer_sizes` | Array containing sizes of each layer
-`int` | `num_Layers` | Number of layers in the network // was L
+`int` | `num_Layers` | Number of layers in the network 
 `int` | `num_correct_outputs` | Number of times network output matches truth values for test data 
-`vector<matrix>` | `weights` | Vector of (j x k) matrices containing all the weights for the network, where k is the size of layer previous to the layer of size j
-`vector<matrix>` | `biases` | Vector of (j x 1) matrices containing all the biases for the network, where j is the size of the layer
-`vector<matrix>` | `activations` | Vector of (j x 1) matrices containing all the activation values of the network, where j is the size of the layer
-`vector<matrix>` | `weighted_sums` | Vector of (j x 1) matrices containing all the weighted sums of the network, where j is the size of the layer
-`vector<matrix>` | `errors` | Vector of (j x 1) matrices containing all errors at each node of the network, where j is the size of the layer // was delta
-`vector<matrix>` | `sum_nabla_b` | Vector of (j x 1) matrices containing the sum of the dC/db at each node of the network, where j is the size of the layer
-`vector<matrix>` | `sum_nabla_w` | Vector of (j x k) matrices containing the sum of the dC/dw at each node of the network, where k is the size of layer previous to the layer of size j
-`vector<matrix>` | `Expected_values` | Vector of (L x 1) matrices containing the expected values for each training data input, where L is the size of the output layer 
+`vector<matrix>` | `weights` | Vector of matrices containing all the weights for the network
+`vector<matrix>` | `biases` | Vector of matrices containing all the biases for the network
+`vector<matrix>` | `activations` | Vector of matrices containing all the activation values of the network
+`vector<matrix>` | `weighted_sums` | Vector of matrices containing all the weighted sums of the network
+`vector<matrix>` | `errors` | Vector of matrices containing all errors at each node of the network 
+`vector<matrix>` | `sum_nabla_b` | Vector of matrices containing the sum of the dC/db at each node of the network
+`vector<matrix>` | `sum_nabla_w` | Vector of matrices containing the sum of the dC/dw at each node of the network
+`vector<matrix>` | `Expected_values` | Vector of matrices containing the expected values for each training data input 
 `vector<int>` | `test_data_indices` | Array of all indices corresponding to the test data
 `vector<int>` | `mini_batch_indices` | Array of indices of size batch_size corresponding to the test data
 `string` | `test_data_file` | Name of file of test data inputs
@@ -53,22 +53,25 @@ Generally, the learning rate is less than 1
 
 ### batch_size
 	int batch_size;
-Size of the small samples of randomly chosen training inputs from the test data file
+Size of the small samples of randomly chosen training inputs from the test data file.
+Provided, the sample size should be large enough to speedup the learning process of the network.
 
 ### epochs
 	int epochs;
 A hyperparameter that denotes the number of times the samples of finite size needs to be chosen randomly, such that the training inputs are exhausted. 
+This number is usually provided by the user rather than a randomly selected value by the learning algorithm.	
 	
 ### layer_sizes
 	vector<int> layer_sizes;
-Records the size of every layer in the network
+Records the size of every layer in the network, once given a source by the user. Every required matrix gets its size using this parameter.
 	
 ### num_Layers
 	int num_Layers;
-Stores information about the depth of the network
+Stores information about the depth of the network. This helps in randomly accessing any particular layer in tbe network. 
 	
 ### num_correct_output
 	int num_correct_output;
+A 
 	
 ### weights
 	vector<matrix> weights;
