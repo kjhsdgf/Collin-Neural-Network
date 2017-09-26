@@ -85,29 +85,37 @@ The biases of all the layers in a network are stored in a vector of matrices eac
 	vector<matrix> activations;
 The activations of a particular layer in a network are stored in a matrix of size (j x 1), where j is the layer size of that layer. Declaring this results in creation of vector of matrices, sufficient for all the layers in the network.
 Activation values are calculated by the activation function declared outside the class. It requires the weighted sums to perform the calculation.
+However, for every training input, the first layer of activations will be the training input data extracted from the file.
 	
 ### weighted_sums
 	vector<matrix> weighted_sums;
 The weighted sums of all layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. The weighted sum at any particular layer can be given by the dot product, of the weight matrix for that layer and the values of the activations layer just before that layer, with the bias matrix for that layer added to the dot product. 
-##### weighted_sums at jth layer = ((weights at j) . (activations at j - 1)) + (biases at j)
+##### 		weighted_sums at jth layer = ((weights at j) . (activations at j - 1)) + (biases at j)
 
 ### errors
 	vector<matrix> errors;
+The errors for all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. The errors will be calculated for every layer using the backprogation equations.
+The errors for the ouput layer will be calculated first using the expected values and the derivative of the activation function. Then, the errors will be back propagated to all the hidden layers which will help us in calculating the cost partials.
 	
 ### sum_nabla_b
 	vector<matrix> sum_nabla_b;
+The sum of the cost partials with respect to biases for all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. This stores the sum of the dC/db values for all the layers in the network. It helps in updating the biases after going through a certain batch size and thus, helps in minimizing the value of our cost function. 
 
 ### sum_nabla_w
 	vector<matrix> sum_nabla_w;
+The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. It helps in updating the weights after going through a certain batch size and thus,helping us in minimizing the value of our cost function. 
 	
 ### Expected_Values
 	vector<matrix> Expected_values;
-	
+The Expected_Values is a vector of a matrix of size (L x 1), where L is the size of the ouput layer in the network. The expected values for every training data input are extracted from the file and stored here to compare the final output after every forward propagation with these expected values.
+
 ### test_data_indices
 	vector<int> test_data_indices;
+A vector of the size same as that of the number of training data inputs. Randomization after every epoch is performed on the test data indices before passing them to any other function.
 	
 ### mini_batch_indices
 	vector<int> mini_batch_indices;
+A vector of the size same as the batch size. This parameter stores in the indices after the randomization and it is made sure that the different mini batches get unique indices from the test data.
 	
 ### test_data_file
 	string test_data_file;
