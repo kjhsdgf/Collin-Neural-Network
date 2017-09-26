@@ -6,7 +6,7 @@ Type | Name | Description
 `double` | `learning_rate` | Multiplier for updating weights and biases // was eta
 `int` | `batch_size` | Size of mini batches to take from test data
 `int` | `epochs` | Number of times to "train" the network // consider changing name to more descriptive one
-`int*` | `layer_sizes` | Array containing sizes of each layer
+`vector<int>` | `layer_sizes` | Array containing sizes of each layer
 `int` | `num_Layers` | Number of layers in the network // was L
 `int` | `num_correct_outputs` | Number of times network output matches truth values for test data 
 `vector<matrix>` | `weights` | Vector of (j x k) matrices containing all the weights for the network, where k is the size of layer previous to the layer of size j
@@ -49,19 +49,23 @@ Return type | Name | Description
 ### learning_rate
 	double learning_rate;  
 Positive multiplier for updating weights and biases.  
-Generally < 1
+Generally, the learning rate is less than 1
 
 ### batch_size
 	int batch_size;
+Size of the small samples of randomly chosen training inputs from the test data file
 
 ### epochs
 	int epochs;
+A hyperparameter that denotes the number of times the samples of finite size needs to be chosen randomly, such that the training inputs are exhausted. 
 	
 ### layer_sizes
-	int * layer_sizes;
+	vector<int> layer_sizes;
+Records the size of every layer in the network
 	
 ### num_Layers
 	int num_Layers;
+Stores information about the depth of the network
 	
 ### num_correct_output
 	int num_correct_output;
