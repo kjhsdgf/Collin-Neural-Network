@@ -89,7 +89,7 @@ Activation values are calculated by the activation function declared outside the
 ### weighted_sums
 	vector<matrix> weighted_sums;
 The weighted sums of all layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. The weighted sum at any particular layer can be given by the dot product, of the weight matrix for that layer and the values of the activations layer just before that layer, with the bias matrix for that layer added to the dot product. 
-#### weighted_sum at jth layer = ((weights at j).(activations at j - 1)) + (biases at j)
+##### weighted_sums at jth layer = ((weights at j) . (activations at j - 1)) + (biases at j)
 
 ### errors
 	vector<matrix> errors;
