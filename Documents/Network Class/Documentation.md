@@ -16,6 +16,7 @@ Type | Name | Description
 `vector<matrix>` | `errors` | Vector of (j x 1) matrices containing all errors at each node of the network // was delta
 `vector<matrix>` | `sum_nabla_b` | Vector of (j x 1) matrices containing the sum of the dC/db at each node of the network
 `vector<matrix>` | `sum_nabla_w` | Vector of (j x k) matrices containing the sum of the dC/dw at each node of the network
+`vector<matrix>` | `Expected_values` | Vector of (L x 1) matrices containing the expected values for each training data input 
 `vector<int>` | `test_data_indices` | Array of all indices corresponding to the test data
 `vector<int>` | `mini_batch_indices` | Array of indices of size batch_size corresponding to the test data
 `string` | `test_data_file` | Name of file of test data inputs
@@ -41,30 +42,64 @@ Return type | Name | Description
 `void` | `Classify ()` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
 `void` | `Randomize_Matrix(matrix& M)` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
 `bool` | `Create_Network_File(string& network_filename)` | Writes a file to store the network	
-`matrix&` | `Hadamard_Product (const matrix& M1, const matrix& M2)` | A method to perform the Hadamard Product operation on any two matrices 
+`matrix&` | `Hadamard_Product (const matrix& M1, const matrix& M2)` |Performs the Hadamard Product operation on any two given matrices 
 `void` | `Shuffle(vector<T> data)` | Applies Fisher-Yates shuffle to randomize elements in a vector
 
 ## Member Details
 ### learning_rate
-	double learning_rate  
-Multiplier for updating weights and biases.  
+	double learning_rate;  
+Positive multiplier for updating weights and biases.  
 Generally < 1.
 ### batch_size
+	int batch_size;
+
 ### epochs
+	int epochs;
+	
 ### layer_sizes
+	int * layer_sizes;
+	
 ### num_Layers
+	int num_Layers;
+	
 ### num_correct_output
+	int num_correct_output;
+	
 ### weights
+	vector<matrix> weights;
+	
 ### biases
+	vector<matrix> biases;
+	
 ### activations
+	vector<matrix> activations;
+	
 ### weighted_sums
+	vector<matrix> weighted_sums;
+	
 ### errors
+	vector<matrix> errors;
+	
 ### sum_nabla_b
+	vector<matrix> sum_nabla_b;
+
 ### sum_nabla_w
+	vector<matrix> sum_nabla_w;
+	
+### Expected_Values
+	vector<matrix> Expected_values;
+	
 ### test_data_indices
+	vector<int> test_data_indices;
+	
 ### mini_batch_indices
+	vector<int> mini_batch_indices;
+	
 ### test_data_file
+	string test_data_file;
+	
 ### expected_values_file
+	string expected_values_file;
 
 ## Constructor Details
 
