@@ -178,12 +178,15 @@ This method extracts the input data from the test_data file and assigns that to 
 #### Parameters:
 It takes one parameter, which is the matrix of the expected values.
 #### Description:
-Once the weightes_sums and the activations matrices gets assigned, this method checks for the last activations matrix of the network and compares it with the Expected_values matrix passed as the parameter. If they match, it increments the num_correct by 1. 
+Once the weighted_sums and the activations matrices get assigned, this method checks for the last activations matrix of the network and compares it with the Expected_values matrix passed as the parameter. If they match, it increments the num_correct by 1. 
 If they doesn't match, it calculates the errors in the output using the expected values matrix and backpropagates the error. Thus, it assigns the error matrices in the network. Once the error matrices are assigned, it calculates the cost partials and thus, sum_nabla_b and sum_nabla_w gets updated.
+
 ### SGD()
 #### Syntax:
 	void Network :: SGD();
 #### Description:
+This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. SGD() is responsible to read in the expected values from the expected_values file and assign the values to the Expected_Values matrix.
+It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.   
 
 ### Train()
 #### Syntax:
