@@ -27,25 +27,25 @@ Type | Name | Description
 ## Constructor Summary
 Constructor | Description
 ------------- | -------------
-`Network (istream& in = cin)` | Constructs an untrained Network object that represents the data read from the "in" istream
-`Network (const string& network_filename, const string& data_filename)` | Reconstructs a [trained] network and classifies it
+`Network (istream& = cin)` | Constructs an untrained Network object that represents the data read from the "in" istream
+`Network (const string& , const string&)` | Reconstructs a [trained] network and classifies it
 `~Network ()` | Deallocates the Network object's dynamic memory and closes all files
 	
 ## Method Summary
 Return type | Name | Description
 -------------|------|-------------
-`string&` | `ReadInit (const string& hyperparam_filename)` | Reads the required hyperparameters of the class from a file provided by the user
+`string&` | `ReadInit (const string& )` | Reads the required hyperparameters of the class from a file provided by the user
 `string&` | `ReadInit ()` | Reads the required hyperparameters from the console `cin`
 `void` | `ForwardPropagation ()` | Sets all activation values and weighted inputs for a single test data input
-`void` | `BackPropagation (const matrix& Expected_values)` | Backpropagates through network to compute error at each node
+`void` | `BackPropagation (const matrix& )` | Backpropagates through network to compute error at each node
 `void` | `SGD ()` | Stochastic Gradient Descent: performs forward and back propagation once for each input in the mini batch then updates the weights and biases accordingly
 `void` | `Train ()` | Trains network by repeatedly performing SGD on randomized mini batches of the test data for as many epochs as specified
 `void` | `Update ()` | Updates weights and biases based on data from SGD
 `void` | `Classify ()` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
-`void` | `RandomizeMatrix (vector<matrix>& M)` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
-`bool` | `CreateNetworkFile (string& network_filename)` | Writes a file to store the network	
-`matrix&` | `HadamardProduct (const matrix& M1, const matrix& M2)` |Performs the Hadamard Product operation on any two given matrices 
-`void` | `Shuffle(vector<T> data)` | Applies Fisher-Yates shuffle to randomize elements in a vector
+`void` | `RandomizeMatrix (vector<matrix>& )` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
+`bool` | `CreateNetworkFile (string& )` | Writes a file to store the network	
+`matrix&` | `HadamardProduct (const matrix& , const matrix& )` |Performs the Hadamard Product operation on any two given matrices 
+`void` | `Shuffle(vector<T> )` | Applies Fisher-Yates shuffle to randomize elements in a vector
 
 ## Member Details
 ### learning_rate
