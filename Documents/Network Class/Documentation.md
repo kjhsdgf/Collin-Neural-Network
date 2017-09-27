@@ -207,7 +207,10 @@ Like its name suggests, this method updates the weights and biases matrices of t
 ### 8. Classify()
 #### Syntax:
 	void Network :: Classify();
+#### Member Description:
+
 #### Description:
+
 
 ### 9. RandomizeMatrix()
 #### Syntax:
@@ -221,8 +224,11 @@ This method will randomly assign the value to the matrix passed to it. The value
 #### Syntax:
 	bool Network :: CreateNetworkFile(string& network_filename); 
 #### Return Type:
+This returns a boolean flag, which is true or false.
 #### Parameters:
+It takes one parameter, which is of string type.
 #### Description:
+This method creates a file of the name same as that passed as the parameter. If open, the method writes the required values such as the weights and biases matrices, layer_sizes vector and the number of layers to the file created. It returns true once the writing is performed. If the file, with the name passed doesn't open, this method returns false.
 
 ### 11. HadamardProduct()
 #### Syntax:
@@ -230,12 +236,17 @@ This method will randomly assign the value to the matrix passed to it. The value
 #### Return Type:
 This returns the address of the matrix, which is the result of the Hadamard Product.
 #### Parameters:
-It takes two parameters of matrix type, which are used as the operands for Hadamard Product. 
+It takes two parameters of matrix type, which are used as the operands for Hadamard Product.
+#### Member Details:
+It declares a matrix M to store the result of the product.
 #### Description:
+Hadamard_Product() is a scalar multiplication of two matrices where we obtain a matrix by multiplying an element in one matrix with that respective element in the other matrix. This method checks for the size of the matrices and if they are equal, it performs the Hadamard product on the two matrices and returns the address of the product matrix. If the two matrices passes have different sizes, it displays an error message.
 
 ### 12. Shuffle()
 #### Syntax:
 	void Network :: Shuffle(vector<T> data);
 #### Parameters:
+It take one parameter which is a vector to the data that has to be shuffled.
 #### Description:
+This method uses the Fisher Yates shuffle to shuffle the data passed to it. It consists of a loop which goes through the data and performs the operation of swapping the values or shuffling the data.
 
