@@ -1,4 +1,6 @@
 Tabs; 4; No Wrap
+## Requirements
+	#include "Network.h"
 
 ## Member Summary
 Type | Name | Description
@@ -36,12 +38,12 @@ Return type | Name | Description
 `string&` | `ReadInit ()` | Reads the required hyperparameters from the console `cin`
 `void` | `ForwardPropagation ()` | Sets all activation values and weighted inputs for a single test data input
 `void` | `BackPropagation (const matrix& Expected_values)` | Backpropagates through network to compute error at each node
-`void` | `SGD()` | Stochastic Gradient Descent: performs forward and back propagation once for each input in the mini batch then updates the weights and biases accordingly
-`void` | `Train()` | Trains network by repeatedly performing SGD on randomized mini batches of the test data for as many epochs as specified
-`void` | `Update()` | Updates weights and biases based on data from SGD
+`void` | `SGD ()` | Stochastic Gradient Descent: performs forward and back propagation once for each input in the mini batch then updates the weights and biases accordingly
+`void` | `Train ()` | Trains network by repeatedly performing SGD on randomized mini batches of the test data for as many epochs as specified
+`void` | `Update ()` | Updates weights and biases based on data from SGD
 `void` | `Classify ()` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
-`void` | `RandomizeMatrix(matrix& M)` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
-`bool` | `CreateNetworkFile(string& network_filename)` | Writes a file to store the network	
+`void` | `RandomizeMatrix (vector<matrix>& M)` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
+`bool` | `CreateNetworkFile (string& network_filename)` | Writes a file to store the network	
 `matrix&` | `HadamardProduct (const matrix& M1, const matrix& M2)` |Performs the Hadamard Product operation on any two given matrices 
 `void` | `Shuffle(vector<T> data)` | Applies Fisher-Yates shuffle to randomize elements in a vector
 
