@@ -185,18 +185,18 @@ If they doesn't match, it calculates the errors in the output using the expected
 #### Syntax:
 	void Network :: SGD();
 #### Description:
-SGD stands for the idea of Stochastic Gradient Descent to speed up learning process of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the Expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.   
+SGD stands for the idea of Stochastic Gradient Descent to speed up learning process of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the Expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.  
 At the end of the function, the sum of the cost partials are set to 0 again.
 
 ### 6. Train()
 #### Syntax:
 	void Network :: Train();
 #### Member Description:
-A member named SGD_Calls is declared in the function to get a number for how many times the SGD() needs to be called to complete an epoch. It is calculated by (size of test data)/(batch size).
+A member named `SGD_Calls` of datatype `int` is declared in the function to get a number for how many times the SGD() needs to be called to complete an epoch. It is calculated by (size of test data)/(batch size).
 #### Description:
 This method is responsible for training the network until all training data inputs are exhausted. It performs the training as many times as the number of epochs entered by the user. This method is responsible to assign the values to the test_data_indices initially to the values which represent their respective position in the test_data file. Once initialized, the test_data_indices are shuffled at the start of every epoch. 
 The loop makes sure to jump to the beginning of the test_data file and expected_values file at the start of every epoch. Also, it sets the num_correct to 0 at the start of every epoch. The nested loops are set up, which takes care of the calling SGD() and also, updates the mini_batch_indices vector. At the end of every epoch, the efficiency of the network built is displayed with the number of correct outputs found generated during the learning of the network.
-As the number of epochs are completed, a file of the network built is made, which stores all the required information of the netwrok that was built.  
+As the number of epochs are completed, a file of the network built is made, which stores all the required information of the network that was built.  
 
 ### 7. Update()
 #### Syntax:
@@ -208,9 +208,9 @@ Like its name suggests, this method updates the weights and biases matrices of t
 #### Syntax:
 	void Network :: Classify();
 #### Member Description:
-
+The variables declared inside this function include `ambiguous_data`, `end` and `biggest`, all of `int` datatype. `ambiguous_data` keeps a track on the number of data which the classifier was not able to classify. The `end` stores the values for the number of training inputs in the verification file. `biggest` stores the index which has maximum activation value and thus, helps in classification. 
 #### Description:
-
+Classify() is called when the user wants to classify a specific file. In that case, the value of `end` is calculated and a loop is started which goes through all the classification data inputs in the file. At the start of the loop, `biggest` is set to 0 and ForwardPropagation() is called to assign the values to the weighted_sums and activations matrices for each calssification data input. Once the activations at the ouput layer are assigned, it checks for the biggest value generated. If it finds the biggest value, the training data input is said to be classified. Otherwise, `ambiguous_data` value is incremented by 1 if no biggest value is found. If biggest was found, it further classifies it into horizontal, vertical or diagonal based on the idex stored in the biggest. Once the loop goes through the complete data set, the ouput is displayed which says the number of data inputs classified according to the different categories and at last displays the accuracy of the classifier based on the classified data out of the complete data set.
 
 ### 9. RandomizeMatrix()
 #### Syntax:
@@ -238,7 +238,7 @@ This returns the address of the matrix, which is the result of the Hadamard Prod
 #### Parameters:
 It takes two parameters of matrix type, which are used as the operands for Hadamard Product.
 #### Member Details:
-It declares a matrix M to store the result of the product.
+It declares a `matrix` `M` to store the result of the product.
 #### Description:
 Hadamard_Product() is a scalar multiplication of two matrices where we obtain a matrix by multiplying an element in one matrix with that respective element in the other matrix. This method checks for the size of the matrices and if they are equal, it performs the Hadamard product on the two matrices and returns the address of the product matrix. If the two matrices passes have different sizes, it displays an error message.
 
