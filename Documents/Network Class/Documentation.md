@@ -185,8 +185,7 @@ If they doesn't match, it calculates the errors in the output using the expected
 #### Syntax:
 	void Network :: SGD();
 #### Description:
-This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. SGD() is responsible to read in the expected values from the expected_values file and assign the values to the Expected_Values matrix.
-It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.   
+SGD stands for the idea of Stochastic Gradient Descent to speed up the learning of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the Expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.   
 
 ### 6. Train()
 #### Syntax:
