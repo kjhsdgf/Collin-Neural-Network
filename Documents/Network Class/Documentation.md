@@ -140,7 +140,7 @@ It takes two parameters, the filename of the previous network that needs to used
 This constructor assigns values to all the data members of the class. It takes the required values for classification from the previous network file and creates the required matrices. This constructor gets called when the user chooses to classify the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value, if needed and to null, if not needed.
 
 ## Method Details
-### -ReadInit(string &)
+### * ReadInit(string &)
 #### Syntax:
 	string& Network :: ReadInit (const string& hyperparam_filename);
 #### Return Type:
