@@ -2,6 +2,11 @@ Tabs; 4; No Wrap
 ## Requirements
 	#include "Network.h"
 
+## Syntax
+	class Network
+	{
+	};
+	
 ## Member Summary
 Type | Name | Description
 ----- | ------- | -------------
