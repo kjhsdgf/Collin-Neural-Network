@@ -32,7 +32,7 @@ Constructor | Description
 ## Method Summary
 Return type | Name | Description
 -------------|------|-------------
-`string&` | `ReadInit (string& hyperparam_filename)` | Reads the required hyperparameters of the class from a file provided by the user
+`string&` | `ReadInit (const string& hyperparam_filename)` | Reads the required hyperparameters of the class from a file provided by the user
 `string&` | `ReadInit ()` | Reads the required hyperparameters from the console `cin`
 `void` | `ForwardPropagation ()` | Sets all activation values and weighted inputs for a single test data input
 `void` | `BackPropagation (const matrix& Expected_values)` | Backpropagates through network to compute error at each node
@@ -40,9 +40,9 @@ Return type | Name | Description
 `void` | `Train()` | Trains network by repeatedly performing SGD on randomized mini batches of the test data for as many epochs as specified
 `void` | `Update()` | Updates weights and biases based on data from SGD
 `void` | `Classify ()` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
-`void` | `Randomize_Matrix(matrix& M)` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
-`bool` | `Create_Network_File(string& network_filename)` | Writes a file to store the network	
-`matrix&` | `Hadamard_Product (const matrix& M1, const matrix& M2)` |Performs the Hadamard Product operation on any two given matrices 
+`void` | `RandomizeMatrix(matrix& M)` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
+`bool` | `CreateNetworkFile(string& network_filename)` | Writes a file to store the network	
+`matrix&` | `HadamardProduct (const matrix& M1, const matrix& M2)` |Performs the Hadamard Product operation on any two given matrices 
 `void` | `Shuffle(vector<T> data)` | Applies Fisher-Yates shuffle to randomize elements in a vector
 
 ## Member Details
@@ -125,12 +125,14 @@ The name of the file containing the test data is the file from which the activat
 The expected_values_file gives the expected values for each training data input in the test_data_file. It helps in getting the values of errors and helps the network to learn faster.
 
 ## Constructor Details
+### Default Constructor
 	Network::Network (istream& in = cin);
 #### Parameters:
 It takes one parameter, which is the input stream. Although, this input stream is by default set to **cin**. 
 #### Function:
 This constructor assigns values to all the data members, based on the values of some data members entered by the user. It takes the values from the ReadInit() method, and creates all the required matrices for the class. This constructor gets called when the user chooses to train the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value.  
 
+### Parametric Constructor
 	Network::Network (const string& network_filename, const string& data_filename);
 #### Parameters:
 It takes two parameters, the filename of the previous network that needs to used and the other parameter is the data file name, which needs to be classified. 
@@ -139,26 +141,74 @@ This constructor assigns values to all the data members of the class. It takes t
 
 ## Method Details
 ### ReadInit(string &)
-	
+	string& Network :: ReadInit (const string& hyperparam_filename);
+#### Return Type:
+#### Parameters:
+#### Function:
+
 ### ReadInit()
+	string& Network :: ReadInit ();
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### ForwardPropagation()
+	void Network :: ForwardPropagation ();
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### BackPropagation()
+	void Network :: BackPropagation (const matrix& Expected_values);
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### SGD()
+	void Network :: SGD();
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### Train()
+	void Network :: Train();
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### Update()
+	void Network :: Update();
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### Classify()
+	void Network :: Classify();
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### RandomizeMatrix()
+	void Network :: RandomizeMatrix(matrix& M);
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### CreateNetworkFile()
+	bool Network :: CreateNetworkFile(string& network_filename); 
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### HadamardProduct()
+	matrix& Network :: HadamardProduct (const matrix& M1, const matrix& M2);
+#### Return Type:
+#### Parameters:
+#### Function:
 
 ### Shuffle()
+	void Network :: Shuffle(vector<T> data);
+#### Return Type:
+#### Parameters:
+#### Function:
 
