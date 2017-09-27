@@ -206,7 +206,9 @@ SGD stands for the idea of Stochastic Gradient Descent to speed up the learning 
 #### Syntax:
 	void Network :: RandomizeMatrix(matrix& M);
 #### Parameters:
+It will take one parameter with the datatype matrix. 
 #### Description:
+This method will randomly assign the value to the matrix passed to it. The values generated will be based on the Gaussian Normal Distribution. It contains a loop, which goes from the first layer to the last layer of the network. Weights and biases at each layer in the network are randomly assigned using this method.
 
 ### 10. CreateNetworkFile()
 #### Syntax:
@@ -219,7 +221,9 @@ SGD stands for the idea of Stochastic Gradient Descent to speed up the learning 
 #### Syntax:
 	matrix& Network :: HadamardProduct (const matrix& M1, const matrix& M2);
 #### Return Type:
+This returns the address of the matrix, which is the result of the Hadamard Product.
 #### Parameters:
+It takes two parameters of matrix type, which are later used as the operands for Hadamard Product. 
 #### Description:
 
 ### 12. Shuffle()
