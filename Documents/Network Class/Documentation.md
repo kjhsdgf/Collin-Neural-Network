@@ -27,7 +27,7 @@ Type | Name | Description
 ## Constructor Summary
 Constructor | Description
 ------------- | -------------
-`Network (istream& = cin)` | Constructs an untrained Network object that represents the data read from the "in" istream
+`Network (istream& = cin)` | Constructs an untrained Network object that represents the data read from an input stream
 `Network (const string& , const string&)` | Reconstructs a [trained] network and classifies it
 `~Network ()` | Deallocates the Network object's dynamic memory and closes all files
 	
