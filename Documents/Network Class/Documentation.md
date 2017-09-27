@@ -148,13 +148,10 @@ This method returns the address of a string, which stores the filename of the te
 #### Parameters:
 It takes one parameter, which is the name of the file that has the values of all hyperparameters stored in it.
 #### Description:
-This method reads in all the required parameters from the file, the name of which is passed in the parameter. This method is responsible to open the file and read in the values of the hyperparameters.  
-It asks the user to enter the name of the test data file and truth data file. This method is responsible to check for the validation of the values before assigning them to the data members of the class and display the error message in case of any invalid input. Then, it assigns the values to the data members of the class and returns the address of the name of the test data file.
+This method reads in all the required parameters from the file, the name of which is passed in the parameter. This method is responsible to open the file and read in the values of the hyperparameters. It asks the user to enter the name of the test data file and truth data file. This method is responsible to check for the validation of the values before assigning them to the data members of the class and display the error message in case of any invalid input. Then, it assigns the values to the data members of the class and returns the address of the name of the test data file.
 #### Validation Check:
 ReadInit() will be assigning the values to learning_rate, epochs, batch_size, layer_sizes, test_data_file and the truth_data_file. The value of the learning rate read from the file has to be less than 1. 
-The layer_sizes has to be valid, so the layer sizes are always a positive number. The batch_size read from the file has to be less than the actual data_size. 
-//We need to think about the range of the batch_size
-The names of the file entered by the user has to be valid
+The layer_sizes has to be valid, so the layer sizes are always a positive number. The batch_size read from the file has to be less than the actual data_size. The names of the file entered by the user have to be valid names.
 
 ### ReadInit() 
 #### Syntax:
@@ -167,22 +164,25 @@ It does not take any parameters.
 This method reads in all the required parameters from the console, as entered by the user. Also, it asks the user to enter the name of the test data file and truth data file. 
 This method is responsible to validate the values before assigning them to the data members of the class and display the error message in case of any invalid input. Then, it assigns the values to the data members of the class and returns the address of the name of the test data file.
 #### Validation Check:
-ReadInit() will be assigning the values to learning_rate, epochs, batch_size, layer_sizes, test_data_file and the truth_data_file. The value of the learning rate read from the file has to be less than 1. 
-The layer_sizes has to be valid, so the layer sizes are always a positive number. The batch_size read from the file has to be less than the actual data_size. 
-//We need to think about the range of the batch_size
-The names of the file entered by the user has to be valid
+ReadInit() will be assigning the values to learning_rate, epochs, batch_size, layer_sizes, test_data_file and the truth_data_file. The value of the learning rate user enters has to be less than 1. 
+The layer_sizes has to be valid, so that the layer sizes are always a positive number. The batch_size entered has to be less than the actual data_size. 
+The names of the file entered by the user have to be valid names.
 
 ### ForwardPropagation() 
 #### Syntax:
 	void Network :: ForwardPropagation ();
 #### Return Type:
+This method does not return anything.
 #### Parameters:
+It does not take any parameters.
 #### Description:
+
 
 ### BackPropagation()
 #### Syntax:
 	void Network :: BackPropagation (const matrix& Expected_values);
 #### Return Type:
+This method does not return anything.
 #### Parameters:
 #### Description:
 
@@ -190,34 +190,43 @@ The names of the file entered by the user has to be valid
 #### Syntax:
 	void Network :: SGD();
 #### Return Type:
+This method does not return anything.
 #### Parameters:
+It does not take any parameters.
 #### Description:
 
 ### Train()
 #### Syntax:
 	void Network :: Train();
 #### Return Type:
+This method does not return anything.
 #### Parameters:
+It does not take any parameters.
 #### Description:
 
 ### Update()
 #### Syntax:
 	void Network :: Update();
 #### Return Type:
+This method does not return anything.
 #### Parameters:
+It does not take any parameters.
 #### Description:
 
 ### Classify()
 #### Syntax:
 	void Network :: Classify();
 #### Return Type:
+This method does not return anything.
 #### Parameters:
+It does not take any parameters.
 #### Description:
 
 ### RandomizeMatrix()
 #### Syntax:
 	void Network :: RandomizeMatrix(matrix& M);
 #### Return Type:
+This method does not return anything.
 #### Parameters:
 #### Description:
 
@@ -239,6 +248,7 @@ The names of the file entered by the user has to be valid
 #### Syntax:
 	void Network :: Shuffle(vector<T> data);
 #### Return Type:
+This method does not return anything.
 #### Parameters:
 #### Description:
 
