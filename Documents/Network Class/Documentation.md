@@ -102,7 +102,7 @@ The sum of the cost partials with respect to biases for all the layers in a netw
 ### sum_nabla_w
 	vector<matrix> sum_nabla_w;
 The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. For any _ith_ layer in the network,
-##### dC/dw = Hadamard Product of [((errors at _ith_ layer) . ((activations at _(i-1)th_ layer)<sup>T</sup>))] and [Sigmoid Prime of weighted_sums at _ith_ layer]
+##### dC/dw = Hadamard Product of [((errors at _ith_ layer) . ((activations at _(i-1)th_ layer) <sup>T</sup> ))] and [Sigmoid Prime of weighted_sums at _ith_ layer]
 	
 ### Expected_Values
 	vector<matrix> Expected_values;
@@ -129,86 +129,116 @@ The expected_values_file gives the expected values for each training data input 
 	Network::Network (istream& in = cin);
 #### Parameters:
 It takes one parameter, which is the input stream. Although, this input stream is by default set to **cin**. 
-#### Function:
+#### Description:
 This constructor assigns values to all the data members, based on the values of some data members entered by the user. It takes the values from the ReadInit() method, and creates all the required matrices for the class. This constructor gets called when the user chooses to train the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value.  
 
 ### Parametric Constructor
 	Network::Network (const string& network_filename, const string& data_filename);
 #### Parameters:
 It takes two parameters, the filename of the previous network that needs to used and the other parameter is the data file name, which needs to be classified. 
-#### Function:
+#### Description:
 This constructor assigns values to all the data members of the class. It takes the required values for classification from the previous network file and creates the required matrices. This constructor gets called when the user chooses to classify the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value, if needed and to null, if not needed.
 
 ## Method Details
 ### ReadInit(string &)
+#### Syntax:
 	string& Network :: ReadInit (const string& hyperparam_filename);
 #### Return Type:
+This method returns the address of a string, which stores the filename of the test data.
 #### Parameters:
-#### Function:
+It takes one parameter, which is the name of the file that has the values of all hyperparameters stored in it.
+#### Description:
+This method reads in all the required parameters from the file, the name of which is passed in the parameter. This method is responsible to open the file and read in the values of the hyperparameters.  
+It asks the user to enter the name of the test data file and truth data file. This method is responsible to check for the validation of the values before assigning them to the data members of the class and display the error message in case of any invalid input. Then, it assigns the values to the data members of the class and returns the address of the name of the test data file.
+#### Validation Check:
+ReadInit() will be assigning the values to learning_rate, epochs, batch_size, layer_sizes, test_data_file and the truth_data_file. The value of the learning rate read from the file has to be less than 1. 
+The layer_sizes has to be valid, so the layer sizes are always a positive number. The batch_size read from the file has to be less than the actual data_size. 
+//We need to think about the range of the batch_size
+The names of the file entered by the user has to be valid
 
-### ReadInit()
+### ReadInit() 
+#### Syntax:
 	string& Network :: ReadInit ();
 #### Return Type:
+This method returns the address of the string, which stores the filename of the test data.
 #### Parameters:
-#### Function:
+It does not take any parameters.
+#### Description:
+This method reads in all the required parameters from the console, as entered by the user. Also, it asks the user to enter the name of the test data file and truth data file. 
+This method is responsible to validate the values before assigning them to the data members of the class and display the error message in case of any invalid input. Then, it assigns the values to the data members of the class and returns the address of the name of the test data file.
+#### Validation Check:
+ReadInit() will be assigning the values to learning_rate, epochs, batch_size, layer_sizes, test_data_file and the truth_data_file. The value of the learning rate read from the file has to be less than 1. 
+The layer_sizes has to be valid, so the layer sizes are always a positive number. The batch_size read from the file has to be less than the actual data_size. 
+//We need to think about the range of the batch_size
+The names of the file entered by the user has to be valid
 
-### ForwardPropagation()
+### ForwardPropagation() 
+#### Syntax:
 	void Network :: ForwardPropagation ();
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### BackPropagation()
+#### Syntax:
 	void Network :: BackPropagation (const matrix& Expected_values);
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### SGD()
+#### Syntax:
 	void Network :: SGD();
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### Train()
+#### Syntax:
 	void Network :: Train();
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### Update()
+#### Syntax:
 	void Network :: Update();
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### Classify()
+#### Syntax:
 	void Network :: Classify();
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### RandomizeMatrix()
+#### Syntax:
 	void Network :: RandomizeMatrix(matrix& M);
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### CreateNetworkFile()
+#### Syntax:
 	bool Network :: CreateNetworkFile(string& network_filename); 
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### HadamardProduct()
+#### Syntax:
 	matrix& Network :: HadamardProduct (const matrix& M1, const matrix& M2);
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
 ### Shuffle()
+#### Syntax:
 	void Network :: Shuffle(vector<T> data);
 #### Return Type:
 #### Parameters:
-#### Function:
+#### Description:
 
