@@ -140,7 +140,7 @@ It takes two parameters, the filename of the previous network that needs to used
 This constructor assigns values to all the data members of the class. It takes the required values for classification from the previous network file and creates the required matrices. This constructor gets called when the user chooses to classify the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value, if needed and to null, if not needed.
 
 ## Method Details
-### * ReadInit(string &)
+### 1. ReadInit(string &)
 #### Syntax:
 	string& Network :: ReadInit (const string& hyperparam_filename);
 #### Return Type:
@@ -153,7 +153,7 @@ This method reads in all the required parameters from the file, the name of whic
 ReadInit() will be assigning the values to learning_rate, epochs, batch_size, layer_sizes, test_data_file and the expected_values_file. The value of the learning rate read from the file has to be less than 1. 
 The layer_sizes has to be valid, so the layer sizes are always a positive number. The batch_size read from the file has to be less than the actual data_size. The names of the file entered by the user have to be valid names.
 
-### ReadInit() 
+### 2. ReadInit() 
 #### Syntax:
 	string& Network :: ReadInit ();
 #### Return Type:
@@ -166,13 +166,13 @@ ReadInit() will be assigning the values to learning_rate, epochs, batch_size, la
 The layer_sizes has to be valid, so that the layer sizes are always a positive number. The batch_size entered has to be less than the actual data_size. 
 The names of the file entered by the user have to be valid names.
 
-### ForwardPropagation() 
+### 3. ForwardPropagation() 
 #### Syntax:
 	void Network :: ForwardPropagation ();
 #### Description:
 This method extracts the input data from the test_data file and assigns that to the first weighted_sums matrix of the network. It then starts a loop that goes upto the last layer of the network and assigns the values to each weighted_sums and activations matrices. 
 
-### BackPropagation()
+### 4. BackPropagation()
 #### Syntax:
 	void Network :: BackPropagation (const matrix& Expected_values);
 #### Parameters:
@@ -181,49 +181,49 @@ It takes one parameter, which is the matrix of the expected values.
 Once the weighted_sums and the activations matrices get assigned, this method checks for the last activations matrix of the network and compares it with the Expected_values matrix passed as the parameter. If they match, it increments the num_correct by 1. 
 If they doesn't match, it calculates the errors in the output using the expected values matrix and backpropagates the error. Thus, it assigns the error matrices in the network. Once the error matrices are assigned, it calculates the cost partials and thus, sum_nabla_b and sum_nabla_w gets updated.
 
-### SGD()
+### 5. SGD()
 #### Syntax:
 	void Network :: SGD();
 #### Description:
 This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. SGD() is responsible to read in the expected values from the expected_values file and assign the values to the Expected_Values matrix.
 It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.   
 
-### Train()
+### 6. Train()
 #### Syntax:
 	void Network :: Train();
 #### Description:
 
-### Update()
+### 7. Update()
 #### Syntax:
 	void Network :: Update();
 #### Description:
 
-### Classify()
+### 8. Classify()
 #### Syntax:
 	void Network :: Classify();
 #### Description:
 
-### RandomizeMatrix()
+### 9. RandomizeMatrix()
 #### Syntax:
 	void Network :: RandomizeMatrix(matrix& M);
 #### Parameters:
 #### Description:
 
-### CreateNetworkFile()
+### 10. CreateNetworkFile()
 #### Syntax:
 	bool Network :: CreateNetworkFile(string& network_filename); 
 #### Return Type:
 #### Parameters:
 #### Description:
 
-### HadamardProduct()
+### 11. HadamardProduct()
 #### Syntax:
 	matrix& Network :: HadamardProduct (const matrix& M1, const matrix& M2);
 #### Return Type:
 #### Parameters:
 #### Description:
 
-### Shuffle()
+### 12. Shuffle()
 #### Syntax:
 	void Network :: Shuffle(vector<T> data);
 #### Parameters:
