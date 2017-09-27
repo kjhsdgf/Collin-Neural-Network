@@ -185,17 +185,24 @@ If they doesn't match, it calculates the errors in the output using the expected
 #### Syntax:
 	void Network :: SGD();
 #### Description:
-SGD stands for the idea of Stochastic Gradient Descent to speed up the learning of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the Expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.   
+SGD stands for the idea of Stochastic Gradient Descent to speed up learning process of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the Expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.   
+At the end of the function, the sum of the cost partials are set to 0 again.
 
 ### 6. Train()
 #### Syntax:
 	void Network :: Train();
+#### Member Description:
+A member named SGD_Calls is declared in the function to get a number for how many times the SGD() needs to be called to complete an epoch. It is calculated by (size of test data)/(batch size).
 #### Description:
+This method is responsible for training the network until all training data inputs are exhausted. It performs the training as many times as the number of epochs entered by the user. This method is responsible to assign the values to the test_data_indices initially to the values which represent their respective position in the test_data file. Once initialized, the test_data_indices are shuffled at the start of every epoch. 
+The loop makes sure to jump to the beginning of the test_data file and expected_values file at the start of every epoch. Also, it sets the num_correct to 0 at the start of every epoch. The nested loops are set up, which takes care of the calling SGD() and also, updates the mini_batch_indices vector. At the end of every epoch, the efficiency of the network built is displayed with the number of correct outputs found generated during the learning of the network.
+As the number of epochs are completed, a file of the network built is made, which stores all the required information of the netwrok that was built.  
 
 ### 7. Update()
 #### Syntax:
 	void Network :: Update();
 #### Description:
+Like its name suggests, this method updates the weights and biases matrices of the network. It consists of a loop which goes from the first layer of the netwrok to the last layer, updating the weights and biases matrices in that layer. It requires the cost partials to be calculated before updating the weights and biases matrices.
 
 ### 8. Classify()
 #### Syntax:
@@ -204,11 +211,11 @@ SGD stands for the idea of Stochastic Gradient Descent to speed up the learning 
 
 ### 9. RandomizeMatrix()
 #### Syntax:
-	void Network :: RandomizeMatrix(matrix& M);
+	void Network :: RandomizeMatrix(vector<matrix> & M);
 #### Parameters:
-It will take one parameter with the datatype matrix. 
+It takes one parameter which is a vector to the matrices. 
 #### Description:
-This method will randomly assign the value to the matrix passed to it. The values generated will be based on the Gaussian Normal Distribution. It contains a loop, which goes from the first layer to the last layer of the network. Weights and biases at each layer in the network are randomly assigned using this method.
+This method will randomly assign the value to the matrix passed to it. The values generated will be based on the Gaussian Normal Distribution. It will consist of a loop from the first layer to the last layer of the network. The matrix at each layer _i_ will be assigned with pseudorandom numbers, with mean 0 and standard deviation equal to 1/Sqrt[layer sizes of _i-1_ <sup> th </sup> layer].
 
 ### 10. CreateNetworkFile()
 #### Syntax:
@@ -223,7 +230,7 @@ This method will randomly assign the value to the matrix passed to it. The value
 #### Return Type:
 This returns the address of the matrix, which is the result of the Hadamard Product.
 #### Parameters:
-It takes two parameters of matrix type, which are later used as the operands for Hadamard Product. 
+It takes two parameters of matrix type, which are used as the operands for Hadamard Product. 
 #### Description:
 
 ### 12. Shuffle()
