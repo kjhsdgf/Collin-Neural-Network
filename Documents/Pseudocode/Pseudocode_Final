@@ -1,11 +1,4 @@
-#include<iostream>
-#include<fstream>
-#include<string.h>
-#include<vector.h>
-#include<dlib/matrixabstract.h>
-	
-using namespace std;
-using namespace dlib;
+#include "Network.h"
 
 void main()
 {
@@ -52,54 +45,51 @@ using namespace dlib;
 Class Network
 {
 	Data Members:			//Names of the Data Members can be changed later
-		double eta;
+		double learning_rate;
 		int batch_size;
 		int epochs;
-		int layer_sizes[];          //array of layer sizes
-		int L;                      //number of layers i.e. sizeof(layer_sizes)
+		int layer_sizes[];
+		int num_layers;
 		vector<matrix> weights;
 		vector<matrix> biases;
-
 		vector<matrix> activations;
 		vector<matrix> weighted_inputs;
-
-		vector<matrix> delta; 
+		vector<matrix> errors; 
 		vector<matrix> sum_nabla_b;
 		vector<matrix> sum_nabla_w;
-
-		vector<int> test data indices;
-		vector<int> mini batch indices;		//only used in train(), why not limit its scope to that function?
-
-		int number correct;			//only used in train(), why not limit its scope to that function?
-
+		vector<int> test_data_indices;
+		vector<int> mini_batch_indices;		//only used in train(), why not limit its scope to that function?
+		int num_correct;			//only used in train(), why not limit its scope to that function?
 		string training_data_filename;		//consider truncating "filename". unnecessary and unwieldy
-		istream training_data_infile
+		ifstream training_data_infile
 		string expected_values_filename;	//	adding "filename" also makes code easier to read and understand
-		istream expected_values_infile		//	when you have other related data structures to specify (-Eli)
+		ifstream expected_values_infile		//	when you have other related data structures to specify (-Eli)
 		
 	Methods:
 	
 	Network()
         {
 			readIn();
-			//open training_data_file with istream object
-			//open expected_values_file with istream object
+			//open training_data_filename with ifstream object
+			//open expected_values_filename with ifstream object
 
-			//Generate L, which is the number of layers. This is given by sizeof(layer sizes). 
-				//Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size L.
-				//Everything but the activations vector will have an effective size of L-1, as their first element will be left unused.
-				//Looping an index i from 1 to L
-					//resize the ith element of the weights vector: layer sizes at i by layer sizes at i-1, fill w/ rand #s using randomizeMatrix()
-					//resize the ith element of the sum_nabla_w vector: layer sizes at i by layer sizes at i-1, fill with zeros (yes, fill with zeros -Eli)	
-					//resize the ith element of the biases vector: layer sizes at i by 1, fill with random numbers using randomizeMatrix()
-					//resize the ith element of the sum_nabla_b vector: layer sizes at i by 1, fill with zeros
-					//resize the ith element of the delta vector: layer sizes at i by 1, fill with zeros				
-					//resize the ith element of the activations vector: layer sizes at i by 1, fill with zeros
-					//resize the ith element of the weightedinputs vector: layer sizes at i by 1, fill with zeros
+			//Generate num_layers, which is the number of layers. This is given by sizeof(layer sizes). 
+			//weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size num_layers.
+				//Everything but the activations vector will have an effective size of num_layers-1, as their first element will be left unused.
+			//expected_values vector resized to match number of 
+			//Looping an index i from 1 to num_layers
+					//resize the ith element of the weights vector: layer_sizes[i] by layer_sizes[i-1], fill with zeros
+					//resize the ith element of the sum_nabla_w vector: layer_sizes[i] by layer_sizes[i-1], fill with zeros <-- (yes, fill with zeros -Eli)	
+					//resize the ith element of the biases vector: layer_sizes[i] by 1, fill with zeros
+					//resize the ith element of the sum_nabla_b vector: layer_sizes[i] by 1, fill with zeros
+					//resize the ith element of the errors vector: layer_sizes[i] by 1, fill with zeros				
+					//resize the ith element of the activations vector: layer_sizes[i] by 1, fill with zeros
+					//resize the ith element of the weighted_inputs vector: layer_sizes[i] by 1, fill with zeros
+					//resize the ith element of the expected_values vector: layer_sizes[L] by 1, fill with values from file
 			//end of the loop
 
-			//resize the 0th member of the activations vector: layer sizes at 0 by 1, fill with zeros			
-			//resize mini batch indices to batch_size			            		
+			//resize the 0th member of the activations vector: layer_sizes[0] by 1, fill with zeros			
+			//resize mini_batch_indices to batch_size			            		
         }
 				
 	//consider overloading the constructor for classification
@@ -117,9 +107,7 @@ Class Network
 	
 	Network(const string &previous_network_filename)
 	{
-	    //readIn(previous_network_filename);
-		//open training_data_file with istream object
-	    //open expected_values_file with istream object		
+	    //readIn(previous_network_filename);	
 		//prompt user: do they want to update hyperparameters before training?
 			//if so, update via cin
 	}
@@ -127,7 +115,7 @@ Class Network
 	~Network()
 	{
 		//save network data to a file using createNetworkFile()
-		//make sure to close all the files, namely training_data and expected_values_file
+		//make sure to close all the files, namely training_data_infile and expected_values_infile
 		//deallocate dynamic memory
 	}
 
@@ -135,23 +123,26 @@ Class Network
 	//in case user wants to load a previous network to continue training, or update hyperparameters and retrain
 	void readInit(const string &previous_network_filename)
     {
-	 	//Read in the hyperparameters from file and store them in the data members
-		//Read in the name of expected_values_file, training_data_filename
-	    //Read in L, which is the number of layers.
-		//Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size L.
-        	//Everything but the activations vector will have an effective size of L-1, as their first element will be left unused.
-        //Looping an index i from 1 to L
-			//resize the ith element of the weights vector: layer sizes at i by layer sizes at i-1, fill with zeros
-			//resize the ith element of the sum_nabla_w vector: layer sizes at i by layer sizes at i-1, fill with zeros (yes, fill with zeros -Eli)	
-			//resize the ith element of the biases vector: layer sizes at i by 1, fill with zeros
-			//resize the ith element of the sum_nabla_b vector: layer sizes at i by 1, fill with zeros
-			//resize the ith element of the delta vector: layer sizes at i by 1, fill with zeros				
-			//resize the ith element of the activations vector: layer sizes at i by 1, fill with zeros
-			//resize the ith element of the weightedinputs vector: layer sizes at i by 1, fill with zeros
+	 	//Read in the hyperparameters from previous_network_filename and store them in the data members
+		//Read in the name of expected_values_filename, training_data_filename
+		//open training_data_filename with ifstream object
+	    //open expected_values_filename with ifstream object			
+	    //Read in num_layers, which is the number of layers.
+		//Weights, biases, activations, weighted inputs, nabla_w, nabla_b resized to size num_layers.
+        	//Everything but the activations vector will have an effective size of num_layers-1, as their first element will be left unused.
+        //Looping an index i from 1 to num_layers
+			//resize the ith element of the weights vector: layer_sizes[i] by layer_sizes[i-1], fill with zeros
+			//resize the ith element of the sum_nabla_w vector: layer_sizes[i] by layer_sizes[i-1], fill with zeros
+			//resize the ith element of the biases vector: layer_sizes[i] by 1, fill with zeros
+			//resize the ith element of the sum_nabla_b vector: layer_sizes[i] by 1, fill with zeros
+			//resize the ith element of the errors vector: layer_sizes[i] by 1, fill with zeros				
+			//resize the ith element of the activations vector: layer_sizes[i] by 1, fill with zeros
+			//resize the ith element of the weighted_inputs vector: layer_sizes[i] by 1, fill with zeros
+			//resize the ith element of the expected_values vector: layer_sizes[L] by 1, fill with values from file
 		//end of the loop
 		//Assign the matrices created with the weights and biases from previous_network_filename
-		//resize the 0th member of the activations vector: layer sizes at 0 by 1, fill with zeros			
-	    //resize mini batch indices to batch_size
+		//resize the 0th member of the activations vector: layer_sizes[0] by 1, fill with zeros
+	    //resize mini_batch_indices to batch_size
 	}
 	 
 	void readInit()
@@ -169,97 +160,83 @@ Class Network
 	}
 
 	//forwardPropagation() is a function that sets all activation values for a single test data input. 
-	//It needs the layer of activations at 0 to be assigned values from the test data.
-	void forwardPropagation(matrix<double> input_vector)
+	//It needs the layer of activations[0] to be assigned values from the test data.
+	void forwardPropagation(int mini_batch_index)
 	{
-		//activations at 0 = input_vector
-		//Looping an index i from 1 to L
-			//weighted inputs at i = (weights at i * activations at i-1) + biases at i;
-			//activations at i = activation_Function(weighted_inputs at i, Layer_Size at i);
+		//activations[0] = (contents in file[mini_batch_index]) <-- can either do this elementwise once, or elementwise (to load an input vector), then using dlib's overriden = operator
+		//Looping an index i from 1 to num_layers
+			//weighted inputs[i] = (weights[i] * activations[i-1]) + biases[i];
+			//activations[i] = activation_Function(weighted_inputs[i]);
 	}
 		
 	//backPropagation() is a function that calculates the nabla_b and nabla_w vectors.
 	//backProp requires activationPrime function, costPrime function, activations and weighted inputs already been set
-	void backPropagation(matrix of expected output for a given training input, expected_val)
+	void backPropagation(int mini_batch_index) <-- give the function an integer corresponding to the sample you want to backprop
 		{
-			//compare expected val to activations[L] (using similar algorithm as seen in classify())
-			//if they are the same, increment number correct 
+			//compare contents in expected_values[mini_batch_index] to activations[num_layers] (using similar algorithm as seen in classify())
+			//if they are the same, increment num_correct 
 
-			//delta at L = hadamardProduct(costPrime(Activations at L, expected_val), sigmoidPrime(weighted inputs at L))
-			//sum_nabla_b at L += delta at L
-			//sum_nabla_w at L += (delta at L) * (activations at L-1 transposed)
-			//Looping an index i from L-1 to 1 (the remaining layers)
-				//delta at i = hadamardProduct(((weights at i + 1 transposed)*(delta at i + 1)), sigmoidPrime(weighted inputs of at i)
-				//sum_nabla_b at i += delta at i 
-				//sum_nabla_w at i += (delta at i) * (activations at i-1 transposed)
+			//errors[num_layers] = hadamardProduct(costPrime(activations[num_layers], expected_values[mini_batch_index]), sigmoidPrime(weighted inputs[L]))
+			//sum_nabla_b[num_layers] += errors[num_layers]
+			//sum_nabla_w[num_layers] += (errors[num_layers]) * (activations[num_layers-1] transposed)
+			//Looping an index i from num_layers-1 to 1 (the remaining layers)
+				//errors[i] = hadamardProduct(((weights[i + 1] transposed)*(errors[i + 1])), sigmoidPrime(weighted inputs[i])
+				//sum_nabla_b[i] += errors[i]
+				//sum_nabla_w[i] += (errors[i]) * (activations[i-1] transposed)
 			//end of the loop
 		}
 		
 	//SGD's function is to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and 
-	//nabla_w vectors over the whole batch. it then updates the weights and biases using the nabla vectors and the learning
-	//rate eta
-	//SGD requires an int batch size to iterate over the vector mini batch indices which hold indices of the test data
+	//nabla_w vectors over the whole batch. it then updates the weights and biases using the nabla vectors and the learning_rate
+	//SGD requires an int batch size to iterate over the vector mini_batch_indices which hold indices of the test data
 	//  with respect to the mini batch to be iterated
 	//  it is assumed that these indices are randomly generated and won't repeat a test element for the same epoch but that
 	//  is outside SGD's scope and it won't need to worry about that.
-	//SGD also requires test data indices to have been resized appropriately
+	//SGD also requires test_data_indices to have been resized appropriately
 	
 	//may not be the same as mini batch size due to leftover data at end of test data
 	//	We're throwing out the leftovers as per discussion in the meeting on 9-22-17 (-Eli)
-	void SGD(int batch_size)
+	void SGD(int input_batch_size)
 	{
-		//compute average errors for the batch
-		//create a vector for expected values, expected_val
-		//create a vector for input into the network, input_activations
-		//Looping index i from 0 to batch_size
-			//read next input_activations
-			//forwardPropagation(input_activations)
-			//read next expected_val
-			//backwardPropagation(expected_val)
-
-		//apply error information to weights and biases
+		//Looping index i from 0 to input_batch_size
+			//forwardPropagation(mini_batch_indices[i])
+			//backwardPropagation(mini_batch_indices[i])
 		//update();                
 		//zero out sum_nabla vectors
 	}
 		
 	void update()
 	{
-		//Looping index i from 1 to L
-			//weights[i] -= (eta / batch_size) * (sum_nabla_w[i]) <-- I don't think there's a way to get around doing one division
-			//biases[i]  -= (eta / batch_size) * (sum_nabla_b[i])		per element. You either do it in the loop or not.
+		//Looping index i from 1 to num_layers
+			//weights[i] -= (learning_rate / batch_size) * (sum_nabla_w[i]) <-- I don't think there's a way to get around doing one division
+			//biases[i]  -= (learning_rate / batch_size) * (sum_nabla_b[i])		per element. You either do it in the loop or not.
 	}
 		
 	//Train brings all the other methods together and trains the network. It loops through the epochs separating out 
 	//mini batches from the test data and running sgd on all mini batches for each epoch. Train doesnt actually access the files
 	void train()
 	{
-		//jump to the beginning of the file
-		//open the truth data file 
-		int test data size = size of test data
-		test data indices resized to test data size and initialized:
-			such that test data indices at i = i    // these values but will be randomized later
+		//jump to the beginning of training file using training_data_infile
+		//int test_data_size = size of training data
+		//test_data_indices resized to test_data_size
 
-		Loop index i through test data indices
-			test data indices[i] = i
+		//Loop index i through size of test_data_indices
+			//test_data_indices[i] = i
 
-		int sgd calls = (size of test data)/(mini batch size)  // number of times sgd is called to finish one epoch 
-		int leftover = epochs remainder(%) mini batch size     // to see if there's a small mini batch left in the data
-								       //we can use leftover later to determine the consequences of not performing SGD(leftover)
-		Looping index i from 0 to epochs
-			number_correct = 0;
-			Fisher Yates shuffle (test data indices)
-			int batch size = mini batch size
-
-			Looping index j from 0 to sgd calls
-				Looping through index k from 0 to (mini batch size - 1)
-					mini batch indices[k] = test data indices [(j*mini batch size) + k)]
-				SGD(batch size)
+		//int sgd_calls = (test_data_size)/(batch_size)
+		//Looping index i from 0 to epochs	<-- start of epoch
+			//num_correct = 0;
+			//shuffle(test_data_indices)
+			//Looping index j from 0 to sgd_calls
+				//Looping index k from 0 to (batch_size - 1)
+					//mini_batch_indices[k] = test_data_indices[(j*batch_size) + k)]
+				//SGD(batch_size)
 			
-			cout << "Efficiency at epoch: " << i << " = " << ((number correct) / (test data size))*100 <<" %";
+			//cout << "Efficiency at epoch: " << i << " = " << ((num_correct) / (test data size))*100 <<" %";
 		//end of the loop
 		
-		bool result = Create_Network_File(); 		//this will store the values required for classification
-		if(!result)
+		//bool result = Create_Network_File(); 		//this will store the values required for classification
+		//if(!result)
 			//Display an error message
 	}
 	
@@ -267,7 +244,7 @@ Class Network
 	{
 		//create a file named Previous_Network_[Date and Time] to write the required values 
 		if (is_open(Previous_Network_[Date and Time])) 
-			//write the values of hyperparameters, L, array of layer sizes, matrices of weights and biases
+			//write the values of hyperparameters, num_layers, array of layer sizes, matrices of weights and biases
 			//close the file
 			return true;
 		else
@@ -282,12 +259,12 @@ Class Network
 		//to calculate numTrainingInputs, we can call tellg(), which will give us the size of file in bytes so that 
 		//numTrainingInputs = size of file/size of a single verification datum
 		//Loop index i from 0 to size of (verification data) //from i = 0 to end
-			//call forwardPass(), which takes a datum from training_data_filename and computes the activations <-- is this the right file?
+			//call forwardPass(i), which takes a datum via training_data_filename and computes the activations <-- is this the right file?
 			//set biggest = 0, which will act as the index of the biggest activation value
-			//Looping index j from 1 to size of (activations[L]) (j=0 is assumed to be biggest)
-				//if activations(L, j) > activations(L, biggest) 
+			//Looping index j from 1 to size of (activations[num_layers]) (j=0 is assumed to be biggest)
+				//if activations(num_layers, j) > activations(num_layers, biggest) 
 					//then biggest = j
-				//else if activations(L, j) == activations(L, biggest)
+				//else if activations(num_layers, j) == activations(num_layers, biggest)
 					//increment ambiguous_data;
 				//else
 					//do nothing.
