@@ -48,7 +48,7 @@ Class Network
 		double learning_rate;
 		int batch_size;
 		int epochs;
-		int layer_sizes[];
+		vector<int> layer_sizes; //because we don't know what size will it be
 		int num_layers;
 		vector<matrix> weights;
 		vector<matrix> biases;
@@ -58,13 +58,13 @@ Class Network
 		vector<matrix> sum_nabla_b;
 		vector<matrix> sum_nabla_w;
 		vector<int> test_data_indices;
-		vector<int> mini_batch_indices;		//only used in train(), why not limit its scope to that function?
-		int num_correct;			//only used in train(), why not limit its scope to that function?
-		string training_data_filename;		//consider truncating "filename". unnecessary and unwieldy
+		vector<int> mini_batch_indices;		//only used in train(), why not limit its scope to that function? //I agree [-Ami]
+		int num_correct;			//only used in train(), why not limit its scope to that function? //Yes [-Ami]
+		string training_data;		//consider truncating "filename". unnecessary and unwieldy
 		ifstream training_data_infile
 		string expected_values_filename;	//	adding "filename" also makes code easier to read and understand
 		ifstream expected_values_infile		//	when you have other related data structures to specify (-Eli)
-		
+							//	ifstream will work specifically for the files, have no idea for the other data structures [-Ami]	
 	Methods:
 	
 	Network()
@@ -108,7 +108,7 @@ Class Network
 	Network(const string &previous_network_filename)
 	{
 	    //readIn(previous_network_filename);	
-		//prompt user: do they want to update hyperparameters before training?
+		//prompt user: do they want to update hyperparameters before training? //	why not, read the hyperparameters form the file only if the user wants it? [-Ami]
 			//if so, update via cin
 	}
 
@@ -119,7 +119,7 @@ Class Network
 		//deallocate dynamic memory
 	}
 
-	//no need to return filename if it's already written to a data member (-Eli)
+	//no need to return filename if it's already written to a data member (-Eli) //Agreed! [-Ami]
 	//in case user wants to load a previous network to continue training, or update hyperparameters and retrain
 	void readInit(const string &previous_network_filename)
     {
@@ -152,11 +152,11 @@ Class Network
 	
 	//takes a matrix object and the address to a function (returns a double, no arguments)
 	//assigns numbers as specified by the function passed
-	void randomizeMatrix(matrix<double> input_matrix, double (*distribution)(void))
+	void randomizeMatrix(matrix<double> input_matrix, double (*distribution)(void)) //I am still thinking about distribution(), need to look up for that [-Ami]
 	{
 		//Looping an index j from 1 to input_matrix.nr()
 			//Looping an index i from 1 to input_matrix.nc()
-				//input_matrix(i, j) = distribution();
+				//input_matrix(i, j) = distribution(); 
 	}
 
 	//forwardPropagation() is a function that sets all activation values for a single test data input. 
@@ -164,14 +164,14 @@ Class Network
 	void forwardPropagation(int mini_batch_index)
 	{
 		//activations[0] = (contents in file[mini_batch_index]) <-- can either do this elementwise once, or elementwise (to load an input vector), then using dlib's overriden = operator
-		//Looping an index i from 1 to num_layers
+		//Looping an index i from 1 to num_layers			// I would say to read from the file, use strtok to assign the values in the activations matrix and this has to be done element wise if we're using strtok. [-Ami]
 			//weighted inputs[i] = (weights[i] * activations[i-1]) + biases[i];
 			//activations[i] = activation_Function(weighted_inputs[i]);
 	}
 		
 	//backPropagation() is a function that calculates the nabla_b and nabla_w vectors.
 	//backProp requires activationPrime function, costPrime function, activations and weighted inputs already been set
-	void backPropagation(int mini_batch_index) <-- give the function an integer corresponding to the sample you want to backprop
+	void backPropagation(int mini_batch_index) <-- give the function an integer corresponding to the sample you want to backprop	//yes, this works! [-Ami]
 		{
 			//compare contents in expected_values[mini_batch_index] to activations[num_layers] (using similar algorithm as seen in classify())
 			//if they are the same, increment num_correct 
