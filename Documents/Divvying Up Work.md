@@ -10,12 +10,10 @@
 - [x] here
 
 ### Elijah
-- [x] Write
-- [ ] the
-- [x] things
-- [ ] you'll
-- [ ] do
-- [x] here
+- [ ] `costPrime` (1 line)
+- [ ] `distribution` (> 5 lines)
+- [ ] `hadamardProduct` ( > 7 lines)
+- [ ] `update` (3 lines)
 
 ### Yonatan
 - [x] Write
