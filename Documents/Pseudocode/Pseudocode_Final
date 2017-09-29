@@ -48,7 +48,8 @@ Class Network
 		double learning_rate;
 		int batch_size;
 		int epochs;
-		int layer_sizes[];
+		vector<int> layer_sizes;
+		vector<matrix> expected_values;		//to store the expected values after reading from the file
 		int num_layers;
 		vector<matrix> weights;
 		vector<matrix> biases;
@@ -58,8 +59,8 @@ Class Network
 		vector<matrix> sum_nabla_b;
 		vector<matrix> sum_nabla_w;
 		vector<int> test_data_indices;
-		vector<int> mini_batch_indices;		//only used in train(), why not limit its scope to that function?
-		int num_correct;			//only used in train(), why not limit its scope to that function?
+		vector<int> mini_batch_indices;		//mini_batch_indices are being used in SGD() along with Train() [-Ami]
+		int num_correct;			//we need this to be a class data member, because it is used in backPropagation() as well
 		string training_data_filename;		//consider truncating "filename". unnecessary and unwieldy
 		ifstream training_data_infile
 		string expected_values_filename;	//	adding "filename" also makes code easier to read and understand
@@ -101,8 +102,9 @@ Class Network
 									//just make another data member for validation data
 		//open previous_network_filename
 		//open validation_data_filename
-		//readInit(previous_network_filename)
-		//classify(validation_data_filename)
+		//readInit(previous_network_filename)	//This method creates the vector of matrices for sum_nabla_b and other matrics that are not needed during classification, consider creating the vector matrices needed inside of this function [-Ami]
+							// parameter not needed for classify () as the training_data_filename stores the name of the validation file [-Ami]
+							//classify is already being called by main() [-Ami]
 	}
 	
 	Network(const string &previous_network_filename)
@@ -196,9 +198,10 @@ Class Network
 	
 	//may not be the same as mini batch size due to leftover data at end of test data
 	//	We're throwing out the leftovers as per discussion in the meeting on 9-22-17 (-Eli)
-	void SGD(int input_batch_size)
+	void SGD()	//no parameters needed, as we have a data member batch_size, and we're not dealing with the leftovers [-Ami]
 	{
-		//Looping index i from 0 to input_batch_size
+		//Looping index i from 0 to input_batch_size 	//the loop goes till the batch_size [-Ami]
+			//read the expected values from the file for that mini_batch_indices[i] [-Ami]
 			//forwardPropagation(mini_batch_indices[i])
 			//backwardPropagation(mini_batch_indices[i])
 		//update();                
@@ -216,6 +219,7 @@ Class Network
 	//mini batches from the test data and running sgd on all mini batches for each epoch. Train doesnt actually access the files
 	void train()
 	{
+		
 		//jump to the beginning of training file using training_data_infile
 		//int test_data_size = size of training data
 		//test_data_indices resized to test_data_size
@@ -254,17 +258,16 @@ Class Network
 	void classify() 				//we don't need any parameters here, because constructor stores the name of validation file in the training_data_file
 	{
 		//int ambiguous_data (0);
-		//int numTrainingInputs;		//will tell us the number of the training inputs in the verfification file
+		//int numTrainingInputs;		//will tell us the number of the training inputs in the verfification file	//consider numInputs [-Ami]
 		//int biggest;
 		//to calculate numTrainingInputs, we can call tellg(), which will give us the size of file in bytes so that 
 		//numTrainingInputs = size of file/size of a single verification datum
-		//Loop index i from 0 to size of (verification data) //from i = 0 to end
-			//call forwardPass(i), which takes a datum via training_data_filename and computes the activations <-- is this the right file?
+		//Loop index i from 0 to size of (verification data) //from i = 0 to numInput [-Ami]			//call forwardPass(i), which takes a datum via training_data_filename and computes the activations <-- is this the right file?
 			//set biggest = 0, which will act as the index of the biggest activation value
 			//Looping index j from 1 to size of (activations[num_layers]) (j=0 is assumed to be biggest)
 				//if activations(num_layers, j) > activations(num_layers, biggest) 
 					//then biggest = j
-				//else if activations(num_layers, j) == activations(num_layers, biggest)
+				//else if activations(num_layers, j) == activations(num_layers, biggest) 	//consider the ouput [0.1,0.1,0.2] [-Ami]
 					//increment ambiguous_data;
 				//else
 					//do nothing.
