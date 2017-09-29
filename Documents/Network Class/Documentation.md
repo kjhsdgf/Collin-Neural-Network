@@ -151,6 +151,7 @@ It takes one parameter, the filename of the previous network that needs to used.
 This constructor gets called when the user chooses to train the existing network. It reads in all the values required from the previous_network file and asks user if the user wants to change the hyperparameters. If so, it updates the values of the hyperparameters.
 
 ### Overloaded Parametric Constructor
+#### Syntax:
 	Network::Network (const string& previous_network_filename, const string& validation_data_filename);
 #### Parameters:
 It takes two parameters, the filename of the previous network that needs to used and the other parameter is the data file name, which needs to be classified. 
