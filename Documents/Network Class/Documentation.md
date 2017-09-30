@@ -45,6 +45,16 @@ Return type | Name | Description
 `matrix&` | `hadamardProduct (const matrix& , const matrix&)` |Performs the Hadamard Product operation on any two given matrices 
 `void` | `shuffleDataIndices(vector<T>)` | Shuffles the data indices in a given vector
 
+
+
+
+
+
+
+
+
+
+
 ## Member Details
 ### learning_rate
 	double learning_rate;  
