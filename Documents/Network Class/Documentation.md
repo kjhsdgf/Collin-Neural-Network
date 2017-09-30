@@ -52,7 +52,7 @@ Return type | Name | Description
 `void` | `randomizeMatrix (matrix<double> , double * distribution())` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
 `bool` | `createNetworkFile ()` | Writes a file to store the network	
 `matrix&` | `hadamardProduct (const matrix& , const matrix&)` |Performs the Hadamard Product operation on any two given matrices 
-`void` | `shuffle(vector<T>)` | Applies Fisher-Yates shuffle to randomize elements in a vector
+`void` | `shuffleDataIndices(vector<T>)` | Shuffles the data indices in a given vector
 
 ## Member Details
 ### learning_rate
@@ -95,10 +95,10 @@ The biases of all the layers in a network are stored in a vector of matrices eac
 The activations of a particular layer in a network are stored in a matrix of size (j x 1), where j is the layer size of that layer. Activation values are calculated by the activation function declared outside the class. It requires the weighted sums to perform the calculation.
 However, for every training input, the first layer of activations will be the training input data extracted from the file.
 	
-### weighted_sums
-	vector<matrix> weighted_sums;
+### weighted_inputs
+	vector<matrix> weighted_inputs;
 The weighted sums of all layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. The weighted sum at any particular layer can be given by the dot product, of the weight matrix for that layer and the values of the activations layer just before that layer, with the bias matrix for that layer added to the dot product. 
-##### 		weighted_sums at jth layer = ((weights at j) . (activations at j - 1)) + (biases at j)
+##### 		weighted_inputs at jth layer = ((weights at j) . (activations at j - 1)) + (biases at j)
 
 ### errors
 	vector<matrix> errors;
@@ -111,7 +111,7 @@ The sum of the cost partials with respect to biases for all the layers in a netw
 ### sum_nabla_w
 	vector<matrix> sum_nabla_w;
 The sum of the cost partials with respect to weights for all the layers in a network are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. This stores the sum of the dC/dw values for all the layers in the network. For any _ith_ layer in the network,
-##### dC/dw = Hadamard Product of [((errors at _ith_ layer) . ((activations at _(i-1)th_ layer) <sup>T</sup> ))] and [Sigmoid Prime of weighted_sums at _ith_ layer]
+##### dC/dw = Hadamard Product of [((errors at _ith_ layer) . ((activations at _(i-1)th_ layer) <sup>T</sup> ))] and [Sigmoid Prime of weighted_inputs at _ith_ layer]
 	
 ### Expected_Values
 	vector<matrix> Expected_values;
@@ -184,7 +184,7 @@ The names of the file entered by the user have to be valid names.
 #### Parameters:
 It takes one parameter, which is the mini_batch_index of datatype `int`.
 #### Description:
-This method extracts the input data from the test_data file and assigns that to the first activations matrix. It then starts a loop that goes upto the last layer of the network and assigns the values to each weighted_sums and activations matrices. 
+This method extracts the input data from the test_data file and assigns that to the first activations matrix. It then starts a loop that goes upto the last layer of the network and assigns the values to each weighted_inputs and activations matrices. 
 
 ### 4. backPropagation()
 #### Syntax:
@@ -199,7 +199,7 @@ If they doesn't match, it calculates the errors in the output using the expected
 #### Syntax:
 	void Network :: SGD();
 #### Description:
-SGD stands for the idea of Stochastic Gradient Descent to speed up learning process of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the Expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the ForwardPropagation() and BackPropagation() for each training input data at a particular mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.  
+SGD stands for the idea of Stochastic Gradient Descent to speed up learning process of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the Expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the forwardPropagation() and backPropagation() for each mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.  
 At the end of the function, the sum of the cost partials are set to 0 again.
 
 ### 6. train()
@@ -222,9 +222,9 @@ Like its name suggests, this method updates the weights and biases matrices of t
 #### Syntax:
 	void Network :: classify();
 #### Member Description:
-The variables declared inside this function include `ambiguous_data`, `numInputs` and `biggest`, all of `int` datatype. `ambiguous_data` keeps a track on the number of data which the classifier was not able to classify. The `numInputs` stores the values for the number of training inputs in the verification file. `biggest` stores the index which has maximum activation value and thus, helps in classification. 
+The variables declared inside this function include `ambiguous_data`, `numData` and `biggest`, all of `int` datatype. `ambiguous_data` keeps a track on the number of data which the classifier was not able to classify. The `numData` stores the values for the number of training inputs in the verification file. `biggest` stores the index which has maximum activation value and thus, helps in classification. 
 #### Description:
-Classify() is called when the user wants to classify a specific file. In that case, the value of `numInputs` is calculated and a loop is started which goes through all the classification data inputs in the file. At the start of the loop, `biggest` is set to 0 and forwardPropagation() is called to assign the values to the weighted_sums and activations matrices for each classification data input. Once the activations at the ouput layer are assigned, it checks for the biggest value generated. If it finds the biggest value, the training data input is said to be classified. Otherwise, `ambiguous_data` value is incremented by 1 if no biggest value is found. If biggest was found, it further classifies it into horizontal, vertical or diagonal based on the idex stored in the biggest. Once the loop goes through the complete data set, the ouput is displayed which says the number of data inputs classified according to the different categories and at last displays the accuracy of the classifier based on the classified data out of the complete data set.
+Classify() is called when the user wants to classify a specific file. In that case, the value of `numData` is calculated and a loop is started which goes through all the classification data inputs in the file. At the start of the loop, `biggest` is set to 0 and forwardPropagation() is called to assign the values to the weighted_sums and activations matrices for each classification data input. Once the activations at the ouput layer are assigned, it checks for the biggest value generated. If it finds the biggest value, the training data input is said to be classified. Otherwise, `ambiguous_data` value is incremented by 1 if no biggest value is found. If biggest was found, it further classifies it into horizontal, vertical or diagonal based on the idex stored in the biggest. Once the loop goes through the complete data set, the ouput is displayed which says the number of data inputs classified according to the different categories and at last displays the accuracy of the classifier based on the classified data out of the complete data set.
 
 ### 9. randomizeMatrix()
 #### Syntax:
@@ -258,7 +258,7 @@ Hadamard_Product() is a scalar multiplication of two matrices where we obtain a 
 #### Syntax:
 	void Network :: shuffleDataIndices(vector<T> data_indices);
 #### Parameters:
-It take one parameter which is a vector to the data indices that has to be shuffled.
+It take one parameter which is a vector of the data indices that has to be shuffled.
 #### Description:
 This method shuffles the data indices passed to it. It consists of a loop which goes through the data indices and performs the operation of shuffling the data.
 
