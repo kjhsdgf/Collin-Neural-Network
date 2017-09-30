@@ -13,9 +13,5 @@
 - [ ] `update` (3 lines)
 
 ### Yonatan
-- [x] Write
-- [ ] the
-- [ ] things
-- [x] you'll
-- [ ] do
-- [x] here
+- [ ] `readInit() //cin` (7-15)
+- [ ] `shuffle(vector<T>)` (~5)
