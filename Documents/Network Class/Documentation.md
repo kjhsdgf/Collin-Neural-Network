@@ -43,18 +43,18 @@ Return type | Name | Description
 `void` | `randomizeMatrix (matrix<double> , double * distribution())` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
 `bool` | `createNetworkFile ()` | Writes a file to store the network	
 `matrix&` | `hadamardProduct (const matrix& , const matrix&)` |Performs the Hadamard Product operation on any two given matrices 
-`void` | `shuffleDataIndices(vector<T>)` | Shuffles the data indices in a given vector
-
-
-
-
-
-
-
-
-
-
-
+`void` | `shuffleDataIndices(vector<T>)` | Shuffles the data indices in a given vector  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 ## Member Details
 ### learning_rate
 	double learning_rate;  
