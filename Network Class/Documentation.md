@@ -165,7 +165,7 @@ This constructor assigns the validation_data_filename to the training_data_filen
 #### Parameters:
 It takes one parameter, which is the name of the file that stores the values of an already trained network.
 #### Description:
-This method reads in all the required parameters from the file, the name of which is passed in the parameter. This method is responsible to open the file and read in the values of the hyperparameters along with the training_data_filename and the expected_values_filename. It opens the two files and creates the matrices for the data members of the class. Once created, the weights and biases matrices gets assigned with the values from the previous_netwrok file. This method is responsible to check for the validation of the values before assigning them to the data members of the class and display the error message in case of any invalid input.
+This method reads in all the required parameters from the file, the name of which is passed in the parameter. This method is responsible to open the file and read in the values of the hyperparameters along with the training_data_filename and the expected_values_filename. It opens the two files and creates the matrices for the data members of the class. Once created, the weights and biases matrices get assigned with the values from the previous_network file. This method is responsible to check for the validation of the values before assigning them to the data members of the class and display the error message in case of any invalid input.
 
 ### 2. readInit() 
 #### Syntax:
