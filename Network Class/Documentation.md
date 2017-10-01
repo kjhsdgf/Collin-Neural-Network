@@ -28,8 +28,8 @@ Type | Name | Description
 `vector<int>` | `min_batch_indices` | Array of indices of size batch_size corresponding to the test data
 `string` | `training_data_filename` | Name of file of test data inputs
 `string` | `expected_values_filename` | Name of file of expected values that correspond to the test data inputs
-`ifstream` | `training_data_infile` | Ifstream object to read in from the training_data_file
-`ifstream` | `expected_values_infile` | Ifstream object to read in from the expected_values_file
+`ifstream` | `training_data_infile` | ifstream object to read in from the training_data_file
+`ifstream` | `expected_values_infile` | ifstream object to read in from the expected_values_file
 ## Constructor Summary
 Constructor | Description
 ------------- | -------------
