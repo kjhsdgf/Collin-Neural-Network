@@ -1,7 +1,7 @@
 //PLEASE FOLLOW THIS: Tabs, 4, No wrap
 
 template <class T>
-void Network::myshuffle(vector<T>& v)
+void Network::FYShuffle(vector<T>& v)
 {
 	//below is another method using shuffle defined in <algorithm> but it is potentially much slower and not much more random
 	//unsigned seed = chrono::system_clock::now().time_since_epoch().count();
