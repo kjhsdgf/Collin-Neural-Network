@@ -2,8 +2,10 @@
 #define NETWORK_H
 
 #include <vector>
-#include <matrix> //?
+#include <dlib/matrixabstract.h>
+#include <string>
 using namespace std;
+using namespace dlib;
 
 class Network
 {
@@ -24,7 +26,7 @@ class Network
 		
 		void	classify	(const string&) // or maybe (ifstream&);
 		bool	writeToFile	();
-		matrix&	hadamardProduct (matri
+		matrix&	hadamardProduct (matrix 
 	private:
 		double			learningRate;
 		int				batchSize;
