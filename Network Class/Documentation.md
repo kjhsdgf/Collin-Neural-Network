@@ -140,7 +140,7 @@ The expected_values_file gives the expected values for each training data input 
 #### Parameters:
 It takes one parameter, which is the input stream. Although, this input stream is by default set to **cin**. 
 #### Description:
-This constructor assigns values to all the data members, based on the values of some data members entered by the user. It takes the values from the ReadInit() method, and creates all the required matrices for the class. This constructor gets called when the user chooses to train the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value.  
+This constructor assigns values to all the data members, based on the values of some data members entered by the user. It takes the values from the readInit() method, and creates all the required matrices for the class. This constructor gets called when the user chooses to train the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value.  
 
 ### Parametric Constructor
 #### Syntax:
@@ -171,10 +171,10 @@ This method reads in all the required parameters from the file, the name of whic
 #### Syntax:
 	void Network :: readInit ();
 #### Description:
-This method reads in all the required parameters from the console, as entered by the user. Also, it asks the user to enter the name of the test data file and expected values file. 
+This method reads in all the required parameters from the console, as entered by the user. Also, it asks the user to enter the name of the training_data file and expected_values file. 
 This method is responsible to validate the values before assigning them to the data members of the class and display the error message in case of any invalid input. Then, it assigns the values to the data members of the class and returns the address of the name of the test data file.
 #### Validation Check:
-ReadInit() will be assigning the values to learning_rate, epochs, batch_size, layer_sizes, test_data_file and the expected_values_file. The value of the learning rate user enters has to be less than 1. 
+ReadInit() will be assigning the values to learning_rate, epochs, batch_size, layer_sizes, training_data_file and the expected_values_file. The value of the learning rate user enters has to be less than 1. 
 The layer_sizes has to be valid, so that the layer sizes are always a positive number. The batch_size entered has to be less than the actual data_size. 
 The names of the file entered by the user have to be valid names.
 
@@ -184,7 +184,7 @@ The names of the file entered by the user have to be valid names.
 #### Parameters:
 It takes one parameter, which is the mini_batch_index of datatype `int`.
 #### Description:
-This method extracts the input data from the test_data file and assigns that to the first activations matrix. It then starts a loop that goes upto the last layer of the network and assigns the values to each weighted_inputs and activations matrices. 
+This method extracts the input data from the training_data file and assigns that to the first activations matrix. It then starts a loop that goes upto the last layer of the network and assigns the values to each weighted_inputs and activations matrices. 
 
 ### 4. backPropagation()
 #### Syntax:
@@ -192,14 +192,14 @@ This method extracts the input data from the test_data file and assigns that to 
 #### Parameters:
 It takes one parameter, which is the mini_batch_index of datatype `int`.
 #### Description:
-Once the weighted_sums and the activations matrices get assigned, this method checks for the last activations matrix of the network and compares it with the Expected_values matrix of that mini_batch_index. If they match, it increments the num_correct by 1. 
+Once the weighted_inputs and the activations matrices get assigned, this method checks for the last activations matrix of the network and compares it with the Expected_values matrix of that mini_batch_index. If they match, it increments the num_correct by 1. 
 If they doesn't match, it calculates the errors in the output using the expected values matrix and backpropagates the error. Thus, it assigns the error matrices in the network. Once the error matrices are assigned, it calculates the cost partials and thus, sum_nabla_b and sum_nabla_w gets updated.
 
 ### 5. SGD()
 #### Syntax:
 	void Network :: SGD();
 #### Description:
-SGD stands for the idea of Stochastic Gradient Descent to speed up learning process of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the Expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the forwardPropagation() and backPropagation() for each mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.  
+SGD stands for the idea of Stochastic Gradient Descent to speed up learning process of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the forwardPropagation() and backPropagation() for each mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.  
 At the end of the function, the sum of the cost partials are set to 0 again.
 
 ### 6. train()
@@ -222,7 +222,7 @@ Like its name suggests, this method updates the weights and biases matrices of t
 #### Syntax:
 	void Network :: classify();
 #### Member Description:
-The variables declared inside this function include `ambiguous_data`, `numData` and `biggest`, all of `int` datatype. `ambiguous_data` keeps a track on the number of data which the classifier was not able to classify. The `numData` stores the values for the number of training inputs in the verification file. `biggest` stores the index which has maximum activation value and thus, helps in classification. 
+The variables declared inside this function include `ambiguous_data`, `numData` and `biggest`, all of `int` datatype. `ambiguous_data` keeps a track on the number of data which the classifier was not able to classify. The `numData` stores the value for the total number of training inputs in the verification file. `biggest` stores the index which has maximum activation value and thus, helps in classification. 
 #### Description:
 Classify() is called when the user wants to classify a specific file. In that case, the value of `numData` is calculated and a loop is started which goes through all the classification data inputs in the file. At the start of the loop, `biggest` is set to 0 and forwardPropagation() is called to assign the values to the weighted_inputs and activations matrices for each classification data input. Once the activations at the ouput layer are assigned, it checks for the biggest value generated. If it finds the biggest value, the training data input is said to be classified. Otherwise, `ambiguous_data` value is incremented by 1 if no biggest value is found. If biggest was found, it further classifies it into horizontal, vertical or diagonal based on the idex stored in the biggest. Once the loop goes through the complete data set, the ouput is displayed which says the number of data inputs classified according to the different categories and at last displays the accuracy of the classifier based on the classified data out of the complete data set.
 
