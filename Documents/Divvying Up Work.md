@@ -14,4 +14,4 @@
 
 ### Yonatan
 - [ ] `readInit() //cin` (7-15)
-- [ ] `shuffle(vector<T>)` (~5)
+- [x] `shuffle(vector<T>)` (~5)
