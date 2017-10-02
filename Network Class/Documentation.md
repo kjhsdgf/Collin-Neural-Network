@@ -58,11 +58,7 @@ Return type | Name | Description
 `bool` | `createNetworkFile ()` | Writes a file to store the network	
 `matrix&` | `hadamardProduct (const Matrix& , const Matrix&)` |Performs the Hadamard Product operation on any two given matrices 
 `void` | `shuffleDataIndices(vector<T>)` | Shuffles the data indices in a given vector
-
-## Overloaded Operators
-Return type | Name | Description
--------------|------|-------------
-`std::vector<T>` | `operator [] (ifstream& , int)` | Returns the vector at any position in the file using the ifstream object
+`std::vector<T>` | `getAt (ifstream& , int)` | Returns the vector at any position in the file using the ifstream object
 
 ## Member Details
 ### learningRate
@@ -273,13 +269,13 @@ It take one parameter which is a vector of the data indices that has to be shuff
 #### Description:
 This method shuffles the data indices passed to it. It consists of a loop which goes through the data indices and performs the operation of shuffling the data.
 
-### 13. Operator [] ()
+### 13. getAt ()
 #### Syntax:
 	template <class T>
-	std::vector<T> Network :: operator [] (ifstream& Infile, int i)
+	std::vector<T> Network :: getAt (ifstream& Infile, int i);
 #### Return Type:
 This returns the vector of class T.
 #### Parameters:
 It takes two parameters, one which is the `ifstream` object of the file and the other parameter is the position of type `int`.
 #### Description:
-This operator returns the vector at any particular position i in the file. The file from which the vector needs to be read is passed using the ifstream object of that file.
+This method returns the vector at any particular position i in the file. The file from which the vector needs to be read is passed using the ifstream object of that file.
