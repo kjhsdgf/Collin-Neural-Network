@@ -45,8 +45,9 @@ class Network
 		Vector				miniBatchIndices;
 		Vector				layerSizes;
 	
-	//we don't need the string names to be the class data members. We are defining them inside the readInit()
-	//and opening the required files in readInit() using the ifstream objects
+	//we do need the string names to be the class data members. Just realized, we need to write the names of the files in the Previous_Network_File.
+		string				trainingDataFilename;
+		string				expectedValuesFilename;
 	
 		ifstream			trainingDataInfile;
 		ifstream			expectedValuesInfile;
