@@ -30,14 +30,14 @@ bool Network::createNetworkFile()
 		j = 1;
 		while (j < numLayers)
 		{
-			outfile << "w " << j;
+			outfile << "w " << j << endl;
 			for (i = 0; i < weights[j].nr(); i++)
 			{
 				for (k = 0; k < weights[j].nc(); k++)
 					outfile << weights[j](i, k) << " ";
 				outfile << endl;
 			}
-			outfile << "b " << j;
+			outfile << "b " << j << endl;
 			for (i = 0; i < biases[j].nr(); i++)
 			{
 				outfile << biases[j](i, 1);
