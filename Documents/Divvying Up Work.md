@@ -2,8 +2,9 @@
  First let's try to complete the documentation so that when we try to delegate tasks, everyone's on the same page
 
 ### Ami
-- [x] `createNetworkFile` ( 12-15 lines)
+- [x] `writeToFile` ( 12-15 lines)
 - [x] `activationFunction()` (1 line)
+- [ ] `readInit(file)` (10-15 lines)
 
 ### Elijah
 - [ ] `costPrime` (1 line)
