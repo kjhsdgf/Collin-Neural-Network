@@ -29,7 +29,7 @@ class Network
 		void	readInit		();
 		void	forwardProp		(int);
 		bool	backProp		(int);
-		void	SGD			();
+		int	SGD			();
 		void	update			();
 
 	private:
