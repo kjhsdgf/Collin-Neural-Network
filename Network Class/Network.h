@@ -34,6 +34,7 @@ class Network
 		
 		VMatrix				weights;
 		VMatrix				sumNablaW;
+	
 	//As we decided, the n by 1 matrics are now vectors of dlib::vector
 		VVector				biases;
 		VVector				activations;
@@ -43,8 +44,10 @@ class Network
 		
 		Vector				miniBatchIndices;
 		Vector				layerSizes;
+	
 	//we don't need the string names to be the class data members. We are defining them inside the readInit()
 	//and opening the required files in readInit() using the ifstream objects
+	
 		ifstream			trainingDataInfile;
 		ifstream			expectedValuesInfile;
 	
@@ -58,8 +61,8 @@ class Network
 		int		SGD			();
 		void		update			();
 		template<class T>
-		std::vector<T>& operator[]		(ifstream& inFile, const int i);	//A function to return the vector at any position i in 
-										//the file, whose ifstream object is passed as the parameter
-		 	
+		std::vector<T>& operator[]		(ifstream& inFile, const int i); //A function to return the vector at any position i  
+											 //in the file, whose ifstream object is passed as the 
+											 //parameter
 };
 #endif
