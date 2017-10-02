@@ -55,12 +55,17 @@ class Network
 	//functions that need to be private:
 		bool		writeToFile		();
 		Matrix&		hadamardProduct		(const Matrix& ,const Matrix& );
+		void 		randomizeMatrix		(const Matrix&);	//parameter with a pointer to the function distribution is not needed
+										//because distribution is outside the class and so, it can be called directly
+										//without introducing a functor as a parameter
 		void		readInit		(const string&);
 		void		readInit		();
 		void		forwardProp		(int);
 		bool		backProp		(int);
 		int		SGD			();
 		void		update			();
+		template<class T>
+		void 		shuffleDataIndices	(std::vector<T>& v);
 		template<class T>
 		std::vector<T>& operator[]		(ifstream& inFile, const int i); //A function to return the vector at any position i  
 											 //in the file, whose ifstream object is passed as the 
