@@ -1,6 +1,6 @@
 #include "Network.h"
 
-bool Network::createNetworkFile() 	
+bool Network::writeToFile() 	
 {
 	ofstream outfile;
 	std::vector<int>::iterator i1;
