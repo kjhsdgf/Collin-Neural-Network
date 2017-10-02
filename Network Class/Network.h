@@ -43,7 +43,7 @@ class Network
 		Vector				errors;
 		Vector				sumNablaB;
 		Vector				sumNablaW;
-		Vector				miniBatchIndices;
+		std::vector<int>		miniBatchIndices;
 		ifstream			trainingDataInfile;
 		ifstream			expectedValuesInfile;
 };
