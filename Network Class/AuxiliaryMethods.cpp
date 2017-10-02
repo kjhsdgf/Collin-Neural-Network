@@ -1,3 +1,4 @@
+
 //PLEASE FOLLOW THIS: Tabs, 4, No wrap
 
 //Fisher Yates shuffle
@@ -15,4 +16,11 @@ void FYShuffle(vector<T>& v)
 		v[i] = v[randI];
 		v[randI] = temp;
 	}
+}
+
+//Activation function: can be changed later by the programmer, however as we discussed reading a function from the file can be a little risky
+//So, I need to think about it before implementing it
+const Matrix& activationFunction(const Matrix& weighted_inputs)
+{
+	return sigmoid(weighted_inputs);
 }
