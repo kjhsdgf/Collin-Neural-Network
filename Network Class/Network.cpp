@@ -27,8 +27,8 @@ bool Network::writeToFile()
 			outfile << (*i1) << " ";
 		}
 		outfile << endl;
-		j = 1;
-		while (j < numLayers)
+		j = 0;
+		while ((j++) < numLayers)
 		{
 			outfile << "w " << j << endl;
 			for (i = 0; i < weights[j].nr(); i++)
