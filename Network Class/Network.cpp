@@ -51,7 +51,4 @@ bool Network::createNetworkFile()
 		return false;
 }
 
-const Matrix& activationFunction(const Matrix& weighted_inputs, const int Layer_Size)
-{
-	return sigmoid(weighted_inputs);
-}
+
