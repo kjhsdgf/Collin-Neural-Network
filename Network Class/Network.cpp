@@ -48,7 +48,10 @@ bool Network::writeToFile()
 		return true;
 	}
 	else
+	{
+		cout<<"Server error 401: Could not open the file requested! Try again later..";
 		return false;
+	}
 }
 
 
