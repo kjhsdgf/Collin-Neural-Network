@@ -45,7 +45,7 @@ Return type | Name | Description
 `void` | `readInit ()` | Reads the required hyperparameters from the console `cin`
 `void` | `forwardProp (int)` | Sets all activation values and weighted inputs for a single test data input
 `bool` | `backProp (int)` | Backpropagates through network to compute error at each node
-`void` | `SGD ()` | Stochastic Gradient Descent: performs forward and back propagation once for each input in the mini batch then updates the weights and biases accordingly
+`int` | `SGD ()` | Stochastic Gradient Descent: performs forward and back propagation once for each input in the mini batch then updates the weights and biases accordingly
 `void` | `train ()` | Trains network by repeatedly performing SGD on randomized mini batches of the test data for as many epochs as specified
 `void` | `update ()` | Updates weights and biases based on data from SGD
 `void` | `classify ()` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
@@ -199,7 +199,9 @@ If they doesn't match, it calculates the errors in the output using the expected
 
 ### 5. SGD()
 #### Syntax:
-	void Network :: SGD();
+	int Network :: SGD();
+#### Return:
+Returns an int of the number of training data that correctly "match" expected values. "Match" is defined in details for `backProp`.
 #### Description:
 SGD stands for the idea of Stochastic Gradient Descent to speed up learning process of the network. This method is responsible to complete a forward pass and backward pass on a mini batch and compute the average nabla_b and nabla_w vectors over the batch. It reads in the expected values from the expected_values file and assign the values to the expected_Values matrix. It starts a loop which goes upto the batch_size. This loop calls the forwardProp() and backProp() for each mini_batch_index. Once the loops ends, it is responsible to update the values of weights and biases using the sum of cost partials.  
 At the end of the function, the sum of the cost partials are set to 0 again.
