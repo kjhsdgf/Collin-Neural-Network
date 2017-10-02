@@ -54,4 +54,38 @@ bool Network::writeToFile()
 	}
 }
 
+void Network::readIn() // reading from console
+{
+	// replace all ambiguous variable names with the real ones from the class
+	
+	cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
+	cout << "Enter a string of integers that correspond to the layers and desired nodes in each layer of your network:" << endl;
+	string layers;  getline(cin, layers);
+
+	char* cStrLayers = new char[layers.size() + 1];
+	strcpy(cStrLayers, layers.c_str());
+
+	vector<int> layerSizes;
+	for (char *p = strtok(cStrLayers, " ,"); p != NULL; p = strtok(NULL, " ,"))
+	{
+		layerSizes.push_back(atoi(p));
+	}
+
+	cout << "\nPlease enter a double for the learning rate (usually in the range [x-y]):" << endl;
+	double lr; cin >> lr;
+
+	cout << "\nPlease enter an integer for the number of epochs (number of times to parse through test data):" << endl;
+	int ep; cin >> ep;
+
+	cout << "\nPlease enter an integer for the mini batch size:" << endl;
+	int mbs; cin >> mbs;
+
+	cout << "\nThank you! You have created a network with these values:" << endl;
+
+	// continue here
+
+	/*for (int i=0; i < layerSizes.size(); i++)
+		cout << layerSizes[i] << endl;*/
+}
+
 
