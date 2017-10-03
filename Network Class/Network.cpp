@@ -12,15 +12,15 @@ bool Network::writeToFile()
 	  trainingDataFilename
 	  expectedValuesFilename
 	  learningRate
-      batchSize
+      	  batchSize
 	  epochs
 	  numLayers
 	  vector of layerSizes
 	  (for all layers ->)
-		w [index]
-		weights matrix at that index
-		b [index]
-		biases matrix at that index  */
+	  w [index]
+	  weights matrix at that index
+	  b [index]
+	  biases matrix at that index  */
 
 	ofstream outfile;
 	std::vector<int>::iterator i1;
