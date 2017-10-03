@@ -7,9 +7,9 @@
 - [ ] `readInit(file)` (10-15 lines)
 
 ### Elijah
-- [ ] `costPrime` (1 line)
-- [ ] `distribution` (> 5 lines)
-- [ ] `hadamardProduct` ( > 7 lines)
+- [x] `costPrime` (1 line) (actual: 1 line)
+- [x] `distribution` (> 5 lines) (actual: 2 lines)
+- [x] `hadamardProduct` ( > 7 lines) (actual: 1 line)
 - [ ] `update` (3 lines)
 
 ### Yonatan
