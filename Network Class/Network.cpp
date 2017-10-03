@@ -125,4 +125,11 @@ void Network::readInit() // reading from console
 			"Mini batch size := " << miniBatchSize << endl;
 }
 
-
+//hadamardProduct utilizes dlib's pointwise_multiply() to compute the element-by-element product.
+//pointwise_multiply() will assert that the input matrices must be of equal size, so the program will stop
+//when that occurs. 
+//Removed & (address operator) from the return type, as it was giving out compiler errors.
+const Matrix hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
+{
+	return pointwise_multiply(input_matrix_L, input_matrix_R);
+}
