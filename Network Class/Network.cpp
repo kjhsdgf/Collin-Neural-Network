@@ -2,19 +2,50 @@
 
 bool Network::writeToFile() 	
 {
+	/*This method creates a file named "Previous_Network_[Day][Time(hhmin)].txt" and 
+	  writes all  the required parameters of the class network in the file.
+	  This file can be used later to train the existing network or to classify the file
+	  provided by the user, using the values from any previous network.
+	  
+	  This method writes to the file in the format as follows:
+
+	  trainingDataFilename
+	  expectedValuesFilename
+	  learningRate
+      batchSize
+	  epochs
+	  numLayers
+	  vector of layerSizes
+	  (for all layers ->)
+		w [index]
+		weights matrix at that index
+		b [index]
+		biases matrix at that index  */
+
 	ofstream outfile;
 	std::vector<int>::iterator i1;
 	int i;
-	int j;
+	int j (0);
 	int k;
-	string fileName("Previous_Network_");
+	string a("Previous_Network_");
 	time_t _tm = time(NULL);
 	struct tm * curtime = localtime(&_tm);
-	fileName += asctime(curtime);
-	outfile.open(fileName, ios_base::out);
+	a += asctime(curtime);
+	string fileName;
+	
+	fileName.resize(24);
+	for (i = 0; i<20; i++)		//gets the name "Previous_Network_[Day]"
+		fileName[j++] = a[i];
+	
+	for (i = 28; i < 35; i++)	//appends the [time (hhmin)] to name of the file
+		if(a[i] != ':')
+			fileName[j++] = a[i];
+	
+	fileName += ".txt";				//appends ".txt" to the name of the file
+	outfile.open(fileName, ios_base::out); //creates the file with name "Previous_Network_[Day][Time(hhmin)].txt"
 	if (outfile.is_open())
 	{
-		cout << "\nCreating file " << fileName << ".txt" << endl;
+		cout << "\nCreating file " << fileName << endl;
 		outfile << trainingDataFilename << endl;
 		outfile << expectedValuesFilename << endl;
 		outfile << learningRate << endl;
@@ -40,7 +71,7 @@ bool Network::writeToFile()
 			outfile << "b " << j << endl;
 			for (i = 0; i < biases[j].nr(); i++)
 			{
-				outfile << biases[j](i, 1);
+				outfile << biases[j](i, 0);
 				outfile << endl;
 			}
 		}
