@@ -56,8 +56,6 @@ bool Network::writeToFile()
 
 void Network::readIn() // reading from console
 {
-	// replace all ambiguous variable names with the real ones from the class
-	
 	cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
 	cout << "Enter a string of integers that correspond to the layers and desired nodes in each layer of your network:" << endl;
 	string layers;  getline(cin, layers);
@@ -70,22 +68,30 @@ void Network::readIn() // reading from console
 	{
 		layerSizes.push_back(atoi(p));
 	}
-
+	numLayers = layerSizes.size();
+	
 	cout << "\nPlease enter a double for the learning rate (usually in the range [x-y]):" << endl;
-	double lr; cin >> lr;
+	cin >> learningRate;
 
 	cout << "\nPlease enter an integer for the number of epochs (number of times to parse through test data):" << endl;
-	int ep; cin >> ep;
+	cin >> epochs;
 
 	cout << "\nPlease enter an integer for the mini batch size:" << endl;
-	int mbs; cin >> mbs;
+	cin >> miniBatchSize;
 
 	cout << "\nThank you! You have created a network with these values:" << endl;
-
-	// continue here
-
-	/*for (int i=0; i < layerSizes.size(); i++)
-		cout << layerSizes[i] << endl;*/
+	
+	cout << "Input layer with " << layerSizes[0] << " nodes." << endl <<
+		 	"Output layer with " << layerSizes[numLayers-1] << " nodes." << endl <<
+			(numLayers - 2) << " hidden layers with "; 
+	
+	for (int i=1; i < numLayers - 1; i++)
+		cout << layerSizes[i] << " ";
+	
+	cout 										 << "nodes respectively." << endl <<
+			"Learning rate := " << learingRate << endl <<
+			"Epochs := " << epochs << endl <<
+			"Mini batch size := " << miniBatchSize << endl;
 }
 
 
