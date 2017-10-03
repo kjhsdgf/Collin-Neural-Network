@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <dlib\matrix.h>
+#include <dlib\matrix_math_functions.h>
 #include <string>
 #include <vector>
 
@@ -54,7 +55,7 @@ class Network
 	
 	//functions that need to be private:
 		bool		writeToFile		();
-		Matrix&		hadamardProduct		(const Matrix& ,const Matrix& );
+		const Matrix	hadamardProduct		(const Matrix& ,const Matrix& );
 		void 		randomizeMatrix		(const Matrix&);	//parameter with a pointer to the function distribution is not needed
 										//because distribution is outside the class and so, it can be called directly
 										//without introducing a functor as a parameter
