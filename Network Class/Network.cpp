@@ -54,7 +54,7 @@ bool Network::writeToFile()
 	}
 }
 
-void Network::readIn() // reading from console
+void Network::readInit() // reading from console
 {
 	cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
 	cout << "Enter a string of integers that correspond to the layers and desired nodes in each layer of your network:" << endl;
