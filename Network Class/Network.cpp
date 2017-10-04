@@ -60,18 +60,9 @@ bool Network::writeToFile()
 		while ((j++) < numLayers)
 		{
 			outfile << "w " << j << endl;
-			for (i = 0; i < weights[j].nr(); i++)
-			{
-				for (k = 0; k < weights[j].nc(); k++)
-					outfile << weights[j](i, k) << " ";
-				outfile << endl;
-			}
+			outfile << weights[j];			//there is overloaded operator for '<<' to display the matrices inside dlib
 			outfile << "b " << j << endl;
-			for (i = 0; i < biases[j].nr(); i++)
-			{
-				outfile << biases[j](i, 0);
-				outfile << endl;
-			}
+			outfile << biases[j];
 		}
 		outfile.close();
 		return true;
