@@ -53,7 +53,7 @@ Return type | Name | Description
 `void` | `train ()` | Trains network by repeatedly performing SGD on randomized mini batches of the test data for as many epochs as specified
 `void` | `update ()` | Updates weights and biases based on data from SGD
 `void` | `classify ()` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
-`void` | `randomizeMatrix (const Matrix& )` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
+`void` | `randomizeMatrix (const Matrix&, void (*distribution) ())` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
 `bool` | `createNetworkFile ()` | Writes a file to store the network	
 `matrix&` | `hadamardProduct (const Matrix& , const Matrix&)` |Performs the Hadamard Product operation on any two given matrices 
 `void` | `shuffleDataIndices(vector<T>)` | Shuffles the data indices in a given vector
@@ -233,7 +233,7 @@ Classify() is called when the user wants to classify a specific file. In that ca
 
 ### 9. randomizeMatrix()
 #### Syntax:
-	void Network :: randomizeMatrix(const Matrix& input_matrix);
+	void Network :: randomizeMatrix(const Matrix& input_matrix, void (*distribution) ());
 #### Parameters:
 It takes two parameters, one of them is a matrix and the other is the pointer to the function that performs the distribution. 
 #### Description:
