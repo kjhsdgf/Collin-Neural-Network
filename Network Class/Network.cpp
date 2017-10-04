@@ -34,7 +34,7 @@ bool Network::writeToFile()
 	string fileName;
 	
 	fileName.resize(24);
-	for (i = 0; i<20; i++)		//gets the name "Previous_Network_[Day]"
+	for (i = 0; i < 20; i++)		//gets the name "Previous_Network_[Day]"
 		fileName[j++] = a[i];
 	
 	for (i = 28; i < 35; i++)	//appends the [time (hhmin)] to name of the file
@@ -54,9 +54,7 @@ bool Network::writeToFile()
 		outfile << numLayers << endl;
 		i1 = layerSizes.begin();
 		for (; i1 != layerSizes.end(); i1++)
-		{
 			outfile << (*i1) << " ";
-		}
 		outfile << endl;
 		j = 0;
 		while ((j++) < numLayers)
