@@ -1,8 +1,8 @@
 # Possible Way to Organize Tasks
 
-### Ami ( > 31 lines) (actual: 46 lines)
+### Ami ( > 31 lines) (actual: 47 lines)
 - [x] `writeToFile` ( 12-15 lines) (actual: 46 lines)
-- [x] `activationFunction()` (1 line)
+- [x] `activationFunction()` (1 line) (actual: 1 line)
 - [ ] `readInit(file)` (10-15 lines)
 
 ### Elijah ( > 21 lines) (actual: 23 lines)
