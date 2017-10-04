@@ -12,7 +12,7 @@ bool Network::writeToFile()
 	  trainingDataFilename
 	  expectedValuesFilename
 	  learningRate
-      batchSize
+      	  batchSize
 	  epochs
 	  numLayers
 	  vector of layerSizes
