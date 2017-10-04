@@ -12,7 +12,6 @@ Type | Name
 ------|--------
 `matrix<double>` | `Matrix`
 `std::vector<Matrix>` | `VMatrix`
-`std::vector<dlib::vector<double>>` | `VVector`
 `std::vector<int>` | `Vector`
 	
 ## Member Summary
@@ -24,11 +23,11 @@ Type | Name | Description
 `Vector` | `layerSizes` | Array containing sizes of each layer
 `int` | `numLayers` | Number of layers in the network 
 `VMatrix` | `weights` | Vector of matrices containing all the weights for the network
-`VVector` | `biases` | Vector of matrices containing all the biases for the network
-`VVector` | `activations` | Vector of matrices containing all the activation values of the network
-`VVector` | `weightedInputs` | Vector of matrices containing all the weighted sums of the network
-`VVector` | `errors` | Vector of matrices containing all errors at each node of the network 
-`VVector` | `sumNablaB` | Vector of matrices containing the sum of the dC/db at each node of the network
+`VMatrix` | `biases` | Vector of matrices containing all the biases for the network
+`VMatrix` | `activations` | Vector of matrices containing all the activation values of the network
+`VMatrix` | `weightedInputs` | Vector of matrices containing all the weighted sums of the network
+`VMatrix` | `errors` | Vector of matrices containing all errors at each node of the network 
+`VMatrix` | `sumNablaB` | Vector of matrices containing the sum of the dC/db at each node of the network
 `VMatrix` | `sumNablaW` | Vector of matrices containing the sum of the dC/dw at each node of the network
 `Vector` | `miniBatchIndices` | Array of indices of size batch_size corresponding to the test data
 `string` | `trainingDataFilename` | Name of file of test data inputs
@@ -89,25 +88,25 @@ Stores information about the depth of the network. This parameter, particularly,
 The weights of all the layers are stored in a vector of matrices each of size (j x k), where k is the layer size just before the layer with j as its layer size. Initially, the weights are randomly assigned values using the Guassian normal distribution. Though, the weights get updated once the network starts learning.
 	
 ### biases
-	VVector biases;
+	VMatrix biases;
 The biases of all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. Initially, the biases are randomly assigned values using the Gaussian normal distribution. However, the biases get updated as the network starts learning.
 	
 ### activations
-	VVector activations;
+	VMatrix activations;
 The activations of a particular layer in a network are stored in a matrix of size (j x 1), where j is the layer size of that layer. Activation values are calculated by the activation function declared outside the class. It requires the weighted sums to perform the calculation.
 However, for every training input, the first layer of activations will be the training input data extracted from the file.
 	
 ### weightedInputs
-	VVector weightedInputs;
+	VMatrix weightedInputs;
 The weighted sums of all layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. The weighted sum at any particular layer can be given by the dot product, of the weight matrix for that layer and the values of the activations layer just before that layer, with the bias matrix for that layer added to the dot product. 
 ##### 		weightedInputs at jth layer = ((weights at j) . (activations at j - 1)) + (biases at j)
 
 ### errors
-	VVector errors;
+	VMatrix errors;
 The errors for all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. The errors for the ouput layer will be calculated first using the expected values and the derivative of the activation function. Then, the errors will be back propagated to all the hidden layers.
 	
 ### sumNablaB
-	VVector sumNablaB;
+	VMatrix sumNablaB;
 The sum of the cost partials with respect to biases for all the layers in a network are stored in a vector of matrices each of size (j x 1), where j is the layer size of that layer. This stores the sum of the dC/db values for all the layers in the network. The cost partial, dC/db for a specific layer is directly equal to the error in that specific layer.
 
 ### sumNablaW
