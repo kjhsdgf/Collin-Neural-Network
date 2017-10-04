@@ -19,7 +19,7 @@ Type | Name | Description
 ----- | ------- | -------------
 `double` | `learningRate` | Multiplier for updating weights and biases 
 `int` | `batchSize` | Size of mini batches to take from test data
-`int` | `epochs` | Number of times to "train" the network // consider changing name to more descriptive one
+`int` | `epochs` | Number of times to "train" the network 
 `Vector` | `layerSizes` | Array containing sizes of each layer
 `int` | `numLayers` | Number of layers in the network 
 `VMatrix` | `weights` | Vector of matrices containing all the weights for the network
