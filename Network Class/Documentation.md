@@ -54,7 +54,7 @@ Return type | Name | Description
 `void` | `update ()` | Updates weights and biases based on data from SGD
 `void` | `classify ()` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
 `void` | `randomizeMatrix (const Matrix&, double (*distribution) ())` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
-`bool` | `createNetworkFile ()` | Writes a file to store the network	
+`bool` | `writeToFile ()` | Writes a file to store the network	
 `matrix&` | `hadamardProduct (const Matrix& , const Matrix&)` |Performs the Hadamard Product operation on any two given matrices 
 `void` | `shuffleDataIndices(vector<T>)` | Shuffles the data indices in a given vector
 `std::vector<T>` | `getAt (ifstream& , int)` | Returns the vector at any position in the file using the ifstream object
@@ -239,13 +239,13 @@ It takes two parameters, one of them is a matrix and the other is the pointer to
 #### Description:
 This method will randomly assign the value to the matrix passed to it. The values generated will be based on the distribution(). It will consist of a nested loop going through each element in the matrix. Each element in the matrix will be assigned with pseudorandom numbers as the distribution(), which is defined outside the class allows.
 
-### 10. createNetworkFile()
+### 10. writeToFile()
 #### Syntax:
-	bool Network :: createNetworkFile(); 
+	bool Network :: writeToFile(); 
 #### Return Type:
 This returns a boolean flag, which is true or false.
 #### Description:
-This method creates a file of the name "Previous_Network_[Date and Time]". If open, the method writes the required values such as the weights and biases vectors, layerSizes vector and the number of layers to the file created. It returns true once the writing is performed. If the file, with the name passed doesn't open, this method returns false.
+This method creates a file of the name "Previous_Network_[Day and Time]". If open, the method writes the required values such as the weights and biases vectors, layerSizes vector and the number of layers to the file created. It returns true once the writing is performed. If the file, with the name passed doesn't open, this method returns false.
 
 ### 11. hadamardProduct()
 #### Syntax:
