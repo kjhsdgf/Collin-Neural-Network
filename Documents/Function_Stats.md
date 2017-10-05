@@ -1,9 +1,10 @@
 # Function Stats/Divvying Up Work
 
-### Ami ( > 31 lines) (actual: 47 lines)
+### Ami ( > 43 lines) (actual: 47 lines)
 - [x] `writeToFile` ( 12-15 lines) (actual: 46 lines)
 - [x] `activationFunction()` (1 line) (actual: 1 line)
-- [ ] `readInit(file)` (10-15 lines)
+- [ ] `readInit(file)` (20-30 lines)
+- [ ] `getAt()` ( > 10 lines)
 
 ### Elijah ( > 57 lines) (actual: 23 lines)
 - [x] `costPrime` (1 line) (actual: 1 line)
