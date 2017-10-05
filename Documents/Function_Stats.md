@@ -26,12 +26,13 @@
 | `Network(file, file)` | < 40 |
 | `train` | < 30 |
 | `Network(file)` | < 25 |
-| `backPropagation` | < 20 |
+| `backProp` | < 20 |
 | `SGD` | < 20 |
 | `Network(cin)` | < 20 |
 | `classify` | < 20 |
 | ~~`writeToFile`~~ | < 15 |
-| `forwardPropagation` | < 10 |
+| `getAt` | guess: < 15 |
+| `forwardProp` | < 10 |
 | ~~`distribution`~~ | guess: < 10 |
 | ~~`hadamardProduct`~~ | 7 |
 | ~~`readInit(cin)`~~ | 6 |
@@ -43,7 +44,6 @@
 | `activationPrime` | 2 |
 | ~~`costPrime`~~ | 1 |
 | ~~`activation_Function`~~ | 1 |
-| `getAt` | guess: < 15 |
 
 ## Function Dependencies
 ### functions that depend on other functions being written prior
@@ -51,8 +51,8 @@
 | ---- | ---------- | ---------- |
 | ~~`costPrime`~~ | `~Network()` | `Network(file)` |
 | ~~`activationFunction`~~ | ~~`randomizeMatrix`~~ | `Network(file, file)` |
-| ~~`hadamardProduct`~~ |  `forwardPropagation` | `readInit(file)` |
-| ~~`shuffleDataIndices`~~ | `classify` | `backPropagation` |
+| ~~`hadamardProduct`~~ |  `forwardProp` | `readInit(file)` |
+| ~~`shuffleDataIndices`~~ | `classify` | `backProp` |
 | ~~`writeToFile`~~ | `activationPrime` | `SGD` |
 | ~~`update`~~ | `Network(cin)` | `train` |
 | ~~`distribution`~~ | `getAt` |
