@@ -43,6 +43,7 @@
 | `activationPrime` | 2 |
 | ~~`costPrime`~~ | 1 |
 | ~~`activation_Function`~~ | 1 |
+| `getAt` | guess: < 15 |
 
 ## Function Dependencies
 ### functions that depend on other functions being written prior
@@ -54,5 +55,5 @@
 | ~~`shuffleDataIndices`~~ | `classify` | `backPropagation` |
 | ~~`writeToFile`~~ | `activationPrime` | `SGD` |
 | ~~`update`~~ | `Network(cin)` | `train` |
-| ~~`distribution`~~ |
+| ~~`distribution`~~ | `getAt` |
 | ~~`readInit(cin)`~~ |
