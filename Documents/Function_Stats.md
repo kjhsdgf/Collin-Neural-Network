@@ -1,5 +1,24 @@
-# Function Stats
-### My hope is that this will help produce a roughly equivalent distribution of work that is easier to distribute!
+# Function Stats/Divvying Up Work
+
+### Ami ( > 31 lines) (actual: 47 lines)
+- [x] `writeToFile` ( 12-15 lines) (actual: 46 lines)
+- [x] `activationFunction()` (1 line) (actual: 1 line)
+- [ ] `readInit(file)` (10-15 lines)
+
+### Elijah ( > 57 lines) (actual: 23 lines)
+- [x] `costPrime` (1 line) (actual: 1 line)
+- [x] `distribution` (> 5 lines) (actual: 14 lines)
+- [x] `hadamardProduct` ( > 7 lines) (actual: 1 line)
+- [x] `update` (3 lines) (actual: 4 lines)
+- [x] `randomizeMatrix` ( < 5 lines) (actual: 3 lines)
+- [ ] `forwardPropagation` ( > 5 lines)
+- [ ] `classify` ( > 30 lines)
+- [ ] `activationPrime` (1 line)
+
+### Yonatan ( > 45 lines ) (actual: 30 lines)
+- [x] `readInit() //cin` (7-15) (actual: 25 lines)
+- [x] `shuffle(vector<T>)` (~5) (actual: 5 lines)
+- [ ] `Network` default constructor ( < 25 lines)
 
 ## Approximate Length of Functions
 | Function Name | Appx. Lines, based on Pseudocode.cpp |
@@ -37,25 +56,3 @@
 | ~~`update`~~ | `Network(cin)` | `train` |
 | ~~`distribution`~~ |
 | ~~`readInit(cin)`~~ |
-
-# Divvying Up Work
-
-### Ami ( > 31 lines) (actual: 47 lines)
-- [x] `writeToFile` ( 12-15 lines) (actual: 46 lines)
-- [x] `activationFunction()` (1 line) (actual: 1 line)
-- [ ] `readInit(file)` (10-15 lines)
-
-### Elijah ( > 57 lines) (actual: 23 lines)
-- [x] `costPrime` (1 line) (actual: 1 line)
-- [x] `distribution` (> 5 lines) (actual: 14 lines)
-- [x] `hadamardProduct` ( > 7 lines) (actual: 1 line)
-- [x] `update` (3 lines) (actual: 4 lines)
-- [x] `randomizeMatrix` ( < 5 lines) (actual: 3 lines)
-- [ ] `forwardPropagation` ( > 5 lines)
-- [ ] `classify` ( > 30 lines)
-- [ ] `activationPrime` (1 line)
-
-### Yonatan ( > 45 lines ) (actual: 30 lines)
-- [x] `readInit() //cin` (7-15) (actual: 25 lines)
-- [x] `shuffle(vector<T>)` (~5) (actual: 5 lines)
-- [ ] `Network` default constructor ( < 25 lines)
