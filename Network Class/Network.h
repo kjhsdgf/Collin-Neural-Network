@@ -19,54 +19,54 @@ typedef std::vector<int> Vector;
 class Network
 {
 	public:
-					Network				(istream& = cin);
-					Network				(const string&, const string&);
-					Network				(const string&);
-					~Network			();
-		void			train				();
-		void			classify			(const string&);
+							Network				(istream& = cin);
+							Network				(const string&, const string&);
+							Network				(const string&);
+							~Network			();
+		void				train				();
+		void				classify			(const string&);
 
 	private:
-		double			learningRate;
-		int			batchSize;
-		int			epochs;
-		int 			numLayers;
+		double				learningRate;
+		int					batchSize;
+		int					epochs;
+		int 				numLayers;
 		
-		VMatrix			weights;
-		VMatrix			sumNablaW;
-		VMatrix			biases;
-		VMatrix			activations;
-		VMatrix			weightedInputs;
-		VMatrix			errors;
-		VMatrix			sumNablaB;
+		VMatrix				weights;
+		VMatrix				sumNablaW;
+		VMatrix				biases;
+		VMatrix				activations;
+		VMatrix				weightedInputs;
+		VMatrix				errors;
+		VMatrix				sumNablaB;
 		
-		Vector			miniBatchIndices;
-		Vector			layerSizes;
+		Vector				miniBatchIndices;
+		Vector				layerSizes;
 	
 	//we do need the string names to be the class data members. Just realized, we need to write the names of the files in the Previous_Network_File.
-		string			trainingDataFilename;
-		string			expectedValuesFilename;
+		string				trainingDataFilename;
+		string				expectedValuesFilename;
 	
-		ifstream		trainingDataInfile;
-		ifstream		expectedValuesInfile;
+		ifstream			trainingDataInfile;
+		ifstream			expectedValuesInfile;
 	
 	//functions that need to be private:
-		bool			writeToFile		();
+		bool				writeToFile			();
 		const Matrix		hadamardProduct		(const Matrix& ,const Matrix& );
-		void 			randomizeMatrix		(const Matrix&);	//parameter with a pointer to the function distribution is not needed
-																//because distribution is outside the class and so, it can be called directly
-																//without introducing a functor as a parameter
-		void			readInit		(const string&);
-		void			readInit		();
-		void			forwardProp		(int);
-		bool			backProp		(int);
-		int			SGD			();
-		void			update			();
+		void 				randomizeMatrix		(const Matrix&);	//parameter with a pointer to the function distribution is not needed
+																	//because distribution is outside the class and so, it can be called directly
+																	//without introducing a functor as a parameter
+		void				readInit			(const string&);
+		void				readInit			();
+		void				forwardProp			(int);
+		bool				backProp			(int);
+		int					SGD					();
+		void				update				();
 		template<class T>
-		void 			shuffleDataIndices	(std::vector<T>& v);
+		void 				shuffleDataIndices	(std::vector<T>& v);
 		template<class T>
-		std::vector<T>& 	getAt			(ifstream& inFile, const int i); //A function to return the vector at any position i  
-											 								//in the file, whose ifstream object is passed as the 
-											 								//parameter
+		std::vector<T>& 	getAt				(ifstream& inFile, const int i); //A function to return the vector at any position i  
+											 									//in the file, whose ifstream object is passed as the 
+											 									//parameter
 };
 #endif
