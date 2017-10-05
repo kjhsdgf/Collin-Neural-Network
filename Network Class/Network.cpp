@@ -136,7 +136,7 @@ const Matrix hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_m
 
 //Updates weights and biases for the network by overwriting weights and biases.
 //helps if sumNablaW and sumNablaB VMatrix's have been filled.
-void update()
+void updateWeightsAndBiases()
 {
 	double k = (learningRate / batchSize); //saves (numLayers - 1) divisions
 	for (int i = 1; i < numLayers; i++)
