@@ -28,11 +28,10 @@ const Matrix activationFunction(const Matrix& weighted_inputs)
 //Uses polar form of Box-Muller transform of uniformly distributed variable in [0,1] to normally distributed 
 //variable in (-inf, inf). May end up simplified to exclude v2, but tbh I don't yet understand the transform.
 //Requires #include <math>
-const long double distribution(const int numNeuronsIn)
+const double distribution(const int numNeuronsIn)
 {
-	//we end up getting pretty small numbers here, so long doubles are used
-	long double v1, v2, w, z1;							//temp variables to hold 
-	long double variance = (1 / sqrt(numNeuronsIn));	//standard deviation as per Nielsen's suggestion
+	double v1, v2, w, z1;							//temp variables to hold 
+	double variance = (1 / sqrt(numNeuronsIn));	//standard deviation as per Nielsen's suggestion
 
 	//For some reason, I can't get the assignment to work right unless the operation is split into phases as shown.
 	//Should be something like v# = 2 * (std::rand() / RAND_MAX) - 1, but that causes stack overflow...
