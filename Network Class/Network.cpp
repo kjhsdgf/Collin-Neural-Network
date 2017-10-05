@@ -118,14 +118,14 @@ void Network::readInit() // reading from console
 //pointwise_multiply() will assert that the input matrices must be of equal size, so the program will stop
 //when that occurs. 
 //Removed & (address operator) from the return type, as it was giving out compiler errors.
-const Matrix hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
+const Matrix Network::hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
 {
 	return pointwise_multiply(input_matrix_L, input_matrix_R);
 }
 
 //Updates weights and biases for the network by overwriting weights and biases.
 //helps if sumNablaW and sumNablaB VMatrix's have been filled.
-void updateWeightsAndBiases()
+void Network::updateWeightsAndBiases()
 {
 	double k = (learningRate / batchSize); //saves (numLayers - 1) divisions
 	for (int i = 1; i < numLayers; i++)
