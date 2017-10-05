@@ -59,3 +59,11 @@ void randomizeMatrix(Matrix &inputMatrix)
 			for (int j = 0; j < inputMatrix.nc(); j++)
 				inputMatrix(i, j) = distribution(inputMatrix.nc());
 }
+
+//Returns the values for the first derivative of the sigmoid function at a given matrix's coordinates, passed as argument.
+//Expressed using the Hadamard product in source literature, but that class member may not be available to the user,
+//so I used pointwise_multiply() instead.
+const Matrix activationPrime(const Matrix &input_matrix)
+{
+	return pointwise_multiply(sigmoid(input_matrix), ones_matrix(input_matrix) - sigmoid(input_matrix));
+}
