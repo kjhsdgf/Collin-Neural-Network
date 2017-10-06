@@ -332,3 +332,77 @@ void Network::classify()
 	//close the files (not closing trainingDataInfile, because destructor should take care of that).
 	classificationOutput.close();
 }
+
+//Default constructor for the class
+Network::Network()
+{
+	//Call readInit() to fill numLayers, layerSizes[], learningRate, epochs, batchSize
+	readInit();
+	
+	//Ask for training data filename, then open it
+	cout << "Please enter the location of your training file [C:\\...\\TrainingDataFilename.txt:" << endl;
+	getline(cin, trainingDataFilename);
+	trainingDataInfile.open(trainingDataFilename);
+	while (trainingDataInfile.fail())
+	{
+		trainingDataInfile.clear();
+		trainingDataInfile.close();
+		cout << "Could not open " << trainingDataFilename << ".\n" << "Please try again:" << endl;
+		getline(cin, trainingDataFilename);
+		trainingDataInfile.open(trainingDataFilename);
+	}
+	//Ask for expected values filename and open it
+	cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:" << endl;
+	getline(cin, expectedValuesFilename);
+	expectedValuesInfile.open(expectedValuesFilename);
+	while (expectedValuesInfile.fail())
+	{
+		expectedValuesInfile.clear();
+		expectedValuesInfile.close();
+		cout << "Could not open " << expectedValuesFilename << ".\n" << "Please try again:" << endl;
+		getline(cin, expectedValuesFilename);
+		expectedValuesInfile.open(expectedValuesFilename);
+	}
+	
+	//resize the VMatrix's to match input
+	weights.resize(numLayers);
+	biases.resize(numLayers);
+	activations.resize(numLayers);
+	weightedInputs.resize(numLayers);
+	errors.resize(numLayers);
+	sumNablaB.resize(numLayers);
+	sumNablaW.resize(numLayers);
+
+	//fill out the 0th layer of activations, as they aren't covered
+	//in the following for loop.
+	activations[0].set_size(layerSizes[0], 1);
+	activations[0] = zeros_matrix(activations[0]);
+	
+	//set the sizes of each matrix, and fill with appropriate numbers
+	for (int i = 1; i < numLayers; i++)
+	{
+		weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
+		randomizeMatrix(weights[i]);
+
+		biases[i].set_size(layerSizes[i], 1);
+		randomizeMatrix(biases[i]);
+
+		activations[i].set_size(layerSizes[i], 1);
+		activations[i] = zeros_matrix(activations[i]);
+
+		weightedInputs[i].set_size(layerSizes[i], 1);
+		weightedInputs[i] = zeros_matrix(weightedInputs[i]);
+
+		errors[i].set_size(layerSizes[i], 1);
+		errors[i] = zeros_matrix(errors[i]);
+
+		sumNablaB[i].set_size(layerSizes[i], 1);
+		sumNablaB[i] = zeros_matrix(sumNablaB[i]);
+
+		sumNablaW[i].set_size(layerSizes[i], layerSizes[i - 1]);
+		sumNablaW[i] = zeros_matrix(sumNablaW[i]);
+	}
+
+	//resize miniBatchIndices to be batchSize elements
+	miniBatchIndices.resize(batchSize);
+}
