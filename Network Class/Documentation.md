@@ -175,17 +175,17 @@ The names of the file entered by the user have to be valid names.
 
 ### 3. forwardProp() 
 #### Syntax:
-	void Network :: forwardProp (int mini_batch_index);
+	void Network :: forwardProp (int testDataIndex);
 #### Parameters:
-It takes one parameter, which is the mini_batch_index of datatype `int`.
+`testDataIndex` - Index of test data from which to populate the input nodes (`activations[0]`) to perform a forward pass through the network.
 #### Description:
 This method extracts the input data from the training_data file and assigns that to the first activations matrix. It then starts a loop that goes upto the last layer of the network and assigns the values to each weightedInputs and activations matrices. 
 
 ### 4. backProp()
 #### Syntax:
-	bool Network :: backProp (int mini_batch_index);
+	bool Network :: backProp (int testDataIndex);
 #### Parameters:
-It takes one parameter, which is the mini_batch_index of datatype `int`.
+`testDataIndex` - Index of expected values that correspond to test data input.
 #### Return:
 Returns true if highest "matches" expected value for the input layer. "Matches" defined as highest activation node of output layer matches the '1' node of expected values. Returns false if otherwise.
 #### Description:
@@ -205,10 +205,13 @@ At the end of the function, the sum of the cost partials are set to 0 again.
 #### Syntax:
 	void Network :: train();
 #### Member Description:
-Members named `test_data_size`,`numCorrect` and  `SGD_Calls` are declared in the function of datatype `int`. `test_data_size` gives the size of the training data. `numCorrect` increments the number of correct outputs produced by the network. `SGD_Calls` gives the number for how many times the SGD() needs to be called to complete an epoch. It is calculated by (size of test data)/(batch size). Also, this method has `testDataIndices`, which is of type `Vector`.
+Declares members `vector<int> testDataIndices`, `int testDataSize`, `int numCorrect`
+   `testDataIndices` - Vector with elements of indices that correspond to the respective line of test data and expected values files.
+   `testDataSize` - Size of test data.
+   `numCorrect` - Number of outputs that match expected values. Reset after every epoch.
 #### Description:
-This method is responsible for training the network until all training data inputs are exhausted. It performs the training as many times as the number of epochs entered by the user. This method is responsible to assign the values to the testDataIndices initially to the values which represent their respective position in the trainingData file. Once initialized, the testDataIndices are shuffled at the start of every epoch. 
-The loop makes sure to jump to the beginning of the trainingData file and expectedValues file at the start of every epoch. Also, it sets the numCorrect to 0 at the start of every epoch. The nested loops are set up, which takes care of the calling SGD(), incrementing the numCorrect as returned by SGD() and also, updates the miniBatchIndices vector. At the end of every epoch, the efficiency of the network built is displayed with the number of correct outputs found generated during the learning of the network.
+This method is responsible for training the network until all training data inputs are exhausted. It performs the training as many times as the number of epochs entered by the user. This method is responsible for assigning the values to `testDataIndices` initially to the values which represent their respective position in the trainingData file. Once initialized, the testDataIndices are shuffled at the start of every epoch. 
+The loop makes sure to shuffle the `testDataIndices` before every epoch as well as zeroing out `numCorrect`. The nested loops are set up, which takes care of the calling SGD(), incrementing the numCorrect as returned by SGD() and also, updates the miniBatchIndices vector. At the end of every epoch, the efficiency over time of the network is displayed with the number of correct outputs found generated during the learning of the network.
 As the number of epochs are completed, a file of the network built is made, which stores all the required information of the network that was built.  
 
 ### 7. update()
@@ -227,8 +230,10 @@ Classify() is called when the user wants to classify a specific file. In that ca
 
 ### 9. randomizeMatrix()
 #### Syntax:
-	void Network :: randomizeMatrix(const Matrix& input_matrix, double (*distribution) ());
+	void Network :: randomizeMatrix(const Matrix& inputMatrix, double (*distribution) ());
 #### Parameters:
+`inputMatrix` - Matrix to populate with random numbers.
+`(*distribution) ()` - Pointer to a distribution method as provided by user.
 It takes two parameters, one of them is a matrix and the other is the pointer to the function that performs the distribution. 
 #### Description:
 This method will randomly assign the value to the matrix passed to it. The values generated will be based on the distribution(). It will consist of a nested loop going through each element in the matrix. Each element in the matrix will be assigned with pseudorandom numbers as the distribution(), which is defined outside the class allows.
@@ -244,10 +249,10 @@ This method creates a file of the name "Previous_Network_[Day and Time]". If ope
 ### 11. hadamardProduct()
 #### Syntax:
 	matrix& Network :: hadamardProduct (const Matrix& M1, const Matrix& M2);
-#### Return Type:
+##### Parameters:
+`M1`, `M2` - The two matrices to which this method will apply elementwise scalar multiplication.
+### Return Type:
 This returns the address of the matrix, which is the result of the Hadamard Product.
-#### Parameters:
-It takes two parameters of matrix type, which are used as the operands for Hadamard Product.
 #### Member Details:
 It declares a `Matrix` `M` to store the result of the product.
 #### Description:
@@ -266,9 +271,10 @@ This method shuffles the data indices passed to it. It consists of a loop which 
 #### Syntax:
 	template <class T>
 	std::vector<T> Network :: getAt (ifstream& Infile, int i);
+#### Parameters:
+`Infile` - File of data to parse.
+`i` - Index of `Infile` at which to extract data.
 #### Return Type:
 This returns the vector of class T.
-#### Parameters:
-It takes two parameters, one which is the `ifstream` object of the file and the other parameter is the position of type `int`.
 #### Description:
 This method returns the vector at any particular position i in the file. The file from which the vector needs to be read is passed using the ifstream object of that file.
