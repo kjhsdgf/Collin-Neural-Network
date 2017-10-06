@@ -72,16 +72,17 @@ Provided, the sample size should be large enough to speedup the learning process
 
 ### epochs
 	int epochs;
-A hyperparameter that denotes the number of times the samples of finite size needs to be chosen randomly, such that the training inputs are exhausted. 
+A hyperparameter that denotes the number of times the entire training data is exhausted. 
 This number is usually provided by the user rather than a randomly selected value by the learning algorithm.	
 	
 ### layerSizes
 	Vector layerSizes;
-Records the size of every layer in the network, once given a source by the user. Every required matrix in the class gets the size using this parameter.
+Stores the size of every layer in the network, once given a source by the user. Every required matrix in the class derives its size using this parameter.
+The first and last element denote input and output layers respectively so `layerSizes` is required to be at least length 2.
 	
 ### numLayers
 	int numLayers;
-Stores information about the depth of the network. This parameter, particularly, helps in randomly accessing any particular layer in the network. 
+Stores the number of layers in the network given by the size of the layerSizes vector
 	
 ### weights
 	VMatrix weights;
@@ -116,15 +117,7 @@ The sum of the cost partials with respect to weights for all the layers in a net
 	
 ### miniBatchIndices
 	Vector mini_batch_indices;
-A vector of the size same as the batch size. This parameter stores in the indices after the randomization and it is made sure that the different mini batches get unique indices from the test data.
-	
-### trainingDataFilename
-	string trainingDataFilename;
-It is name of the file containing the training data inputs.  	
-	
-### expectedValuesFilename
-	string expectedValuesFilename;
-The expectedValuesFilename is the name of the file, which gives the expected values for each training data input in the trainingData file. It helps in getting the values of errors and helps the network to learn faster.
+A vector of ints that stores indices corresponding to the training data with size of mini batch size. 
 
 ### trainingDataInfile
 	ifstream trainingDataInfile;
@@ -139,32 +132,33 @@ An ifstream object to read in from the expectedValues file. This helps in readin
 #### Syntax:
 	Network::Network (istream& in = cin);
 #### Parameters:
-It takes one parameter, which is the input stream. Although, this input stream is by default set to **cin**. 
+`in` - Input stream from which to initialize the hyperparamters. Set to `cin` be default.
 #### Description:
 This constructor assigns values to all the data members, based on the values of some data members entered by the user. It takes the values from the readInit() method, and creates all the required matrices for the class. This constructor gets called when the user chooses to train the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value.  
 
 ### Parametric Constructor
 #### Syntax:
-	Network::Network(const string &previous_network_filename);
+	Network::Network(const string &previousNetworkFilename);
 #### Parameters:
-It takes one parameter, the filename of the previous network that needs to used.
+`previousNetworkFilename` - Name of file that stores a network with initialized values.
 #### Description:
 This constructor gets called when the user chooses to train the existing network. It reads in all the values required from the previous_network file and asks user if the user wants to change the hyperparameters. If so, it updates the values of the hyperparameters.
 
 ### Overloaded Parametric Constructor
 #### Syntax:
-	Network::Network (const string& previous_network_filename, const string& validation_data_filename);
+	Network::Network (const string& previousNetworkFilename, const string& validationDataFilename);
 #### Parameters:
-It takes two parameters, the filename of the previous network that needs to used and the other parameter is the data file name, which needs to be classified. 
+`previousNetworkFilename` - Name of file that stores a network with initialized values.
+`validationDataFilename` - Name of data with which to classify the Network.
 #### Description:
 This constructor opens the two files passed as the parameters. It takes the required values for classification from the previous network file and creates the required matrices. This constructor gets called when the user chooses to classify the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value, if needed and to null, if not needed.
 
 ## Method Details
 ### 1. readInit(string &)
 #### Syntax:
-	void Network :: readInit (const string& previous_network_filename);
+	void Network :: readInit (const string& previousNetworkFilename);
 #### Parameters:
-It takes one parameter, which is the name of the file that stores the values of an already trained network.
+`previousNetworkFilename` - Name of file that stores a network with initialized values.
 #### Description:
 This method reads in all the required parameters from the file, the name of which is passed in the parameter. This method is responsible to open the file and read in the values of the hyperparameters along with the trainingDataFilename and the expectedValuesFilename. It opens the two files and creates the matrices for the data members of the class. Once created, the weights and biases matrices get assigned with the values from the previous_network file. This method is responsible to check for the validation of the values before assigning them to the data members of the class and display the error message in case of any invalid input.
 
