@@ -148,7 +148,7 @@ This constructor gets called when the user chooses to train the existing network
 #### Syntax:
 	Network::Network (const string& previousNetworkFilename, const string& validationDataFilename);
 #### Parameters:
-`previousNetworkFilename` - Name of file that stores a network with initialized values.
+`previousNetworkFilename` - Name of file that stores a network with initialized values.  
 `validationDataFilename` - Name of data with which to classify the Network.
 #### Description:
 This constructor opens the two files passed as the parameters. It takes the required values for classification from the previous network file and creates the required matrices. This constructor gets called when the user chooses to classify the network. Once called, it is this constructor that makes sure every data member of the class gets assigned to a value, if needed and to null, if not needed.
@@ -206,8 +206,8 @@ At the end of the function, the sum of the cost partials are set to 0 again.
 	void Network :: train();
 #### Member Description:
 Declares members `vector<int> testDataIndices`, `int testDataSize`, `int numCorrect`
-   `testDataIndices` - Vector with elements of indices that correspond to the respective line of test data and expected values files.
-   `testDataSize` - Size of test data.
+   `testDataIndices` - Vector with elements of indices that correspond to the respective line of test data and expected values files.  
+   `testDataSize` - Size of test data.  
    `numCorrect` - Number of outputs that match expected values. Reset after every epoch.
 #### Description:
 This method is responsible for training the network until all training data inputs are exhausted. It performs the training as many times as the number of epochs entered by the user. This method is responsible for assigning the values to `testDataIndices` initially to the values which represent their respective position in the trainingData file. Once initialized, the testDataIndices are shuffled at the start of every epoch. 
@@ -232,7 +232,7 @@ Classify() is called when the user wants to classify a specific file. In that ca
 #### Syntax:
 	void Network :: randomizeMatrix(const Matrix& inputMatrix, double (*distribution) ());
 #### Parameters:
-`inputMatrix` - Matrix to populate with random numbers.
+`inputMatrix` - Matrix to populate with random numbers.  
 `(*distribution) ()` - Pointer to a distribution method as provided by user.
 It takes two parameters, one of them is a matrix and the other is the pointer to the function that performs the distribution. 
 #### Description:
@@ -261,18 +261,18 @@ hadamardProduct() is a scalar multiplication of two matrices where we obtain a m
 ### 12. shuffleDataIndices()
 #### Syntax:
 	template <class T>
-	void Network :: shuffleDataIndices(vector<T> data_indices);
+	void Network :: shuffleDataIndices(vector<T> indices);
 #### Parameters:
-It take one parameter which is a vector of the data indices that has to be shuffled.
+`indices` - Vector of indices to shuffle.
 #### Description:
-This method shuffles the data indices passed to it. It consists of a loop which goes through the data indices and performs the operation of shuffling the data.
+Applies Fisher Yates shuffle to randomize contents of a vector passed to it. Loops through elements in the vector swapping an element with a random element from the rest of the list so that each eleement is swapped. Requires that the type `T` passed to it has an overloaded `=` operator.
 
 ### 13. getAt ()
 #### Syntax:
 	template <class T>
 	std::vector<T> Network :: getAt (ifstream& Infile, int i);
 #### Parameters:
-`Infile` - File of data to parse.
+`Infile` - File of data to parse.  
 `i` - Index of `Infile` at which to extract data.
 #### Return Type:
 This returns the vector of class T.
