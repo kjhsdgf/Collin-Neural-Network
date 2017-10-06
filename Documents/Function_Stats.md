@@ -1,9 +1,9 @@
 # Function Stats/Divvying Up Work
 
-### Ami ( > 64 lines) (actual: 76 lines)
+### Ami ( > 64 lines) (actual ~ 126 lines)
 - [x] `writeToFile` ( 12-15 lines) (actual: 46 lines)
 - [x] `activationFunction()` (1 line) (actual: 1 line)
-- [ ] `readInit(file)` (20-30 lines)
+- [ ] `readInit(file)` (20-30 lines) (actual ~ 50 lines)
 - [x] `getAt()` ( > 10 lines) (actual: 13 lines)
 - [x] `Strtok(string)` (6-8 lines) (actual: 16 lines)
 
