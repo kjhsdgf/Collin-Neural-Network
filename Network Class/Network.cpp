@@ -136,3 +136,199 @@ void Network::updateWeightsAndBiases()
 	}
 
 }
+
+//Extracts the training data sample at batchIndex and runs forward propagation as commonly(?) defined for feedforward
+//neural networks. Requires that a training data file be in place, and an infile object is instantiated for it.
+//Added another parameter bc it made my life easier while writing classify()
+void Network::forwardProp(const int batchIndex, const string &filename)
+{
+	//extract data point from training data file at input indice into first layer of activations
+	activations[0] = getAt<double>(filename, batchIndex); //<--untested!
+	//run forward propagation
+	for (int i = 1; i < numLayers; i++)
+	{
+		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
+		activations[i] = activationFunction(weightedInputs[i]);
+	}
+}
+
+//when passed a text file, will classify data therein and output to console as well as a file
+void classify(const string &validation_data_filename)
+{
+//SETUP
+	//create an infile object for validation data, and open it
+	ifstream validationDataInfile(validation_data_filename, ios::ate);	//opened at end for calc of numClassifications
+	if (validationDataInfile.fail())
+	{
+		cout << "File \'" << validation_data_filename << "\' not found!\n";
+		cout << "Exiting classify()...\n";
+		return;
+	}
+
+	//create outfile for output and open it
+	string outputFilename = "Classification_";							//what filename starts with
+	const int MAX_SIZE(80);												//buffer (maximum) size for the intermediary cstring
+	time_t currentTime = time(NULL);									//returns current time
+	struct tm * currentTimeInfo = localtime(&currentTime);				//stores current time into a struct
+	char outputFileTime[MAX_SIZE];										//creates cstring intermediary
+	strftime(outputFileTime, MAX_SIZE, "%a-%b-%d-%T", currentTimeInfo);	//cinverts cstring intermediary into a string containing the current time
+	outputFilename += outputFileTime;									//appends Day(of week)-Month-Day(of month)-Current Hour:Minute:Second to outputFilename
+	ofstream classificationOutput(outputFilename, ios::trunc);			//creates and opens output file
+	
+	//create an integer for biggest element indice
+	int biggestElement(0); ///assumed to be the 0th element, initially
+	//create a counter for number of elements equal to the biggest
+	int numBiggest(0);
+	//create a counter for ambiguous data
+	int ambiguousData(0);
+	//make an integer for the total number of samples in the validation data file
+	const int MAGIC_NUMBER_1(2);	///these are just what worked with the given data files!
+	const int MAGIC_NUMBER_2(10);	///may need to change them later... no idea what they represent yet.
+	int numClassifications = (static_cast<int>(validationDataInfile.tellg()) + MAGIC_NUMBER_1) / MAGIC_NUMBER_2;
+	validationDataInfile.clear();				//clears eof bit
+	validationDataInfile.seekg(0, ios::beg);	//resets the seekg head
+
+//CLASSIFY
+	//Loop through samples
+	for (int i = 0; i < numClassifications; i++)
+	{
+		forwardProp(i, validation_data_filename);				//Pass a sample to forwardProp
+		//find the biggest element in output vector, or determine output as ambiguous
+		for (int j = 0; j < activations[numLayers].nr(); j++)	//loop through the elements of the output
+			if (activations[numLayers](j, 0) > activations[numLayers](biggestElement, 0))
+				biggestElement = j;
+		for (int j = 0; j < activations[numLayers].nr(); j++)
+			if (activations[numLayers](j, 0) == activations[numLayers](biggestElement, 0))
+				numBiggest++;
+		if (numBiggest > 1)
+			ambiguousData++;
+		//print out the classification into a file
+		classificationOutput << "Network Input:  " << dlib::trans(getAt<Matrix>(validationDataInfile, i)[0]);		//<-- possible problems here
+		classificationOutput << "Network Output: " << dlib::trans(activations[numLayers]);
+		classificationOutput << "Classification: ";
+		if (numBiggest > 1)
+			classificationOutput << "ambiguous data";
+		else
+			for (int j = 0; j < activations[numLayers].nr(); j++)
+			{
+				if (j == biggestElement)
+					classificationOutput << "1 ";
+				else
+					classificationOutput << "0 ";
+			}
+		classificationOutput << "\n";
+		//print out classification into cmd prompt
+		cout << "Network Input:  " << dlib::trans(getAt<Matrix>(validationDataInfile, i)[0]);		//<-- possible problems here
+		cout << "Network Output: " << dlib::trans(activations[numLayers]);
+		cout << "Classification: ";
+		if (numBiggest > 1)
+			cout << "ambiguous data";
+		else
+			for (int j = 0; j < activations[numLayers].nr(); j++)
+			{
+				if (j == biggestElement)
+					cout << "1 ";
+				else
+					cout << "0 ";
+			}
+		cout << "\n";
+		//reset relevant counters for next classification
+		biggestElement = 0;
+		numBiggest = 0;
+	}
+	//Print out number classified, and % classified
+	cout << numClassifications - ambiguousData << " out of " << numClassifications << " classified.";
+	classificationOutput << numClassifications - ambiguousData << " out of " << numClassifications << " classified.";
+//CLOSING
+	//close the files
+	classificationOutput.close();
+	validationDataInfile.close();
+
+}
+
+//in the case they want to classify whatever's already in the training file data member
+void classify()
+{
+//SETUP
+	//move class training data infile to the start
+	trainingDataInfile.clear();
+	trainingDataInfile.seekg(0, ios::beg);
+
+	//create outfile for output and open it
+	string outputFilename = "Classification_";							//what filename starts with
+	const int MAX_SIZE(80);												//buffer (maximum) size for the intermediary cstring
+	time_t currentTime = time(NULL);									//returns current time
+	struct tm * currentTimeInfo = localtime(&currentTime);				//stores current time into a struct
+	char outputFileTime[MAX_SIZE];										//creates cstring intermediary
+	strftime(outputFileTime, MAX_SIZE, "%a-%b-%d-%T", currentTimeInfo);	//cinverts cstring intermediary into a string containing the current time
+	outputFilename += outputFileTime;									//appends Day(of week)-Month-Day(of month)-Current Hour:Minute:Second to outputFilename
+	ofstream classificationOutput(outputFilename, ios::trunc);			//creates and opens output file
+	
+	//create an integer for biggest element indice
+	int biggestElement(0); ///assumed to be the 0th element, initially
+	//create a counter for number of elements equal to the biggest
+	int numBiggest(0);
+	//create a counter for ambiguous data
+	int ambiguousData(0);
+	//make an integer for the total number of samples in the validation data file
+	const int MAGIC_NUMBER_1(2);	///these are just what worked with the given data files!
+	const int MAGIC_NUMBER_2(10);	///may need to change them later... no idea what they represent yet.
+	int numClassifications = (static_cast<int>(trainingDataInfile.tellg()) + MAGIC_NUMBER_1) / MAGIC_NUMBER_2;
+	trainingDataInfile.clear();				//clears eof bit
+	trainingDataInfile.seekg(0, ios::beg);	//resets the seekg head
+
+//CLASSIFY
+	//Loop through samples
+	for (int i = 0; i < numClassifications; i++)
+	{
+		forwardProp(i, validation_data_filename);				//Pass a sample to forwardProp
+		//find the biggest element in output vector, or determine output as ambiguous
+		for (int j = 0; j < activations[numLayers].nr(); j++)	//loop through the elements of the output
+			if (activations[numLayers](j, 0) > activations[numLayers](biggestElement, 0))
+				biggestElement = j;
+		for (int j = 0; j < activations[numLayers].nr(); j++)
+			if (activations[numLayers](j, 0) == activations[numLayers](biggestElement, 0))
+				numBiggest++;
+		if (numBiggest > 1)
+			ambiguousData++;
+		//print out the classification into a file
+		classificationOutput << "Network Input:  " << dlib::trans(getAt<Matrix>(trainingDataInfile, i)[0]);		//<-- possible problems here
+		classificationOutput << "Network Output: " << dlib::trans(activations[numLayers]);
+		classificationOutput << "Classification: ";
+		if (numBiggest > 1)
+			classificationOutput << "ambiguous data";
+		else
+			for (int j = 0; j < activations[numLayers].nr(); j++)
+			{
+				if (j == biggestElement)
+					classificationOutput << "1 ";
+				else
+					classificationOutput << "0 ";
+			}
+		classificationOutput << "\n";
+		//print out classification into cmd prompt
+		cout << "Network Input:  " << dlib::trans(getAt<Matrix>(trainingDataInfile, i)[0]);		//<-- possible problems here
+		cout << "Network Output: " << dlib::trans(activations[numLayers]);
+		cout << "Classification: ";
+		if (numBiggest > 1)
+			cout << "ambiguous data";
+		else
+			for (int j = 0; j < activations[numLayers].nr(); j++)
+			{
+				if (j == biggestElement)
+					cout << "1 ";
+				else
+					cout << "0 ";
+			}
+		cout << "\n";
+		//reset relevant counters for next classification
+		biggestElement = 0;
+		numBiggest = 0;
+	}
+	//Print out number classified, and % classified
+	cout << numClassifications - ambiguousData << " out of " << numClassifications << " classified.";
+	classificationOutput << numClassifications - ambiguousData << " out of " << numClassifications << " classified.";
+//CLOSING
+	//close the files (not closing trainingDataInfile, because destructor should take care of that).
+	classificationOutput.close();
+}
