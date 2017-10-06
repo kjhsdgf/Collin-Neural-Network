@@ -6,15 +6,16 @@
 - [ ] `readInit(file)` (20-30 lines)
 - [ ] `getAt()` ( > 10 lines)
 
-### Elijah ( > 57 lines) (actual: 23 lines)
+### Elijah ( > 57 lines) (actual: 88 lines)
 - [x] `costPrime` (1 line) (actual: 1 line)
 - [x] `distribution` (> 5 lines) (actual: 14 lines)
 - [x] `hadamardProduct` ( > 7 lines) (actual: 1 line)
-- [x] `update` (3 lines) (actual: 4 lines)
+- [x] `updateWeightsAndBiases` (3 lines) (actual: 4 lines)
 - [x] `randomizeMatrix` ( < 5 lines) (actual: 3 lines)
-- [ ] `forwardPropagation` ( > 5 lines)
-- [ ] `classify` ( > 30 lines)
-- [ ] `activationPrime` (1 line)
+- [x] `forwardPropagation` ( > 5 lines) (actual: 4 lines)
+- [x] `classify(file)` ( > 30 lines) (actual: 60 lines)
+- [x] `classify()` (mostly copy/paste)
+- [x] `activationPrime` (1 line) (actual: 1 line)
 
 ### Yonatan ( > 45 lines ) (actual: 30 lines)
 - [x] `readInit() //cin` (7-15) (actual: 25 lines)
@@ -30,10 +31,11 @@
 | `backProp` | < 20 |
 | `SGD` | < 20 |
 | `Network(cin)` | < 20 |
-| `classify` | < 20 |
+| ~~`classify(file)`~~ | < 20 |
+| ~~`classify()`~~ | < 20 |
 | ~~`writeToFile`~~ | < 15 |
 | `getAt` | guess: < 15 |
-| `forwardProp` | < 10 |
+| ~~`forwardProp`~~ | < 10 |
 | ~~`distribution`~~ | guess: < 10 |
 | ~~`hadamardProduct`~~ | 7 |
 | ~~`readInit(cin)`~~ | 6 |
@@ -41,8 +43,8 @@
 | `~Network()` | < 5 |
 | ~~`randomizeMatrix`~~ | < 5 |
 | ~~`shuffleDataIndices`~~ | < 5 |
-| ~~`update`~~ | 3 |
-| `activationPrime` | 2 |
+| ~~`updateWeightsAndBiases`~~ | 3 |
+| ~~`activationPrime`~~ | 2 |
 | ~~`costPrime`~~ | 1 |
 | ~~`activation_Function`~~ | 1 |
 
@@ -53,8 +55,8 @@
 | ~~`costPrime`~~ | `~Network()` | `Network(file)` |
 | ~~`activationFunction`~~ | ~~`randomizeMatrix`~~ | `Network(file, file)` |
 | ~~`hadamardProduct`~~ |  `forwardProp` | `readInit(file)` |
-| ~~`shuffleDataIndices`~~ | `classify` | `backProp` |
-| ~~`writeToFile`~~ | `activationPrime` | `SGD` |
-| ~~`update`~~ | `Network(cin)` | `train` |
+| ~~`shuffleDataIndices`~~ | ~~`classify`s~~ | `backProp` |
+| ~~`writeToFile`~~ | ~~`activationPrime`~~ | `SGD` |
+| ~~`updateWeightsAndBiases`~~ | `Network(cin)` | `train` |
 | ~~`distribution`~~ | `getAt` |
 | ~~`readInit(cin)`~~ |
