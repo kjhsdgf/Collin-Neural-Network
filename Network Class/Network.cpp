@@ -153,7 +153,7 @@ void Network::forwardProp(const int batchIndex, const string &filename)
 }
 
 //when passed a text file, will classify data therein and output to console as well as a file
-void classify(const string &validation_data_filename)
+void Network::classify(const string &validation_data_filename)
 {
 //SETUP
 	//create an infile object for validation data, and open it
@@ -247,7 +247,7 @@ void classify(const string &validation_data_filename)
 }
 
 //in the case they want to classify whatever's already in the training file data member
-void classify()
+void Network::classify()
 {
 //SETUP
 	//move class training data infile to the start
