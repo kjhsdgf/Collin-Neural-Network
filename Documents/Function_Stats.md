@@ -6,7 +6,7 @@
 - [ ] `readInit(file)` (20-30 lines)
 - [ ] `getAt()` ( > 10 lines)
 
-### Elijah ( > 57 lines) (actual: 88 lines)
+### Elijah ( > 82 lines) (actual: 132 lines)
 - [x] `costPrime` (1 line) (actual: 1 line)
 - [x] `distribution` (> 5 lines) (actual: 14 lines)
 - [x] `hadamardProduct` ( > 7 lines) (actual: 1 line)
@@ -16,6 +16,7 @@
 - [x] `classify(file)` ( > 30 lines) (actual: 60 lines)
 - [x] `classify()` (mostly copy/paste)
 - [x] `activationPrime` (1 line) (actual: 1 line)
+- [x] `Network()` default constructor ( < 25 lines) (actual: 44 lines)
 
 ### Yonatan ( > 45 lines ) (actual: 30 lines)
 - [x] `readInit() //cin` (7-15) (actual: 25 lines)
@@ -30,11 +31,11 @@
 | `Network(file)` | < 25 |
 | `backProp` | < 20 |
 | `SGD` | < 20 |
-| `Network(cin)` | < 20 |
+| ~~`Network(cin)`~~ | < 20 |
 | ~~`classify(file)`~~ | < 20 |
 | ~~`classify()`~~ | < 20 |
 | ~~`writeToFile`~~ | < 15 |
-| `getAt` | guess: < 15 |
+| ~~`getAt`~~ | guess: < 15 |
 | ~~`forwardProp`~~ | < 10 |
 | ~~`distribution`~~ | guess: < 10 |
 | ~~`hadamardProduct`~~ | 7 |
@@ -57,6 +58,6 @@
 | ~~`hadamardProduct`~~ |  `forwardProp` | `readInit(file)` |
 | ~~`shuffleDataIndices`~~ | ~~`classify`s~~ | `backProp` |
 | ~~`writeToFile`~~ | ~~`activationPrime`~~ | `SGD` |
-| ~~`updateWeightsAndBiases`~~ | `Network(cin)` | `train` |
-| ~~`distribution`~~ | `getAt` |
+| ~~`updateWeightsAndBiases`~~ | ~~`Network(cin)`~~ | `train` |
+| ~~`distribution`~~ | ~~`getAt`~~ |
 | ~~`readInit(cin)`~~ |
