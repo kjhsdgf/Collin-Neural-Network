@@ -137,3 +137,48 @@ void Network::updateWeightsAndBiases()
 	}
 
 }
+
+//ended up writing a Strtok(), which can help us assigning any vector later on while reading from a file
+//can be used in readInit() too
+//Considering the fact that we don't want any user or programmer to use it, Strtok<T> can be a private member of the class.
+template <class T>
+std::vector<T> Strtok(string str)		//std::vector<T> Network :: Strtok(string str)
+{
+	char * pN;
+	std::vector<T> v;
+	char Separator[] = ",";
+	char *p = new char[str.size() + 1];
+	strcpy(p, str.c_str());
+	pN = strtok(p, Separator);
+	while (pN != NULL)
+	{
+		v.push_back(atoi(pN));
+		pN = strtok(NULL, Separator);
+	}
+	delete[] p;
+	return v;
+}
+
+
+template<class T>
+std::vector<T> Network::getAt(ifstream& fin, int i)
+{
+	std::vector<T> v;
+	if (i >= 0)
+	{
+		fin.seekg(0);
+		string str;
+		getline(fin, str);						
+		std::vector<T> v = Strtok<T>(str);
+		fin.seekg(i * (str.size() + 2), ios_base::beg);
+		getline(fin, str);
+		std::vector<T> v2 = Strtok<T>(str);
+		return v2;
+	}
+	else
+	{
+		cout << "\n Server error 403: Found Invalid Index" << endl;
+		v.resize(0);
+		return v;
+	}
+}
