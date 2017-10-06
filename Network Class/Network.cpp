@@ -113,6 +113,7 @@ void Network::readInit() // reading from console
 			"Learning rate := " << learingRate << endl <<
 			"Epochs := " << epochs << endl <<
 			"Mini batch size := " << miniBatchSize << endl;
+	delete[] cStrLayers;
 }
 
 //hadamardProduct utilizes dlib's pointwise_multiply() to compute the element-by-element product.
