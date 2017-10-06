@@ -409,7 +409,7 @@ Network::Network()
 	miniBatchIndices.resize(batchSize);
 }
 
-//ended up writing a Strtok(), which can help us assigning any vector later on while reading from a file
+//A Strtok(), which can help us assigning any vector later on while reading from a file
 //can be used in readInit() too
 //Considering the fact that we don't want any user or programmer to use it, Strtok<T> can be a private member of the class.
 template <class T>
@@ -456,5 +456,94 @@ std::vector<T> Network::getAt(ifstream& fin, int i)
 		cout << "\n Server error 403: Found Invalid Index" << endl;
 		v.resize(0);
 		return v;
+	}
+}
+
+
+//An overloaded readInit() to read the required values, to create or classify a network, from the given file
+bool Network::readInit(const string & file)
+{
+	ifstream fin;
+	fin.open(file, ios_base::in); //creates the file with name "Previous_Network_[Day][Time(hhmin)].txt"
+	if (fin.is_open())
+	{
+		int i;
+		string cLayers;
+		getline(fin, trainingDataFilename);
+		getline(fin, expectedValuesFilename);
+		fin >> learningRate;
+		fin >> batchSize;
+		fin >> epochs;
+		fin >> numLayers;
+		getline(fin, cLayers);
+		layerSizes = Strtok<int>(cLayers, " ");
+
+		//Resize the vectors of the matrices to numLayers
+		weights.resize(numLayers);
+		biases.resize(numLayers);
+		activations.resize(numLayers);
+		weightedInputs.resize(numLayers);
+		errors.resize(numLayers);
+		sumNablaB.resize(numLayers);
+		sumNablaW.resize(numLayers);
+
+		//resize the 0th member of the activations vector: layer_sizes[0] by 1, fill with zeros
+		activations[0].set_size(layerSizes[0], 1);
+		activations[0] = zeros_matrix(activations[0]);
+
+		//Everything but the activations vector will have an effective size of num_layers-1, as their first element will be left unused.
+		for (i = 1; i < numLayers; i++)
+		{
+			//weights matrix at index i created of size: layerSizes[i] by layer_sizes[i-1], filled with random numbers
+			weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
+			randomizeMatrix(weights[i]);
+
+			//biases matrix at index i created of size: layerSizes[i] by 1, filled with random numbers
+			biases[i].set_size(layerSizes[i], 1);
+			randomizeMatrix(biases[i]);
+
+			//activations matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			activations[i].set_size(layerSizes[i], 1);
+			activations[i] = zeros_matrix(activations[i]);
+
+			//weightedInputs matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			weightedInputs[i].set_size(layerSizes[i], 1);
+			weightedInputs[i] = zeros_matrix(weightedInputs[i]);
+
+			//errors matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			errors[i].set_size(layerSizes[i], 1);
+			errors[i] = zeros_matrix(errors[i]);
+
+			//sumNablaB matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			sumNablaB[i].set_size(layerSizes[i], 1);
+			sumNablaB[i] = zeros_matrix(sumNablaB[i]);
+
+			//sumNablaB matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			sumNablaW[i].set_size(layerSizes[i], layerSizes[i - 1]);
+			sumNablaW[i] = zeros_matrix(sumNablaW[i]);
+
+			//end of the loop
+		}
+
+		//resize mini_batch_indices to batch_size
+		miniBatchIndices.resize(batchSize);
+
+		//to be continued...
+		//Assigning the weight matrices with the values from the Previuos_Network file
+		//Assigning the biases matrices with the values form the Previous_Network file
+
+		return true;
+	}
+	else
+	{
+		fin.clear();
+		fin.open(file, ios_base::in);
+		if (!fin.is_open())
+		{
+			cout << "Server error 402: Could not open the file requested! Try again later..";
+			return false;
+		}
+		else
+			return true;
 	}
 }
