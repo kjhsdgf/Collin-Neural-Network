@@ -12,7 +12,7 @@ bool Network::writeToFile()
 	  trainingDataFilename
 	  expectedValuesFilename
 	  learningRate
-      batchSize
+      	  batchSize
 	  epochs
 	  numLayers
 	  vector of layerSizes
@@ -34,34 +34,34 @@ bool Network::writeToFile()
 	string fileName;
 	
 	fileName.resize(24);
-	for (i = 0; i < 20; i++)		//gets the name "Previous_Network_[Day]"
+	for (i = 0; i < 20; i++)			//gets the name "Previous_Network_[Day]"
 		fileName[j++] = a[i];
 	
-	for (i = 28; i < 35; i++)	//appends the [time (hhmin)] to name of the file
+	for (i = 28; i < 35; i++)			//appends the [time (hhmin)] to name of the file
 		if(a[i] != ':')
 			fileName[j++] = a[i];
 	
 	fileName += ".txt";				//appends ".txt" to the name of the file
-	outfile.open(fileName, ios_base::out); //creates the file with name "Previous_Network_[Day][Time(hhmin)].txt"
+	outfile.open(fileName, ios_base::out); 		//creates the file with name "Previous_Network_[Day][Time(hhmin)].txt"
 	if (outfile.is_open())
 	{
-		cout << "\nCreating file " << fileName << endl;
-		outfile << trainingDataFilename << endl;
-		outfile << expectedValuesFilename << endl;
-		outfile << learningRate << endl;
-		outfile << batchSize << endl;				
-		outfile << epochs << endl;
-		outfile << numLayers << endl;
+		cout << "\nCreating file " << fileName << '\n'; //because endl calls flush(), which forces the buffer to write to the file without being filled
+		outfile << trainingDataFilename << '\n';
+		outfile << expectedValuesFilename << '\n';
+		outfile << learningRate << '\n';
+		outfile << batchSize << '\n';				
+		outfile << epochs << '\n';
+		outfile << numLayers << '\n';
 		i1 = layerSizes.begin();
 		for (; i1 != layerSizes.end(); i1++)
 			outfile << (*i1) << " ";
-		outfile << endl;
+		outfile << '\n';
 		j = 1;
 		while ((j) < numLayers)
 		{
-			outfile << "w " << j << endl;
-			outfile << weights[j];			//there is overloaded operator for '<<' to display the matrices inside dlib
-			outfile << "b " << j << endl;
+			outfile << "w " << j << '\n';
+			outfile << weights[j];			
+			outfile << "b " << j << '\n';
 			outfile << biases[j];
 			j++;
 		}
