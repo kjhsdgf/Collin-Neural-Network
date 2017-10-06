@@ -169,11 +169,10 @@ std::vector<T> Network::getAt(ifstream& fin, int i)
 		fin.seekg(0);
 		string str;
 		getline(fin, str);						
-		std::vector<T> v = Strtok<T>(str);
 		fin.seekg(i * (str.size() + 2), ios_base::beg);
 		getline(fin, str);
-		std::vector<T> v2 = Strtok<T>(str);
-		return v2;
+		v = Strtok<T>(str);
+		return v;
 	}
 	else
 	{
