@@ -413,11 +413,10 @@ Network::Network()
 //can be used in readInit() too
 //Considering the fact that we don't want any user or programmer to use it, Strtok<T> can be a private member of the class.
 template <class T>
-std::vector<T> Strtok(string str)			//std::vector<T> Network:: Strtok(string str)
+std::vector<T> Strtok(const string& str, char Separator[] )			//std::vector<T> Network:: Strtok(string str)
 {
 	char * pN;
 	std::vector<T> v;
-	char Separator[] = ",";
 	char *p = new char[str.size() + 1];
 	strcpy(p, str.c_str());
 	pN = strtok(p, Separator);
@@ -448,7 +447,7 @@ std::vector<T> Network::getAt(ifstream& fin, int i)
 		getline(fin, str);						
 		fin.seekg(i * (str.size() + 2), ios_base::beg);
 		getline(fin, str);
-		v = Strtok<T>(str);
+		v = Strtok<T>(str, ",");
 		return v;
 	}
 	else
