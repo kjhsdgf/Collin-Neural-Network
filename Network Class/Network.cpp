@@ -491,15 +491,14 @@ bool Network::readInit(const string & file)
 		activations[0] = zeros_matrix(activations[0]);
 
 		//Everything but the activations vector will have an effective size of num_layers-1, as their first element will be left unused.
+		//@Yon - removed the randomizeMatrix since the matrices will be populated with actual data anyway
 		for (i = 1; i < numLayers; i++)
 		{
 			//weights matrix at index i created of size: layerSizes[i] by layer_sizes[i-1], filled with random numbers
 			weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
-			randomizeMatrix(weights[i]);
 
 			//biases matrix at index i created of size: layerSizes[i] by 1, filled with random numbers
 			biases[i].set_size(layerSizes[i], 1);
-			randomizeMatrix(biases[i]);
 
 			//activations matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
 			activations[i].set_size(layerSizes[i], 1);
@@ -527,9 +526,22 @@ bool Network::readInit(const string & file)
 		//resize mini_batch_indices to batch_size
 		miniBatchIndices.resize(batchSize);
 
-		//to be continued...
-		//Assigning the weight matrices with the values from the Previuos_Network file
-		//Assigning the biases matrices with the values form the Previous_Network file
+		//@Yon - the ignore statements are to ignore the "w [index]" or "b [index]" at the beginning of each matrix output
+		//	   - consider removing those artifacts from the output file for cleaner code
+		//	   - also they're not that necessary anyway since no person will actually look in the .txt file; onlt the program
+		for (int i = 1; i < layerSizes.size(); i++)
+		{
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+			for (int j = 0; j < layerSizes[i]; j++)
+				for (int k = 0; k < layerSizes[i - 1]; k++)
+					fin >> weights[i](j,k);
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+			
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+			for (int j = 0; j < layerSizes[i]; j++)
+				fin >> biases[i](j, 0);
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
 
 		return true;
 	}
