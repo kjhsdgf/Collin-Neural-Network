@@ -52,7 +52,8 @@ Return type | Name | Description
 `int` | `SGD ()` | Stochastic Gradient Descent: performs forward and back propagation once for each input in the mini batch then updates the weights and biases accordingly
 `void` | `train ()` | Trains network by repeatedly performing SGD on randomized mini batches of the test data for as many epochs as specified
 `void` | `update ()` | Updates weights and biases based on data from SGD
-`void` | `classify ()` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
+`void` | `classify ()` | Classifies the training data and displays the efficiency based on the classified data 
+`void` | `classify (const string&)` | Classifies the data file provided by the user and displays the efficiency based on the classified data 
 `void` | `randomizeMatrix (const Matrix&, double (*distribution) ())` | Assigns Gaussian normally distributed set of random numbers for each element in a matrix
 `bool` | `writeToFile ()` | Writes a file to store the network	
 `matrix&` | `hadamardProduct (const Matrix& , const Matrix&)` |Performs the Hadamard Product operation on any two given matrices 
@@ -220,9 +221,17 @@ As the number of epochs are completed, a file of the network built is made, whic
 #### Description:
 Like its name suggests, this method updates the weights and biases matrices of the network. It consists of a loop which goes from the first layer of the netwrok to the last layer, updating the weights and biases matrices in that layer. It requires the cost partials to be calculated before updating the weights and biases matrices.
 
-### 8. classify()
+### 8. classify() *NEEDS EDIT*
 #### Syntax:
 	void Network :: classify();
+#### Member Description:
+The variables declared inside this function include `ambiguous_data`, `numData` and `biggest`, all of `int` datatype. `ambiguous_data` keeps a track on the number of data which the classifier was not able to classify. The `numData` stores the value for the total number of training inputs in the verification file. `biggest` stores the index which has maximum activation value and thus, helps in classification. 
+#### Description:
+Classify() is called when the user wants to classify a specific file. In that case, the value of `numData` is calculated and a loop is started which goes through all the classification data inputs in the file. At the start of the loop, `biggest` is set to 0 and forwardProp() is called to assign the values to the weightedInputs and activations matrices for each classification data input. Once the activations at the ouput layer are assigned, it checks for the biggest value generated. If it finds the biggest value, the training data input is said to be classified. Otherwise, `ambiguous_data` value is incremented by 1 if no biggest value is found. If biggest was found, it further classifies it into horizontal, vertical or diagonal based on the idex stored in the biggest. Once the loop goes through the complete data set, the ouput is displayed which says the number of data inputs classified according to the different categories and at last displays the accuracy of the classifier based on the classified data out of the complete data set.
+
+### 8. classify(const string& validationDataFilename) *NEEDS EDIT*
+#### Syntax:
+	void Network :: classify(const string& validationDataFilename);
 #### Member Description:
 The variables declared inside this function include `ambiguous_data`, `numData` and `biggest`, all of `int` datatype. `ambiguous_data` keeps a track on the number of data which the classifier was not able to classify. The `numData` stores the value for the total number of training inputs in the verification file. `biggest` stores the index which has maximum activation value and thus, helps in classification. 
 #### Description:
