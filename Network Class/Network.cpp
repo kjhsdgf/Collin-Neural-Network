@@ -138,6 +138,39 @@ void Network::updateWeightsAndBiases()
 
 }
 
+//moves backwards through Network calculating error at each level and using that to increment sumNablaB and sumNablaW
+//requires the assumption that expected values has an int
+bool backProp(int index)
+{
+	int lastInd = numLayers - 1;
+	int lastSize = layerSizes[lastInd];
+	Vector expectedValues = getAt<int>(expectedValuesInfile, index);
+	
+	bool correct = true;
+	// to write: check if activations[lastInd] matches expectedVal at index and set correct accordingly
+
+	// Matrix costPrime = activations[lastInd] - expectedValues;
+	// above statement needs expectedValues to be a matrix to work
+	// consider the implications of having getAt return a (j x 1) matrix instead of a vector
+	Matrix costPrime; costPrime.set_size(lastSize, 1);
+	for (int i = 0; i < lastSize; i++
+		 costPrime(i,0) = activations[lastInd](i,0) - expectedValues[i];
+		
+	errors[lastInd] = hadamardProduct(costPrime, activationPrime(weightedInputs[lastInd]));
+	sumNablaB[lastInd] += errors[lastInd];
+	sumNablaW[lastInd] += (errors[lastInd]) * trans(activations[lastInd - 1]);
+
+	for (int i = lastLayer - 1; i > 0; i--)
+	{
+		errors[i] = hadamardProduct(trans(weights[i+1]) * errors[i+1],
+									activationPrime(weightedInputs[i]));
+		sumNablaB[i] += errors[i];
+		sumNablaW[i] += errors[i] * trans(activations[i - 1]);
+	}
+
+	return correct;
+}
+
 
 //Extracts the training data sample at batchIndex and runs forward propagation as commonly(?) defined for feedforward
 //neural networks. Requires that a training data file be in place, and an infile object is instantiated for it.
@@ -409,6 +442,13 @@ Network::Network()
 	miniBatchIndices.resize(batchSize);
 }
 
+//Classify constructor. data initializing handled by readInit
+Network::Network(const string& networkFilename, const string& validationDataFilename)
+{
+	readInit(networkFilename);
+	Classify(validationDataFilename);
+}
+
 //A Strtok(), which can help us assigning any vector later on while reading from a file
 //can be used in readInit() too
 //Considering the fact that we don't want any user or programmer to use it, Strtok<T> can be a private member of the class.
@@ -542,7 +582,7 @@ bool Network::readInit(const string & file)
 				fin >> biases[i](j, 0);
 			fin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
-
+		fin.close();
 		return true;
 	}
 	else
