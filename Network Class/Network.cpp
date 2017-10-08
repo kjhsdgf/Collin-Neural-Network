@@ -510,7 +510,14 @@ std::vector<T> Network::getAt(ifstream& fin, int i)
 bool Network::readInit(const string & file)
 {
 	ifstream fin;
-	fin.open(file, ios_base::in); //creates the file with name "Previous_Network_[Day][Time(hhmin)].txt"
+	fin.open(file, ios_base::in); 
+	if (!fin.is_open())
+	{
+		fin.clear();
+		fin.open(file, ios_base::in);
+	}
+	else;
+
 	if (fin.is_open())
 	{
 		int i;
@@ -521,6 +528,7 @@ bool Network::readInit(const string & file)
 		fin >> batchSize;
 		fin >> epochs;
 		fin >> numLayers;
+		fin.seekg(2, ios::cur);	
 		getline(fin, cLayers);
 		layerSizes = Strtok<int>(cLayers, " ");
 
@@ -535,16 +543,15 @@ bool Network::readInit(const string & file)
 
 		//resize the 0th member of the activations vector: layer_sizes[0] by 1, fill with zeros
 		activations[0].set_size(layerSizes[0], 1);
-		activations[0] = zeros_matrix(activations[0]);
+		activations.push_back(zeros_matrix(activations[0]));
 
 		//Everything but the activations vector will have an effective size of num_layers-1, as their first element will be left unused.
-		//@Yon - removed the randomizeMatrix since the matrices will be populated with actual data anyway
 		for (i = 1; i < numLayers; i++)
 		{
-			//weights matrix at index i created of size: layerSizes[i] by layer_sizes[i-1], filled with random numbers
+			//weights matrix at index i created of size: layerSizes[i] by layer_sizes[i-1]
 			weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
 
-			//biases matrix at index i created of size: layerSizes[i] by 1, filled with random numbers
+			//biases matrix at index i created of size: layerSizes[i] by 1
 			biases[i].set_size(layerSizes[i], 1);
 
 			//activations matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
@@ -573,35 +580,25 @@ bool Network::readInit(const string & file)
 		//resize mini_batch_indices to batch_size
 		miniBatchIndices.resize(batchSize);
 
-		//@Yon - the ignore statements are to ignore the "w [index]" or "b [index]" at the beginning of each matrix output
-		//	   - consider removing those artifacts from the output file for cleaner code
-		//	   - also they're not that necessary anyway since no person will actually look in the .txt file; onlt the program
 		for (int i = 1; i < layerSizes.size(); i++)
 		{
 			fin.ignore(numeric_limits<streamsize>::max(), '\n');
 			for (int j = 0; j < layerSizes[i]; j++)
 				for (int k = 0; k < layerSizes[i - 1]; k++)
-					fin >> weights[i](j,k);
+					fin >> weights[i](j, k);
 			fin.ignore(numeric_limits<streamsize>::max(), '\n');
-			
+
 			fin.ignore(numeric_limits<streamsize>::max(), '\n');
 			for (int j = 0; j < layerSizes[i]; j++)
 				fin >> biases[i](j, 0);
 			fin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
-		fin.close();
+
 		return true;
 	}
 	else
 	{
-		fin.clear();
-		fin.open(file, ios_base::in);
-		if (!fin.is_open())
-		{
 			cout << "Server error 402: Could not open the file requested! Try again later..";
 			return false;
-		}
-		else
-			return true;
 	}
 }
