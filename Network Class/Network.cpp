@@ -149,6 +149,13 @@ bool backProp(int index)
 	bool correct = true;
 	// to write: check if activations[lastInd] matches expectedVal at index and set correct accordingly
 
+	// Matrix costP; costP.set_size(lastSize, 1);
+	// costP = costPrime(expectedValues);						// costPrime() is a class fucntion
+	// 	     = costPrime(expectedValues, activations[lastInd]); // costPrime() is an auxilliary function
+	
+	// replace code below with the code above when we have a costPrime()
+	// i know we're going to be changing it but i just want something to work with for now
+	
 	// Matrix costPrime = activations[lastInd] - expectedValues;
 	// above statement needs expectedValues to be a matrix to work
 	// consider the implications of having getAt return a (j x 1) matrix instead of a vector
