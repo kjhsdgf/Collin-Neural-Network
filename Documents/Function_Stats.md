@@ -6,7 +6,7 @@
 - [x] `readInit(file)` (20-30 lines) (actual ~ 50 lines)
 - [x] `getAt()` ( > 10 lines) (actual: 13 lines)
 - [x] `Strtok(string)` (6-8 lines) (actual: 16 lines)
-- [ ] `SGD()` ( >10 lines)
+- [ ] `SGD` - sorry i had already written it -Yohn
 - [ ] `Network(file)`(8-10 lines)
 - [ ] `~Network()` (5-6 lines)
 
@@ -26,6 +26,7 @@
 ### Yonatan ( > 45 lines ) (actual: 30 lines)
 - [x] `readInit() //cin` (7-15) (actual: 25 lines)
 - [x] `shuffle(vector<T>)` (~5) (actual: 5 lines)
+- [x] `SGD()` ( >10 lines) (actual 10)
 
 ## Approximate Length of Functions
 | Function Name | Appx. Lines, based on Pseudocode.cpp |
