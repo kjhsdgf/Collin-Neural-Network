@@ -26,7 +26,9 @@
 ### Yonatan ( > 45 lines ) (actual: 30 lines)
 - [x] `readInit() //cin` (7-15) (actual: 25 lines)
 - [x] `shuffle(vector<T>)` (~5) (actual: 5 lines)
-- [x] `SGD()` ( >10 lines) (actual 10)
+- [x] `SGD()` ( >10 lines) (actual: 10)
+- [x] `backProp()` ( <20 lines) (actual: 15)
+- [ ] `train()` ( <30 lines)
 
 ## Approximate Length of Functions
 | Function Name | Appx. Lines, based on Pseudocode.cpp |
