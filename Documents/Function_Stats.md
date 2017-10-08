@@ -6,7 +6,6 @@
 - [x] `readInit(file)` (20-30 lines) (actual ~ 50 lines)
 - [x] `getAt()` ( > 10 lines) (actual: 13 lines)
 - [x] `Strtok(string)` (6-8 lines) (actual: 16 lines)
-- [ ] `SGD` - sorry i had already written it -Yohn
 - [ ] `Network(file)`(8-10 lines)
 - [ ] `~Network()` (5-6 lines)
 
