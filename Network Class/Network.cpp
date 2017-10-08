@@ -194,6 +194,32 @@ void Network::forwardProp(const int batchIndex, const string &filename)
 	}
 }
 
+// SGD performs a single step of stochastic gradient descent on a mini batch size
+// It propagates forward to compute an output then backwards to compute the errors in the newtwork for each input in the mini batch size
+// It then computes the average error for the mini batch size and updates the weights and biases accordingly
+// Returns an int representing how many times the network produced expected output for a given mini batch size
+int SGD()
+{
+	int numCorrect = 0;
+	for (int i = 0; i < miniBatchIndices.size(); i++)
+	{
+		forwardProp(miniBatchIndices[i]);
+		if (backProp(miniBatchIndices[i]))
+			numCorrect++;
+	}
+
+	updateWeightsAndBiases();
+
+	for (int i = 1; i < numLayers; i++)
+	{
+		sumNablaB[i] = zeros_matrix(sumNablaB[i]);
+		sumNablaW[i] = zeros_matrix(sumNablaW[i]);
+	}
+	return numCorrect;
+}
+
+
+
 //when passed a text file, will classify data therein and output to console as well as a file
 void Network::classify(const string &validation_data_filename)
 {
