@@ -486,29 +486,50 @@ Network::Network(const string& networkFilename, const string& validationDataFile
 //can be used in readInit() too
 //Considering the fact that we don't want any user or programmer to use it, Strtok<T> can be a private member of the class.
 template <class T>
-std::vector<T> Strtok(const string& str, char Separator[] )			//std::vector<T> Network:: Strtok(string str)
+std::vector<T> Strtok(const string& str, char Separator[])
 {
 	char * pN;
 	std::vector<T> v;
 	char *p = new char[str.size() + 1];
 	strcpy(p, str.c_str());
 	pN = strtok(p, Separator);
-	if(sizeof(*pN) == 2)
-		while (pN != NULL)
-		{
-			v.push_back(atoi(pN));
-			pN = strtok(NULL, Separator);
-		}
-
-	else
-		while (pN != NULL)
-		{
-			v.push_back(atof(pN));
-			pN = strtok(NULL, Separator);
-		}
+	while (pN != NULL)
+	{
+		v.push_back(atof(pN));
+		pN = strtok(NULL, Separator);
+	}
 	delete[] p;
 	return v;
 }
+
+template<class T>
+const matrix<T> Network::getAt(ifstream& fin, int i)
+{
+	std::vector<T> v;
+	matrix<T> m;
+	if (i >= 0)
+	{
+		fin.seekg(0);
+		string str;
+		getline(fin, str);						
+		fin.seekg(i * (str.size() + 2), ios_base::beg);
+		getline(fin, str);
+		v = Strtok<T>(str, ",");
+		m.set_size(v.size(), 1);
+		for (int i = 0; i < v.size(); i++)
+		{
+			m(i, 0) = v[i];
+		}
+		return m;
+	}
+	else
+	{
+		cout << "\n Server error 403: Found Invalid Index" << endl;
+		m.set_size(0,0);
+		return m;
+	}
+}
+		 
 template<class T>
 std::vector<T> Network::getAt(ifstream& fin, int i)
 {
