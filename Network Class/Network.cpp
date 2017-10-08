@@ -138,6 +138,46 @@ void Network::updateWeightsAndBiases()
 
 }
 
+//moves backwards through Network calculating error at each level and using that to increment sumNablaB and sumNablaW
+//requires the assumption that expected values has an int
+bool backProp(int index)
+{
+	int lastInd = numLayers - 1;
+	int lastSize = layerSizes[lastInd];
+	Vector expectedValues = getAt<int>(expectedValuesInfile, index);
+	
+	bool correct = true;
+	// to write: check if activations[lastInd] matches expectedVal at index and set correct accordingly
+
+	// Matrix costP; costP.set_size(lastSize, 1);
+	// costP = costPrime(expectedValues);						// costPrime() is a class fucntion
+	// 	     = costPrime(expectedValues, activations[lastInd]); // costPrime() is an auxilliary function
+	
+	// replace code below with the code above when we have a costPrime()
+	// i know we're going to be changing it but i just want something to work with for now
+	
+	// Matrix costPrime = activations[lastInd] - expectedValues;
+	// above statement needs expectedValues to be a matrix to work
+	// consider the implications of having getAt return a (j x 1) matrix instead of a vector
+	Matrix costPrime; costPrime.set_size(lastSize, 1);
+	for (int i = 0; i < lastSize; i++
+		 costPrime(i,0) = activations[lastInd](i,0) - expectedValues[i];
+		
+	errors[lastInd] = hadamardProduct(costPrime, activationPrime(weightedInputs[lastInd]));
+	sumNablaB[lastInd] += errors[lastInd];
+	sumNablaW[lastInd] += (errors[lastInd]) * trans(activations[lastInd - 1]);
+
+	for (int i = lastLayer - 1; i > 0; i--)
+	{
+		errors[i] = hadamardProduct(trans(weights[i+1]) * errors[i+1],
+									activationPrime(weightedInputs[i]));
+		sumNablaB[i] += errors[i];
+		sumNablaW[i] += errors[i] * trans(activations[i - 1]);
+	}
+
+	return correct;
+}
+
 
 //Extracts the training data sample at batchIndex and runs forward propagation as commonly(?) defined for feedforward
 //neural networks. Requires that a training data file be in place, and an infile object is instantiated for it.
@@ -409,6 +449,13 @@ Network::Network()
 	miniBatchIndices.resize(batchSize);
 }
 
+//Classify constructor. data initializing handled by readInit
+Network::Network(const string& networkFilename, const string& validationDataFilename)
+{
+	readInit(networkFilename);
+	Classify(validationDataFilename);
+}
+
 //A Strtok(), which can help us assigning any vector later on while reading from a file
 //can be used in readInit() too
 //Considering the fact that we don't want any user or programmer to use it, Strtok<T> can be a private member of the class.
@@ -491,15 +538,14 @@ bool Network::readInit(const string & file)
 		activations[0] = zeros_matrix(activations[0]);
 
 		//Everything but the activations vector will have an effective size of num_layers-1, as their first element will be left unused.
+		//@Yon - removed the randomizeMatrix since the matrices will be populated with actual data anyway
 		for (i = 1; i < numLayers; i++)
 		{
 			//weights matrix at index i created of size: layerSizes[i] by layer_sizes[i-1], filled with random numbers
 			weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
-			randomizeMatrix(weights[i]);
 
 			//biases matrix at index i created of size: layerSizes[i] by 1, filled with random numbers
 			biases[i].set_size(layerSizes[i], 1);
-			randomizeMatrix(biases[i]);
 
 			//activations matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
 			activations[i].set_size(layerSizes[i], 1);
@@ -527,10 +573,23 @@ bool Network::readInit(const string & file)
 		//resize mini_batch_indices to batch_size
 		miniBatchIndices.resize(batchSize);
 
-		//to be continued...
-		//Assigning the weight matrices with the values from the Previuos_Network file
-		//Assigning the biases matrices with the values form the Previous_Network file
-
+		//@Yon - the ignore statements are to ignore the "w [index]" or "b [index]" at the beginning of each matrix output
+		//	   - consider removing those artifacts from the output file for cleaner code
+		//	   - also they're not that necessary anyway since no person will actually look in the .txt file; onlt the program
+		for (int i = 1; i < layerSizes.size(); i++)
+		{
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+			for (int j = 0; j < layerSizes[i]; j++)
+				for (int k = 0; k < layerSizes[i - 1]; k++)
+					fin >> weights[i](j,k);
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+			
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+			for (int j = 0; j < layerSizes[i]; j++)
+				fin >> biases[i](j, 0);
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+		fin.close();
 		return true;
 	}
 	else
