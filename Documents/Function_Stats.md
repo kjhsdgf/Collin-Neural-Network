@@ -3,9 +3,13 @@
 ### Ami ( > 64 lines) (actual ~ 126 lines)
 - [x] `writeToFile` ( 12-15 lines) (actual: 46 lines)
 - [x] `activationFunction()` (1 line) (actual: 1 line)
-- [ ] `readInit(file)` (20-30 lines) (actual ~ 50 lines)
+- [x] `readInit(file)` (20-30 lines) (actual ~ 50 lines)
 - [x] `getAt()` ( > 10 lines) (actual: 13 lines)
 - [x] `Strtok(string)` (6-8 lines) (actual: 16 lines)
+- [ ] `SGD()` ( >10 lines)
+- [ ] `Network(file)`(8-10 lines)
+- [ ] `~Network()` (5-6 lines)
+
 
 ### Elijah ( > 82 lines) (actual: 132 lines)
 - [x] `costPrime` (1 line) (actual: 1 line)
