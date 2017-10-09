@@ -218,6 +218,66 @@ int SGD()
 	return numCorrect;
 }
 
+// thought it might be nice if train also returned a vector of the network's efficiency at each epoch
+// but if we're having that info printed out to console (though i think it's better served storing somewhere for later access)
+// this is not necessary and can be changed with juust a couple deletions
+
+// train calls SGD on every mini batch in a training data set until the set has been exhausted as many times as epochs
+// randomizing the set between each epoch
+// no parameters
+// returns a vector of doubles containing the percentage of outputs the network successfully classified for each iteration of an epoch
+vector<double> Network::train()
+{
+	vector<double> efficiency(epochs);
+
+	int trainingDataSize = filesize(trainingDataInfile);
+
+	Vector trainingDataIndices(trainingDataSize);
+	for (int i = 0; i < trainingDataSize; i++)
+		trainingDataIndices[i] = i;
+	
+	int batchSize = miniBatchIndices.size();
+	int sgdCalls = trainingDataSize / batchSize;
+
+	for (int i = 0; i < epochs; i++)
+	{
+		int numCorrect;
+		FYShuffle(trainingDataIndices);
+
+		for (int j = 0; j < sgdCalls; j++)
+		{
+			for (int k = 0; k < batchSize; k++)
+				miniBatchIndices[k] = trainingDataIndices[(j*batchSize) + k];
+			numCorrect += SGD();
+		}
+
+		efficiency[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
+		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
+	}
+
+	if(!writeToFile())
+		cout << "\n Server error 405: Could not write network to file." << endl;
+}
+
+
+// yes i know what you're thinking "parsing the whole file just for the size?!?!" but it's really NOT that slow
+// this should be fine for what data we have now or in the near/far future
+// i have a couple of benchmarks on a few pretty large files i generated so just ask me if you want to know the stats
+//  - Yon
+int Network::filesize(istream& in)
+{
+	int count;
+
+	in.seekg(0, ios::beg);
+	while (!in.eof())
+	{
+		count++;
+		in.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
+	in.seekg(0, ios::beg);
+
+	return count;
+}
 
 
 //when passed a text file, will classify data therein and output to console as well as a file
