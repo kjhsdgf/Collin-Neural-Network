@@ -1,6 +1,6 @@
 #include "Network.h"
 
-bool Network::writeToFile() 	
+bool Network::writeToFile() const
 {
 	/*This method creates a file named "Previous_Network_[Day][Time(hhmin)].txt" and 
 	  writes all  the required parameters of the class network in the file.
@@ -23,7 +23,7 @@ bool Network::writeToFile()
 	  biases matrix at that index  */
 
 	ofstream outfile;
-	std::vector<int>::iterator i1;
+	std::vector<int>::const_iterator i1;
 	int i;
 	int j (0);
 	int k;
@@ -98,7 +98,7 @@ void Network::readInit() // reading from console
 	cin >> epochs;
 
 	cout << "\nPlease enter an integer for the mini batch size:" << endl;
-	cin >> miniBatchSize;
+	cin >> batchSize;
 
 	cout << "\nThank you! You have created a network with these values:" << endl;
 	
@@ -110,9 +110,9 @@ void Network::readInit() // reading from console
 		cout << layerSizes[i] << " ";
 	
 	cout 										 << "nodes respectively." << endl <<
-			"Learning rate := " << learingRate << endl <<
+			"Learning rate := " << learningRate << endl <<
 			"Epochs := " << epochs << endl <<
-			"Mini batch size := " << miniBatchSize << endl;
+			"Mini batch size := " << batchSize << endl;
 	delete[] cStrLayers;
 }
 
@@ -144,7 +144,7 @@ bool backProp(int index)
 {
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
-	Vector expectedValues = getAt<int>(expectedValuesInfile, index);
+	Matrix expectedValues = getM<int>(expectedValuesInfile, index);
 	
 	bool correct = true;
 	// to write: check if activations[lastInd] matches expectedVal at index and set correct accordingly
@@ -160,14 +160,14 @@ bool backProp(int index)
 	// above statement needs expectedValues to be a matrix to work
 	// consider the implications of having getAt return a (j x 1) matrix instead of a vector
 	Matrix costPrime; costPrime.set_size(lastSize, 1);
-	for (int i = 0; i < lastSize; i++
+	for (int i = 0; i < lastSize; i++)
 		 costPrime(i,0) = activations[lastInd](i,0) - expectedValues[i];
 		
 	errors[lastInd] = hadamardProduct(costPrime, activationPrime(weightedInputs[lastInd]));
 	sumNablaB[lastInd] += errors[lastInd];
 	sumNablaW[lastInd] += (errors[lastInd]) * trans(activations[lastInd - 1]);
 
-	for (int i = lastLayer - 1; i > 0; i--)
+	for (int i = lastSize - 1; i > 0; i--)
 	{
 		errors[i] = hadamardProduct(trans(weights[i+1]) * errors[i+1],
 									activationPrime(weightedInputs[i]));
@@ -182,10 +182,10 @@ bool backProp(int index)
 //Extracts the training data sample at batchIndex and runs forward propagation as commonly(?) defined for feedforward
 //neural networks. Requires that a training data file be in place, and an infile object is instantiated for it.
 //Added another parameter bc it made my life easier while writing classify()
-void Network::forwardProp(const int batchIndex, const string &filename)
+void Network::forwardProp(const int batchIndex, ifstream& infile)
 {
 	//extract data point from training data file at input indice into first layer of activations
-	activations[0] = getAt<double>(filename, batchIndex); //<--untested!
+	activations[0] = getM<double>(infile, batchIndex); //<--untested!
 	//run forward propagation
 	for (int i = 1; i < numLayers; i++)
 	{
@@ -506,19 +506,20 @@ template<class T>
 const matrix<T> Network::getM(ifstream& fin, int i)
 {
 	std::vector<T> v;
+	std::vector<T> v2;
 	matrix<T> m;
 	if (i >= 0)
 	{
 		fin.seekg(0);
 		string str;
-		getline(fin, str);						
-		fin.seekg(i * (str.size() + 2), ios_base::beg);
+		for (int j = 0; j < i; j++)
+			getline(fin, str);
 		getline(fin, str);
-		v = Strtok<T>(str, ",");
-		m.set_size(v.size(), 1);
-		for (int i = 0; i < v.size(); i++)
+		v2 = Strtok<T>(str, ",");
+		m.set_size(v2.size(), 1);
+		for (int i = 0; i < v2.size(); i++)
 		{
-			m(i, 0) = v[i];
+			m(i, 0) = v2[i];
 		}
 		return m;
 	}
@@ -529,7 +530,7 @@ const matrix<T> Network::getM(ifstream& fin, int i)
 		return m;
 	}
 }
-		 
+
 template<class T>
 std::vector<T> Network::getV(ifstream& fin, int i)
 {
@@ -538,20 +539,19 @@ std::vector<T> Network::getV(ifstream& fin, int i)
 	{
 		fin.seekg(0);
 		string str;
-		getline(fin, str);						
-		fin.seekg(i * (str.size() + 2), ios_base::beg);
+		for (int j = 0; j < i; j++)
+			getline(fin, str);
 		getline(fin, str);
 		v = Strtok<T>(str, ",");
 		return v;
 	}
 	else
 	{
-		cout << "\n Server error 404: Found Invalid Index" << endl;
+		cout << "\n Server error 403: Found Invalid Index" << endl;
 		v.resize(0);
 		return v;
 	}
 }
-
 
 //An overloaded readInit() to read the required values, to create or classify a network, from the given file
 bool Network::readInit(const string & file)
