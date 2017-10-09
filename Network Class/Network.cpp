@@ -140,42 +140,76 @@ void Network::updateWeightsAndBiases()
 
 //moves backwards through Network calculating error at each level and using that to increment sumNablaB and sumNablaW
 //requires the assumption that expected values has an int
-bool backProp(int index)
+
+bool Network :: backProp(int index)
 {
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
-	Vector expectedValues = getAt<int>(expectedValuesInfile, index);
-	
+	Matrix expectedValues = getAt<double>(expectedValuesInfile, index);
+
 	bool correct = true;
-	// to write: check if activations[lastInd] matches expectedVal at index and set correct accordingly
-
-	// Matrix costP; costP.set_size(lastSize, 1);
-	// costP = costPrime(expectedValues);						// costPrime() is a class fucntion
-	// 	     = costPrime(expectedValues, activations[lastInd]); // costPrime() is an auxilliary function
+	int biggestElement;
+	int biggestIndex;
+	int j;
+	biggestElement = INT_MIN;
+	Matrix outputLayer;
+	outputLayer.set_size(lastSize, 1);
+	outputLayer = zeros_matrix(outputLayer);
 	
-	// replace code below with the code above when we have a costPrime()
-	// i know we're going to be changing it but i just want something to work with for now
+	//we don't need to compare if all three values in the output layer are same
+	//this checks if we have same values in the output layer
 	
-	// Matrix costPrime = activations[lastInd] - expectedValues;
-	// above statement needs expectedValues to be a matrix to work
-	// consider the implications of having getAt return a (j x 1) matrix instead of a vector
-	Matrix costPrime; costPrime.set_size(lastSize, 1);
-	for (int i = 0; i < lastSize; i++
-		 costPrime(i,0) = activations[lastInd](i,0) - expectedValues[i];
-		
-	errors[lastInd] = hadamardProduct(costPrime, activationPrime(weightedInputs[lastInd]));
-	sumNablaB[lastInd] += errors[lastInd];
-	sumNablaW[lastInd] += (errors[lastInd]) * trans(activations[lastInd - 1]);
-
-	for (int i = lastLayer - 1; i > 0; i--)
+	for (j = 0; j < (lastSize - 1); j++)
+	if (activations[lastInd](j, 0) == activations[lastInd](j + 1, 0))
+		n++;
+	else
+		break;
+	
+	//If it's not same, this code creates an output matrix which has 1 for the highest value and 0 for the other values
+	if (n != (lastSize - 1))
 	{
-		errors[i] = hadamardProduct(trans(weights[i+1]) * errors[i+1],
-									activationPrime(weightedInputs[i]));
-		sumNablaB[i] += errors[i];
-		sumNablaW[i] += errors[i] * trans(activations[i - 1]);
-	}
+		for (j = 0; j < lastSize; j++)
+			if (activations[lastInd](j, 0) > biggestElement)
+			{
+				biggestIndex = j;
+				biggestElement = activations[lastInd](j, 0);
+			}
+			else;
 
-	return correct;
+			for (j = 0; j < lastSize; j++)
+				if (j == biggestIndex)
+					outputLayer(j, 0) = 1;
+				else
+					outputLayer(j, 0) = 0;
+	}
+	else;
+
+	//It compares the two matrices if they've same values
+	if (outputLayer == expectedValues)
+				//if yes,
+				return correct;
+	
+	//if no, perform the backpropagation
+	else
+	{
+		Matrix costPrime;
+		costPrime.set_size(lastSize, 1);
+		costPrime = activations[lastInd] - expectedValues;
+
+		errors[lastInd] = hadamardProduct(costPrime, activationPrime(weightedInputs[lastInd]));
+		sumNablaB[lastInd] += errors[lastInd];
+		sumNablaW[lastInd] += (errors[lastInd]) * trans(activations[lastInd - 1]);
+
+		for (int i = lastInd - 1; i > 0; i--)
+		{
+			errors[i] = hadamardProduct(trans(weights[i + 1]) * errors[i + 1],
+				activationPrime(weightedInputs[i]));
+			sumNablaB[i] += errors[i];
+			sumNablaW[i] += errors[i] * trans(activations[i - 1]);
+		}
+
+		return false;
+	}
 }
 
 
