@@ -649,3 +649,41 @@ bool Network::readInit(const string & file)
 			return false;
 	}
 }
+
+//This constructor will be called when the user wants to train an existing network. It will retrieve all the required information the given file
+//and will then, prompt the user if user wants to change the values of hyperparameters. If so, it updates the values of hyperparameters
+Network::Network(const string& previous_network_filename)
+{
+	readInit(previous_network_filename);	
+	char c;
+	string str;
+	cout << "\nWould you like to change the values of hyperparameters? Press Y/N:-> ";
+	cin >> c;
+	if ((c == 'y') || (c == 'Y'))
+	{
+		cout << "\nEnter a value for learning Rate (0 < x < 1): ";
+		cin >> learningRate;
+		cout << "\nEnter a value for batch size (x > 1): ";
+		cin >> batchSize;
+		cout << "\nEnter a value for epochs (x > 1): ";
+		cin >> epochs;
+
+		cout << "\nYou have successfully updated the hyparameters with following values:";
+		cout << "\nLearning Rate: " << learningRate;
+		cout << "\nBatch Size: " << batchSize;
+		cout << "\nNumber of epochs: " << epochs;
+	}
+	else;
+}
+
+//Destructor will be called at the end of the main(). It will be responsible to close all the files and deallocate the dynamic memory that was being used.
+//Consider, having a close() to close the files, if there's going to be a loop in main()
+Network:: ~Network()
+{
+	trainingDataInfile.close();
+	expectedValuesInfile.close();
+	//destructor of dlib and vector class called
+}
+
+
+	
