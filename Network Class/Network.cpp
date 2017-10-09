@@ -486,7 +486,7 @@ Network::Network(const string& networkFilename, const string& validationDataFile
 //can be used in readInit() too
 //Considering the fact that we don't want any user or programmer to use it, Strtok<T> can be a private member of the class.
 template <class T>
-std::vector<T> Strtok(const string& str, char Separator[])
+std::vector<T> Network :: Strtok(const string& str, char Separator[])
 {
 	char * pN;
 	std::vector<T> v;
@@ -503,7 +503,7 @@ std::vector<T> Strtok(const string& str, char Separator[])
 }
 
 template<class T>
-const matrix<T> Network::getAt(ifstream& fin, int i)
+const matrix<T> Network::getM(ifstream& fin, int i)
 {
 	std::vector<T> v;
 	matrix<T> m;
@@ -531,7 +531,7 @@ const matrix<T> Network::getAt(ifstream& fin, int i)
 }
 		 
 template<class T>
-std::vector<T> Network::getAt(ifstream& fin, int i)
+std::vector<T> Network::getV(ifstream& fin, int i)
 {
 	std::vector<T> v;
 	if (i >= 0)
