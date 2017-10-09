@@ -1,13 +1,13 @@
 # Function Stats/Divvying Up Work
 
-### Ami ( > 64 lines) (actual ~ 126 lines)
+### Ami ( > 80 lines) (actual ~ 144 lines)
 - [x] `writeToFile` ( 12-15 lines) (actual: 46 lines)
 - [x] `activationFunction()` (1 line) (actual: 1 line)
 - [x] `readInit(file)` (20-30 lines) (actual ~ 50 lines)
 - [x] `getAt()` ( > 10 lines) (actual: 13 lines)
 - [x] `Strtok(string)` (6-8 lines) (actual: 16 lines)
-- [ ] `Network(file)`(8-10 lines)
-- [ ] `~Network()` (5-6 lines)
+- [x] `Network(file)`(8-10 lines) (actual: 16 lines)
+- [x] `~Network()` (5-6 lines) (actual: 2 lines)
 
 
 ### Elijah ( > 82 lines) (actual: 132 lines)
