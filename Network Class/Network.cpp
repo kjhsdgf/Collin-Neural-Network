@@ -140,14 +140,13 @@ void Network::updateWeightsAndBiases()
 
 //moves backwards through Network calculating error at each level and using that to increment sumNablaB and sumNablaW
 //requires the assumption that expected values has an int
-bool backProp(int index)
+bool Network::backProp(int index)
 {
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
-	Vector expectedValues = getAt<int>(expectedValuesInfile, index);
+	Matrix expectedValues = getM<int>(expectedValuesInfile, index);
 	
-	bool correct = true;
-	// to write: check if activations[lastInd] matches expectedVal at index and set correct accordingly
+	bool correct = compareOutput(expectedValues) > 0;
 
 	// Matrix costP; costP.set_size(lastSize, 1);
 	// costP = costPrime(expectedValues);						// costPrime() is a class fucntion
@@ -160,8 +159,7 @@ bool backProp(int index)
 	// above statement needs expectedValues to be a matrix to work
 	// consider the implications of having getAt return a (j x 1) matrix instead of a vector
 	Matrix costPrime; costPrime.set_size(lastSize, 1);
-	for (int i = 0; i < lastSize; i++
-		 costPrime(i,0) = activations[lastInd](i,0) - expectedValues[i];
+	costPrime = activations[lastInd] - expectedValues;
 		
 	errors[lastInd] = hadamardProduct(costPrime, activationPrime(weightedInputs[lastInd]));
 	sumNablaB[lastInd] += errors[lastInd];
@@ -176,6 +174,60 @@ bool backProp(int index)
 	}
 
 	return correct;
+}
+
+// checks if Network output matches expected
+// @param - takes a matrix of expected vals (could be changed to vector though or process both if need be)
+// returns <0 if correct, >0 if incorrect and a 0 if ambiguous
+bool Network::compareOutput(const Matrix& expectedValues) 
+{
+	int lastInd = numLayers - 1;
+	int lastSize = layerSizes[lastInd];
+
+	// indices at which there is the biggest activation or a 1 for the netowrk or expected vals respectively
+	int biggestI = -1; int expectedI = -1;
+
+	// biggest starts at 0 (not MIN) because any number < 0 might as well be 0 for these purposes
+	// numBiggest is number of times we encounter the biggest element in output layer
+	double biggest = 0;	int numBiggest = 0;
+
+	// out of place random check to make sure it's being fed good data
+	if (expectedValues.size() != lastSize)
+		return 0;
+	for (int i = 0; i < lastSize; i++)
+	{
+		double output = activations[lastInd](i, 0);
+		if (output > biggest)
+		{
+			biggestI = i;
+			biggest = output;
+			numBiggest = 0; // we found a new biggest so numBiggest's previous data is invalid
+		}
+		else if (output == biggest) 
+			numBiggest++;
+
+		if (expectedValues(i, 0) == 1 && expectedI == -1)
+		{
+			if (expectedI == -1) // if it's not been set before..
+				expectedI = i;
+			else				 // it it has it's bad data
+				expectedI = -2;
+		}
+	}
+
+	// the return statements here can and should change depending on what we agree is good, bad, or ambiguous data
+	if (biggestI == -1 || expectedI <= -1) // everything was smaller than 0 or expected is bad data (probably should throw excpetion instead actually)
+		return 0;
+	 
+	// now we can be sure biggestI, expectedI >=0
+
+	if (numBiggest > 0) // if there's more than 1 biggest, ambiguous data. don't even care if the indices match
+		return 0;
+	
+	if (biggestI == expectedI)
+		return 1;
+	else
+		return -1;
 }
 
 
