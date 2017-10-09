@@ -546,7 +546,7 @@ std::vector<T> Network::getAt(ifstream& fin, int i)
 	}
 	else
 	{
-		cout << "\n Server error 403: Found Invalid Index" << endl;
+		cout << "\n Server error 404: Found Invalid Index" << endl;
 		v.resize(0);
 		return v;
 	}
