@@ -1,0 +1,50 @@
+;===============================================================================
+; Copyright 2006-2017 Intel Corporation All Rights Reserved.
+;
+; The source code,  information  and material  ("Material") contained  herein is
+; owned by Intel Corporation or its  suppliers or licensors,  and  title to such
+; Material remains with Intel  Corporation or its  suppliers or  licensors.  The
+; Material  contains  proprietary  information  of  Intel or  its suppliers  and
+; licensors.  The Material is protected by  worldwide copyright  laws and treaty
+; provisions.  No part  of  the  Material   may  be  used,  copied,  reproduced,
+; modified, published,  uploaded, posted, transmitted,  distributed or disclosed
+; in any way without Intel's prior express written permission.  No license under
+; any patent,  copyright or other  intellectual property rights  in the Material
+; is granted to  or  conferred  upon  you,  either   expressly,  by implication,
+; inducement,  estoppel  or  otherwise.  Any  license   under such  intellectual
+; property rights must be express and approved by Intel in writing.
+;
+; Unless otherwise agreed by Intel in writing,  you may not remove or alter this
+; notice or  any  other  notice   embedded  in  Materials  by  Intel  or Intel's
+; suppliers or licensors in any way.
+;===============================================================================
+
+_MKL_DDIAMV@56
+_MKL_DDIAMM@68
+_MKL_DDIASV@48
+_MKL_DDIASM@60
+_MKL_DSKYMM@60
+_MKL_DSKYSV@40
+_MKL_DSKYMV@48
+_MKL_DSKYSM@52
+_MKL_DCOOMM@68
+_MKL_DCOOMV@56
+_MKL_DCOOSM@60
+_MKL_DCOOSV@48
+_MKL_DCSCMM@68
+_MKL_DCSCMV@56
+_MKL_DCSCSM@60
+_MKL_DCSCSV@48
+_MKL_DCSRMM@68
+_MKL_DCSRMV@56
+_MKL_DCSRSM@60
+_MKL_DCSRSV@48
+_MKL_DCSRGEMV@32
+_MKL_DCSRSYMV@32
+_MKL_DCSRTRSV@48
+_MKL_DCOOSYMV@36
+_MKL_DCOOGEMV@36
+_MKL_DCOOTRSV@52
+_MKL_DDIASYMV@36
+_MKL_DDIAGEMV@36
+_MKL_DDIATRSV@52

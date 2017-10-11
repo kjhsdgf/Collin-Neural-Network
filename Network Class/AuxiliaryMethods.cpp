@@ -67,3 +67,9 @@ const Matrix activationPrime(const Matrix &input_matrix)
 {
 	return pointwise_multiply(sigmoid(input_matrix), ones_matrix(input_matrix) - sigmoid(input_matrix));
 }
+
+//First derivative of the quadratic cost function
+const Matrix costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector)
+{
+	return (activations_vector - expected_vals_vector);
+}

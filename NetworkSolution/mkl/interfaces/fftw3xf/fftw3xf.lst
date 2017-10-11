@@ -1,0 +1,69 @@
+#===============================================================================
+# Copyright 2006-2017 Intel Corporation All Rights Reserved.
+#
+# The source code,  information  and material  ("Material") contained  herein is
+# owned by Intel Corporation or its  suppliers or licensors,  and  title to such
+# Material remains with Intel  Corporation or its  suppliers or  licensors.  The
+# Material  contains  proprietary  information  of  Intel or  its suppliers  and
+# licensors.  The Material is protected by  worldwide copyright  laws and treaty
+# provisions.  No part  of  the  Material   may  be  used,  copied,  reproduced,
+# modified, published,  uploaded, posted, transmitted,  distributed or disclosed
+# in any way without Intel's prior express written permission.  No license under
+# any patent,  copyright or other  intellectual property rights  in the Material
+# is granted to  or  conferred  upon  you,  either   expressly,  by implication,
+# inducement,  estoppel  or  otherwise.  Any  license   under such  intellectual
+# property rights must be express and approved by Intel in writing.
+#
+# Unless otherwise agreed by Intel in writing,  you may not remove or alter this
+# notice or  any  other  notice   embedded  in  Materials  by  Intel  or Intel's
+# suppliers or licensors in any way.
+#===============================================================================
+
+wrap = \
+fftw_alignment_of+ fftw_alloc_complex+ fftw_alloc_real+ fftw_cleanup+ \
+fftw_cleanup_threads+ fftw_cost+ fftw_destroy_plan+ fftw_estimate_cost+ \
+fftw_execute+ fftw_execute_dft+ fftw_execute_dft_c2r+ fftw_execute_dft_r2c+ \
+fftw_execute_r2r+ fftw_execute_split_dft+ fftw_execute_split_dft_c2r+ \
+fftw_execute_split_dft_r2c+ fftw_export_wisdom+ fftw_export_wisdom_to_file+ \
+fftw_export_wisdom_to_filename+ fftw_export_wisdom_to_string+ fftw_flops+ \
+fftw_forget_wisdom+ fftw_fprint_plan+ fftw_free+ fftw_import_system_wisdom+ \
+fftw_import_wisdom+ fftw_import_wisdom_from_file+ \
+fftw_import_wisdom_from_filename+ fftw_import_wisdom_from_string+ \
+fftw_init_threads+ fftw_malloc+ fftw_plan_dft+ fftw_plan_dft_1d+ \
+fftw_plan_dft_2d+ fftw_plan_dft_3d+ fftw_plan_dft_c2r+ fftw_plan_dft_c2r_1d+ \
+fftw_plan_dft_c2r_2d+ fftw_plan_dft_c2r_3d+ fftw_plan_dft_r2c+ \
+fftw_plan_dft_r2c_1d+ fftw_plan_dft_r2c_2d+ fftw_plan_dft_r2c_3d+ \
+fftw_plan_guru_dft+ fftw_plan_guru_dft_c2r+ fftw_plan_guru_dft_r2c+ \
+fftw_plan_guru_r2r+ fftw_plan_guru_split_dft+ fftw_plan_guru_split_dft_c2r+ \
+fftw_plan_guru_split_dft_r2c+ fftw_plan_guru64_dft+ fftw_plan_guru64_dft_c2r+ \
+fftw_plan_guru64_dft_r2c+ fftw_plan_guru64_r2r+ fftw_plan_guru64_split_dft+ \
+fftw_plan_guru64_split_dft_c2r+ fftw_plan_guru64_split_dft_r2c+ \
+fftw_plan_many_dft+ fftw_plan_many_dft_c2r+ fftw_plan_many_dft_r2c+ \
+fftw_plan_many_r2r+ fftw_plan_r2r+ fftw_plan_r2r_1d+ fftw_plan_r2r_2d+ \
+fftw_plan_r2r_3d+ fftw_plan_with_nthreads+ fftw_print_plan+ fftw_set_timelimit+ \
+fftw_sprint_plan+ fftw_version+
+
+wrapf = $(wrap:fftw_=fftwf_)
+
+dwrap = dfftw_cleanup+ dfftw_cleanup_threads+ dfftw_destroy_plan+ \
+dfftw_execute+ dfftw_execute_dft+ dfftw_execute_dft_c2r+ \
+dfftw_execute_dft_r2c+ dfftw_execute_r2r+ dfftw_execute_split_dft+ \
+dfftw_execute_split_dft_c2r+ dfftw_execute_split_dft_r2c+ \
+dfftw_export_wisdom+ dfftw_flops+ dfftw_forget_wisdom+ \
+dfftw_import_system_wisdom+ dfftw_import_wisdom+ \
+dfftw_init_threads+ dfftw_plan_dft+ dfftw_plan_dft_1d+ \
+dfftw_plan_dft_2d+ dfftw_plan_dft_3d+ dfftw_plan_dft_c2r+ \
+dfftw_plan_dft_c2r_1d+ dfftw_plan_dft_c2r_2d+ \
+dfftw_plan_dft_c2r_3d+ dfftw_plan_dft_r2c+ dfftw_plan_dft_r2c_1d+ \
+dfftw_plan_dft_r2c_2d+ dfftw_plan_dft_r2c_3d+ dfftw_plan_guru_dft+ \
+dfftw_plan_guru_dft_c2r+ dfftw_plan_guru_dft_r2c+ \
+dfftw_plan_guru_r2r+ dfftw_plan_guru_split_dft+ \
+dfftw_plan_guru_split_dft_c2r+ dfftw_plan_guru_split_dft_r2c+ \
+dfftw_plan_many_dft+ dfftw_plan_many_dft_c2r+ \
+dfftw_plan_many_dft_r2c+ dfftw_plan_many_r2r+ dfftw_plan_r2r+ \
+dfftw_plan_r2r_1d+ dfftw_plan_r2r_2d+ dfftw_plan_r2r_3d+ \
+dfftw_plan_with_nthreads+ dfftw_print_plan+
+
+swrap = $(dwrap:dfftw_=sfftw_)
+
+WRAP = $(wrap) $(wrapf) $(dwrap) $(swrap)
