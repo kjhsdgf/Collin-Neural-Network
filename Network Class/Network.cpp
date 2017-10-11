@@ -179,21 +179,25 @@ bool Network::backProp(int index)
 // checks if Network output matches expected
 // @param - takes a matrix of expected vals (could be changed to vector though or process both if need be)
 // returns <0 if correct, >0 if incorrect and a 0 if ambiguous
-bool Network::compareOutput(const Matrix& expectedValues) 
+int Network::compareOutput(const Matrix& expectedValues) 
 {
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
 
-	// indices at which there is the biggest activation or a 1 for the netowrk or expected vals respectively
+	// indices at which there is the biggest activation or a 1 for the network or expected vals respectively
 	int biggestI = -1; int expectedI = -1;
 
 	// biggest starts at 0 (not MIN) because any number < 0 might as well be 0 for these purposes
-	// numBiggest is number of times we encounter the biggest element in output layer
-	double biggest = 0;	int numBiggest = 0;
+	// isAmbiguous is whether or not we encounter a biggest element more than once in output layer
+	double biggest = 0;	bool isAmbiguous = false;
 
 	// out of place random check to make sure it's being fed good data
 	if (expectedValues.size() != lastSize)
+	{
+		cout << "Error in compareOutput: the number of neurons in the output layer != the number of elements in given validation datum\n";
 		return 0;
+	}
+	
 	for (int i = 0; i < lastSize; i++)
 	{
 		double output = activations[lastInd](i, 0);
@@ -201,16 +205,16 @@ bool Network::compareOutput(const Matrix& expectedValues)
 		{
 			biggestI = i;
 			biggest = output;
-			numBiggest = 0; // we found a new biggest so numBiggest's previous data is invalid
+			isAmbiguous = false; // we found a new biggest so the output is not ambiguous
 		}
 		else if (output == biggest) 
-			numBiggest++;
+			isAmbiguous = true;
 
 		if (expectedValues(i, 0) == 1 && expectedI == -1)
 		{
 			if (expectedI == -1) // if it's not been set before..
 				expectedI = i;
-			else				 // it it has it's bad data
+			else				 // in this case there's bad data
 				expectedI = -2;
 		}
 	}
@@ -221,7 +225,7 @@ bool Network::compareOutput(const Matrix& expectedValues)
 	 
 	// now we can be sure biggestI, expectedI >=0
 
-	if (numBiggest > 0) // if there's more than 1 biggest, ambiguous data. don't even care if the indices match
+	if (isAmbiguous) // if there's more than 1 biggest, ambiguous data. don't even care if the indices match
 		return 0;
 	
 	if (biggestI == expectedI)
