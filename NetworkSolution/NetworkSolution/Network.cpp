@@ -2,24 +2,6 @@
 ///
 //Auxillary Methods
 ///
-
-//Fisher Yates shuffle
-template <class T>
-void FYShuffle(std::vector<T>& v)
-{
-	//below is another method using shuffle defined in <algorithm> but it is potentially much slower and not much more random
-	//unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-	//shuffle(v.begin(), v.end(), default_random_engine(seed));
-
-	for (int i = v.size() - 1; i > 0; i--)
-	{
-		int randI = rand() % i;
-		T temp = v[i];
-		v[i] = v[randI];
-		v[randI] = temp;
-	}
-};
-
 const Matrix activationFunction(const Matrix &weighted_inputs)
 {
 	return sigmoid(weighted_inputs);
@@ -55,6 +37,23 @@ const long double distribution(const int num_neurons_in)
 	w = sqrt((-2 * log(w)) / w);
 	z1 = v1 * w;
 	return (z1 * variance);
+};
+
+//Fisher Yates shuffle
+template <class T>
+void FYShuffle(std::vector<T>& v)
+{
+	//below is another method using shuffle defined in <algorithm> but it is potentially much slower and not much more random
+	//unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+	//shuffle(v.begin(), v.end(), default_random_engine(seed));
+
+	for (int i = v.size() - 1; i > 0; i--)
+	{
+		int randI = std::rand() % i;
+		T temp = v[i];
+		v[i] = v[randI];
+		v[randI] = temp;
+	}
 };
 
 ///
@@ -158,7 +157,6 @@ void Network::readInit() // reading from console
 	char* cStrLayers = new char[layers.size() + 1];
 	strcpy(cStrLayers, layers.c_str());
 
-	std::vector<int> layerSizes;
 	for (char *p = strtok(cStrLayers, " ,"); p != NULL; p = strtok(NULL, " ,"))
 	{
 		layerSizes.push_back(atoi(p));
@@ -244,16 +242,20 @@ int Network::compareOutput(const Matrix& expectedValues)
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
 
-	// indices at which there is the biggest activation or a 1 for the netowrk or expected vals respectively
+	// indices at which there is the biggest activation or a 1 for the network or expected vals respectively
 	int biggestI = -1; int expectedI = -1;
 
 	// biggest starts at 0 (not MIN) because any number < 0 might as well be 0 for these purposes
-	// numBiggest is number of times we encounter the biggest element in output layer
-	double biggest = 0;	int numBiggest = 0;
+	// isAmbiguous is whether or not we encounter a biggest element more than once in output layer
+	double biggest = 0;	bool isAmbiguous = false;
 
 	// out of place random check to make sure it's being fed good data
 	if (expectedValues.size() != lastSize)
+	{
+		cout << "Error in compareOutput: the number of neurons in the output layer != the number of elements in given validation datum\n";
 		return 0;
+	}
+
 	for (int i = 0; i < lastSize; i++)
 	{
 		double output = activations[lastInd](i, 0);
@@ -261,16 +263,16 @@ int Network::compareOutput(const Matrix& expectedValues)
 		{
 			biggestI = i;
 			biggest = output;
-			numBiggest = 0; // we found a new biggest so numBiggest's previous data is invalid
+			isAmbiguous = false; // we found a new biggest so the output is not ambiguous
 		}
 		else if (output == biggest)
-			numBiggest++;
+			isAmbiguous = true;
 
 		if (expectedValues(i, 0) == 1 && expectedI == -1)
 		{
 			if (expectedI == -1) // if it's not been set before..
 				expectedI = i;
-			else				 // it it has it's bad data
+			else				 // in this case there's bad data
 				expectedI = -2;
 		}
 	}
@@ -281,7 +283,7 @@ int Network::compareOutput(const Matrix& expectedValues)
 
 	// now we can be sure biggestI, expectedI >=0
 
-	if (numBiggest > 0) // if there's more than 1 biggest, ambiguous data. don't even care if the indices match
+	if (isAmbiguous) // if there's more than 1 biggest, ambiguous data. don't even care if the indices match
 		return 0;
 
 	if (biggestI == expectedI)
@@ -426,93 +428,6 @@ void Network::classify(const string &validation_data_filename)
 
 }
 
-//in the case they want to classify whatever's already in the training file data member
-void Network::classify()
-{
-	//SETUP
-	//move class training data infile to the start
-	trainingDataInfile.clear();
-	trainingDataInfile.seekg(0, ios::beg);
-
-	//create outfile for output and open it
-	string outputFilename = "Classification_";							//what filename starts with
-	const int MAX_SIZE(80);												//buffer (maximum) size for the intermediary cstring
-	time_t currentTime = time(NULL);									//returns current time
-	struct tm * currentTimeInfo = localtime(&currentTime);				//stores current time into a struct
-	char outputFileTime[MAX_SIZE];										//creates cstring intermediary
-	strftime(outputFileTime, MAX_SIZE, "%a-%b-%d-%T", currentTimeInfo);	//cinverts cstring intermediary into a string containing the current time
-	outputFilename += outputFileTime;									//appends Day(of week)-Month-Day(of month)-Current Hour:Minute:Second to outputFilename
-	ofstream classificationOutput(outputFilename, ios::trunc);			//creates and opens output file
-
-																		//create an integer for biggest element indice
-	int biggestElement(0); ///assumed to be the 0th element, initially
-						   //create a counter for number of elements equal to the biggest
-	int numBiggest(0);
-	//create a counter for ambiguous data
-	int ambiguousData(0);
-	//make an integer for the total number of samples in the validation data file
-	const int MAGIC_NUMBER_1(2);	///these are just what worked with the given data files!
-	const int MAGIC_NUMBER_2(10);	///may need to change them later... no idea what they represent yet.
-	int numClassifications = (static_cast<int>(trainingDataInfile.tellg()) + MAGIC_NUMBER_1) / MAGIC_NUMBER_2;
-	trainingDataInfile.clear();				//clears eof bit
-	trainingDataInfile.seekg(0, ios::beg);	//resets the seekg head
-
-											//CLASSIFY
-											//Loop through samples
-	for (int i = 0; i < numClassifications; i++)
-	{
-		forwardProp(i, trainingDataInfile);				//Pass a sample to forwardProp
-														//find the biggest element in output vector, or determine output as ambiguous
-		for (int j = 0; j < activations[numLayers].nr(); j++)	//loop through the elements of the output
-			if (activations[numLayers](j, 0) > activations[numLayers](biggestElement, 0))
-				biggestElement = j;
-		for (int j = 0; j < activations[numLayers].nr(); j++)
-			if (activations[numLayers](j, 0) == activations[numLayers](biggestElement, 0))
-				numBiggest++;
-		if (numBiggest > 1)
-			ambiguousData++;
-		//print out the classification into a file
-		classificationOutput << "Network Input:  " << dlib::trans(getM<double>(trainingDataInfile, i));		//<-- possible problems here
-		classificationOutput << "Network Output: " << dlib::trans(activations[numLayers]);
-		classificationOutput << "Classification: ";
-		if (numBiggest > 1)
-			classificationOutput << "ambiguous data";
-		else
-			for (int j = 0; j < activations[numLayers].nr(); j++)
-			{
-				if (j == biggestElement)
-					classificationOutput << "1 ";
-				else
-					classificationOutput << "0 ";
-			}
-		classificationOutput << "\n";
-		//print out classification into cmd prompt
-		cout << "Network Input:  " << dlib::trans(getM<double>(trainingDataInfile, i));		//<-- possible problems here
-		cout << "Network Output: " << dlib::trans(activations[numLayers]);
-		cout << "Classification: ";
-		if (numBiggest > 1)
-			cout << "ambiguous data";
-		else
-			for (int j = 0; j < activations[numLayers].nr(); j++)
-			{
-				if (j == biggestElement)
-					cout << "1 ";
-				else
-					cout << "0 ";
-			}
-		cout << "\n";
-		//reset relevant counters for next classification
-		biggestElement = 0;
-		numBiggest = 0;
-	}
-	//Print out number classified, and % classified
-	cout << numClassifications - ambiguousData << " out of " << numClassifications << " classified.";
-	classificationOutput << numClassifications - ambiguousData << " out of " << numClassifications << " classified.";
-	//CLOSING
-	//close the files (not closing trainingDataInfile, because destructor should take care of that).
-	classificationOutput.close();
-}
-
 //Default constructor for the class
 Network::Network()
 {
@@ -520,26 +435,29 @@ Network::Network()
 	readInit();
 
 	//Ask for training data filename, then open it
-	cout << "Please enter the location of your training file [C:\\...\\TrainingDataFilename.txt:" << endl;
+	cout << "Please enter the location of your training file [C:\\...\\TrainingDataFilename.txt:\n";
+	cin.ignore();
 	getline(cin, trainingDataFilename);
+	//trainingDataFilename = "C:\\Users\\...\\source\\repos\\Collin-Neural-Network\\Data\\UnsortedDataFile.txt";
 	trainingDataInfile.open(trainingDataFilename);
 	while (trainingDataInfile.fail())
 	{
 		trainingDataInfile.clear();
 		trainingDataInfile.close();
-		cout << "Could not open " << trainingDataFilename << ".\n" << "Please try again:" << endl;
+		cout << "Could not open " << trainingDataFilename << ".\n" << "Please try again:\n";
 		getline(cin, trainingDataFilename);
 		trainingDataInfile.open(trainingDataFilename);
 	}
 	//Ask for expected values filename and open it
-	cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:" << endl;
+	cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:\n";
 	getline(cin, expectedValuesFilename);
+	//expectedValuesFilename = "C:\\Users\\...\\source\\repos\\Collin-Neural-Network\\Data\\UnsortedTruthFile.txt";
 	expectedValuesInfile.open(expectedValuesFilename);
 	while (expectedValuesInfile.fail())
 	{
 		expectedValuesInfile.clear();
 		expectedValuesInfile.close();
-		cout << "Could not open " << expectedValuesFilename << ".\n" << "Please try again:" << endl;
+		cout << "Could not open " << expectedValuesFilename << ".\n" << "Please try again:\n";
 		getline(cin, expectedValuesFilename);
 		expectedValuesInfile.open(expectedValuesFilename);
 	}
@@ -555,6 +473,7 @@ Network::Network()
 
 	//fill out the 0th layer of activations, as they aren't covered
 	//in the following for loop.
+	cout << layerSizes[0] << endl;
 	activations[0].set_size(layerSizes[0], 1);
 	activations[0] = zeros_matrix(activations[0]);
 
@@ -786,6 +705,65 @@ const matrix<T> Network::getM(ifstream& fin, const int i)
 		m.set_size(0, 0);
 		return m;
 	}
+}
+
+// thought it might be nice if train also returned a vector of the network's efficiency at each epoch
+// but if we're having that info printed out to console (though i think it's better served storing somewhere for later access)
+// this is not necessary and can be changed with juust a couple deletions
+
+// train calls SGD on every mini batch in a training data set until the set has been exhausted as many times as epochs
+// randomizing the set between each epoch
+// no parameters
+// returns a vector of doubles containing the percentage of outputs the network successfully classified for each iteration of an epoch
+std::vector<double> Network::train()
+{
+	std::vector<double> efficiency(epochs);
+
+	int trainingDataSize = fileSize(trainingDataInfile);
+
+	Vector trainingDataIndices(trainingDataSize);
+	for (int i = 0; i < trainingDataSize; i++)
+		trainingDataIndices[i] = i;
+
+	int batchSize = miniBatchIndices.size();
+	int sgdCalls = trainingDataSize / batchSize;
+
+	for (int i = 0; i < epochs; i++)
+	{
+		int numCorrect = 0;
+		FYShuffle(trainingDataIndices);
+
+		for (int j = 0; j < sgdCalls; j++)
+		{
+			for (int k = 0; k < batchSize; k++)
+				miniBatchIndices[k] = trainingDataIndices[(j*batchSize) + k];
+			numCorrect += SGD();
+		}
+
+		efficiency[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
+		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
+	}
+
+	return efficiency;
+}
+
+// yes i know what you're thinking "parsing the whole file just for the size?!?!" but it's really NOT that slow
+// this should be fine for what data we have now or in the near/far future
+// i have a couple of benchmarks on a few pretty large files i generated so just ask me if you want to know the stats
+//  - Yon
+int Network::fileSize(istream& in)
+{
+	int count = 0;
+
+	in.seekg(0, ios::beg);
+	while (!in.eof())
+	{
+		count++;
+		in.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
+	in.seekg(0, ios::beg);
+
+	return count;
 }
 
 //Destructor will be called at the end of the main(). It will be responsible to close all the files and deallocate the dynamic memory that was being used.

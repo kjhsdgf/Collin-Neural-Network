@@ -23,8 +23,8 @@ public:
 	Network(const string&, const string&);
 	Network(const string&);
 	~Network();
-	//void				train();
-	void				classify();
+	std::vector<double>	train();
+	//void				classify();
 	void				classify(const string&);
 
 private:
@@ -52,6 +52,7 @@ private:
 	ifstream			expectedValuesInfile;
 
 	//functions that need to be private:
+	int					fileSize(istream&);
 	bool				writeToFile() const;
 	const Matrix		hadamardProduct(const Matrix&, const Matrix&);
 	void 				randomizeMatrix(Matrix&);		//parameter with a pointer to the function distribution is not needed
