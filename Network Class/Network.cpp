@@ -241,7 +241,7 @@ vector<double> Network::train()
 
 	for (int i = 0; i < epochs; i++)
 	{
-		int numCorrect;
+		int numCorrect = 0;
 		FYShuffle(trainingDataIndices);
 
 		for (int j = 0; j < sgdCalls; j++)
@@ -266,7 +266,7 @@ vector<double> Network::train()
 //  - Yon
 int Network::filesize(istream& in)
 {
-	int count;
+	int count = 0;
 
 	in.seekg(0, ios::beg);
 	while (!in.eof())
