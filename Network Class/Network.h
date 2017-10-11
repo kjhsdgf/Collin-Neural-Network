@@ -36,7 +36,8 @@ public:
 	bool				writeToFile() const;
 	bool				backProp(int);
 
-	//***********Methods that read the values for the class*****
+	//***********Methods that read size of each layer, epochs, learning rate, batch size from file or console input*****
+	//****************************Also, it calculates the number of layers for the network******************************
 	bool				readInit(const string&);
 	void				readInit();
 
