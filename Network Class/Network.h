@@ -85,11 +85,11 @@ private:
 };
 
 //---------Functions outside the class (Auxiliary functions)----------------------------------------
-const Matrix activationFunction(const Matrix& weighted_inputs);
-const Matrix activationPrime(const Matrix &input_matrix);
-const Matrix costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
-const double distribution(const int num_neurons_in);
-      void   randomizeMatrix(Matrix &);
+const Matrix 	activationFunction(const Matrix& weighted_inputs);
+const Matrix 	activationPrime(const Matrix &input_matrix);
+const Matrix 	costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
+const double 	distribution(const int num_neurons_in);
+      void   	randomizeMatrix(Matrix &);
 
 //---------------------------------------------------------------------------------------------------
 
