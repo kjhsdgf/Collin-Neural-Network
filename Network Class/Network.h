@@ -6,7 +6,7 @@
 #include <fstream>
 #include <dlib\matrix.h>
 #include <string>
-#include<time.h>
+#include <time.h>
 #include <vector>
 #include <dlib\matrix\matrix_math_functions.h>
 
@@ -23,13 +23,13 @@ class Network
 public:
 
 	//**********Constructors and Destructors*******************
-						Network();
-						Network(const string&, const string&);	
-						Network(const string&);					
-						~Network();
+					Network();
+					Network(const string&, const string&);	
+					Network(const string&);					
+					~Network();
 
 	//**********Public Accessible Methods**********************
-	std::vector<double>	train();
+	std::vector<double>		train();
 	void				classify(const string&);
 
 	//***********Methods that read size of each layer, number of epochs, learning rate and the batch size for the network*********
@@ -41,8 +41,8 @@ private:
 
 	//Private Data Members:->
 	double				learningRate;
-	int					batchSize;
-	int					epochs;
+	int				batchSize;
+	int				epochs;
 	int 				numLayers;
 
 	VMatrix				weights;
@@ -64,23 +64,23 @@ private:
 	bool				writeToFile() const;
 	bool				backProp(int);
 	void				forwardProp(int, ifstream &);
-	int					SGD();
+	int				SGD();
 	void				updateWeightsAndBiases();
-	int					filesize(istream&);
+	int				filesize(istream&);
 	bool				compareOutput(const Matrix&);
-	const Matrix		hadamardProduct(const Matrix&, const Matrix&);
+	const Matrix			hadamardProduct(const Matrix&, const Matrix&);
 
 	template <class T>
 	void				FYShuffle(std::vector<T>& v);
 
 	template<class T>
-	const matrix<T>		getM(ifstream&, int);	//A function to return a column matrix at any position i in the given file
+	const matrix<T>			getM(ifstream&, int);	//A function to return a column matrix at any position i in the given file
 
 	template<class T>
-	std::vector<T>		getV(ifstream&, int);
+	std::vector<T>			getV(ifstream&, int);
 
 	template <class T>
-	std::vector<T>		Strtok(const string& , char[]);
+	std::vector<T>			Strtok(const string& , char[]);
 	
 };
 
@@ -89,7 +89,7 @@ const Matrix activationFunction(const Matrix& weighted_inputs);
 const Matrix activationPrime(const Matrix &input_matrix);
 const Matrix costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
 const double distribution(const int num_neurons_in);
-	  void	 randomizeMatrix(Matrix &);
+      void   randomizeMatrix(Matrix &);
 
 //---------------------------------------------------------------------------------------------------
 
