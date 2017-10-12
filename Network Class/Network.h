@@ -41,8 +41,8 @@ private:
 
 	//Private Data Members:->
 	double				learningRate;
-	int				batchSize;
-	int				epochs;
+	int					batchSize;
+	int					epochs;
 	int 				numLayers;
 
 	VMatrix				weights;
@@ -59,28 +59,30 @@ private:
 	string				expectedValuesFilename;
 	ifstream			trainingDataInfile;
 	ifstream			expectedValuesInfile;
+	struct layerReport	{ bool isAmbiguous; Matrix cleanOutput; };
 
 	//Private Functions:->
 	bool				writeToFile() const;
 	bool				backProp(int);
-	void				forwardProp(int, ifstream &);
-	int				SGD();
+	void				forwardProp(ifstream &, const int);
+	int					SGD();
 	void				updateWeightsAndBiases();
-	int				filesize(istream&);
+	int					filesize(istream&);
 	bool				compareOutput(const Matrix&);
-	const Matrix			hadamardProduct(const Matrix&, const Matrix&);
+	const Matrix		hadamardProduct(const Matrix&, const Matrix&);
+	layerReport			outputLayerReport();
 
 	template <class T>
 	void				FYShuffle(std::vector<T>& v);
 
 	template<class T>
-	const matrix<T>			getM(ifstream&, int);	//A function to return a column matrix at any position i in the given file
+	const matrix<T>		getM(ifstream&, int);	//A function to return a column matrix at any position i in the given file
 
 	template<class T>
-	std::vector<T>			getV(ifstream&, int);
+	std::vector<T>		getV(ifstream&, int);
 
 	template <class T>
-	std::vector<T>			Strtok(const string& , char[]);
+	std::vector<T>		Strtok(const string& , char[]);
 	
 };
 
