@@ -140,42 +140,84 @@ void Network::updateWeightsAndBiases()
 
 //moves backwards through Network calculating error at each level and using that to increment sumNablaB and sumNablaW
 //requires the assumption that expected values has an int
-bool backProp(int index)
+bool Network::backProp(int index)
 {
 	int lastInd = numLayers - 1;
-	int lastSize = layerSizes[lastInd];
-	Matrix expectedValues = getM<int>(expectedValuesInfile, index);
-	
-	bool correct = true;
-	// to write: check if activations[lastInd] matches expectedVal at index and set correct accordingly
+	Matrix expectedValues = getM<double>(expectedValuesInfile, index);
 
-	// Matrix costP; costP.set_size(lastSize, 1);
-	// costP = costPrime(expectedValues);						// costPrime() is a class fucntion
-	// 	     = costPrime(expectedValues, activations[lastInd]); // costPrime() is an auxilliary function
-	
-	// replace code below with the code above when we have a costPrime()
-	// i know we're going to be changing it but i just want something to work with for now
-	
-	// Matrix costPrime = activations[lastInd] - expectedValues;
-	// above statement needs expectedValues to be a matrix to work
-	// consider the implications of having getAt return a (j x 1) matrix instead of a vector
-	Matrix costPrime; costPrime.set_size(lastSize, 1);
-	for (int i = 0; i < lastSize; i++)
-		 costPrime(i,0) = activations[lastInd](i,0) - expectedValues[i];
-		
-	errors[lastInd] = hadamardProduct(costPrime, activationPrime(weightedInputs[lastInd]));
+	bool isCorrect = compareOutput(expectedValues) > 0;
+
+	errors[lastInd] = hadamardProduct(costPrime(activations[lastInd], expectedValues), activationPrime(weightedInputs[lastInd]));
 	sumNablaB[lastInd] += errors[lastInd];
 	sumNablaW[lastInd] += (errors[lastInd]) * trans(activations[lastInd - 1]);
 
-	for (int i = lastSize - 1; i > 0; i--)
+	for (int i = lastInd - 1; i > 0; i--)
 	{
-		errors[i] = hadamardProduct(trans(weights[i+1]) * errors[i+1],
-									activationPrime(weightedInputs[i]));
+		errors[i] = hadamardProduct(trans(weights[i + 1]) * errors[i + 1],
+			activationPrime(weightedInputs[i]));
 		sumNablaB[i] += errors[i];
 		sumNablaW[i] += errors[i] * trans(activations[i - 1]);
 	}
 
-	return correct;
+	return isCorrect; //correct
+}
+
+// checks if Network output matches expected
+// @param - takes a matrix of expected vals (could be changed to vector though or process both if need be)
+// returns <0 if correct, >0 if incorrect and a 0 if ambiguous
+int Network::compareOutput(const Matrix& expectedValues) 
+{
+	int lastInd = numLayers - 1;
+	int lastSize = layerSizes[lastInd];
+
+	// indices at which there is the biggest activation or a 1 for the network or expected vals respectively
+	int biggestI = -1; int expectedI = -1;
+
+	// biggest starts at 0 (not MIN) because any number < 0 might as well be 0 for these purposes
+	// isAmbiguous is whether or not we encounter a biggest element more than once in output layer
+	double biggest = 0;	bool isAmbiguous = false;
+
+	// out of place random check to make sure it's being fed good data
+	if (expectedValues.size() != lastSize)
+	{
+		cout << "Error in compareOutput: the number of neurons in the output layer != the number of elements in given validation datum\n";
+		return 0;
+	}
+	
+	for (int i = 0; i < lastSize; i++)
+	{
+		double output = activations[lastInd](i, 0);
+		if (output > biggest)
+		{
+			biggestI = i;
+			biggest = output;
+			isAmbiguous = false; // we found a new biggest so the output is not ambiguous
+		}
+		else if (output == biggest) 
+			isAmbiguous = true;
+
+		if (expectedValues(i, 0) == 1 && expectedI == -1)
+		{
+			if (expectedI == -1) // if it's not been set before..
+				expectedI = i;
+			else				 // in this case there's bad data
+				expectedI = -2;
+		}
+	}
+
+	// the return statements here can and should change depending on what we agree is good, bad, or ambiguous data
+	if (biggestI == -1 || expectedI <= -1) // everything was smaller than 0 or expected is bad data (probably should throw excpetion instead actually)
+		return 0;
+	 
+	// now we can be sure biggestI, expectedI >=0
+
+	if (isAmbiguous) // if there's more than 1 biggest, ambiguous data. don't even care if the indices match
+		return 0;
+	
+	if (biggestI == expectedI)
+		return 1;
+	else
+		return -1;
 }
 
 
@@ -218,6 +260,66 @@ int SGD()
 	return numCorrect;
 }
 
+// thought it might be nice if train also returned a vector of the network's efficiency at each epoch
+// but if we're having that info printed out to console (though i think it's better served storing somewhere for later access)
+// this is not necessary and can be changed with juust a couple deletions
+
+// train calls SGD on every mini batch in a training data set until the set has been exhausted as many times as epochs
+// randomizing the set between each epoch
+// no parameters
+// returns a vector of doubles containing the percentage of outputs the network successfully classified for each iteration of an epoch
+vector<double> Network::train()
+{
+	vector<double> efficiency(epochs);
+
+	int trainingDataSize = filesize(trainingDataInfile);
+
+	Vector trainingDataIndices(trainingDataSize);
+	for (int i = 0; i < trainingDataSize; i++)
+		trainingDataIndices[i] = i;
+	
+	int batchSize = miniBatchIndices.size();
+	int sgdCalls = trainingDataSize / batchSize;
+
+	for (int i = 0; i < epochs; i++)
+	{
+		int numCorrect = 0;
+		FYShuffle(trainingDataIndices);
+
+		for (int j = 0; j < sgdCalls; j++)
+		{
+			for (int k = 0; k < batchSize; k++)
+				miniBatchIndices[k] = trainingDataIndices[(j*batchSize) + k];
+			numCorrect += SGD();
+		}
+
+		efficiency[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
+		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
+	}
+
+	if(!writeToFile())
+		cout << "\n Server error 405: Could not write network to file." << endl;
+}
+
+
+// yes i know what you're thinking "parsing the whole file just for the size?!?!" but it's really NOT that slow
+// this should be fine for what data we have now or in the near/far future
+// i have a couple of benchmarks on a few pretty large files i generated so just ask me if you want to know the stats
+//  - Yon
+int Network::filesize(istream& in)
+{
+	int count = 0;
+
+	in.seekg(0, ios::beg);
+	while (!in.eof())
+	{
+		count++;
+		in.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
+	in.seekg(0, ios::beg);
+
+	return count;
+}
 
 
 //when passed a text file, will classify data therein and output to console as well as a file
