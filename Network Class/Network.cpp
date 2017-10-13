@@ -92,6 +92,7 @@ void Network::readInit() // reading from console
 	
 	//--------However the vector returned needs to be saved till train() is called
 	//--------I was thinking to have a class data member to save this data (-Ami)
+	//It requires trainingDataInfile to be open in order to validate the batchSize. Still confused where should we place it! Any comments? (-Ami)
 	
 	std::vector<string>	v = validateInputs(layers);
 	
