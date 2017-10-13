@@ -526,7 +526,7 @@ std::vector<string> Network::validateInputs(string& str, const string& lr_range)
 	int go_ahead(0);
 	string temp;
 	int j(0);
-	int end_of_file = filesize(trainingDataInfile);
+	//int end_of_file = filesize(trainingDataInfile);
 	std::vector<string> wrong_inputs;
 	std::vector<double> range = Strtok<double>(lr_range, " ");
 	while (!(result = ((learningRate > range[0]) && (learningRate < range[1]))))	//loop continues until the learning rate is between two given end points
@@ -554,14 +554,18 @@ std::vector<string> Network::validateInputs(string& str, const string& lr_range)
 	}
 
 	//checks if the batchSize is not greater than the size of file
-	while ((batchSize > end_of_file)||(batchSize < 0))
-	{
-		cout << "\nInvalid batch size..";
-		cout << "\nCannot proceed..Enter a valid number for batch size (0 < x < " << end_of_file << "): " << endl;
-		if (!(cin >> batchSize))
-			continue;
-	}
+
+	//use this piece of code only if training data file is opened before you call this function
 	
+	//------------------------------------------------------------------------------------------------------
+	/*while ((batchSize > end_of_file)||(batchSize < 0))
+	{
+	cout << "\nInvalid batch size..";
+	cout << "\nCannot proceed..Enter a valid number for batch size (0 < x < " << end_of_file << "): " << endl;
+	if (!(cin >> batchSize))
+	continue;
+	}*/
+	//--------------------------------------------------------------------------------------------------------
 	//checks if the number of epochs is a positive integer
 	//consider using size_t instead of int
 	while (epochs < 1)
@@ -572,11 +576,12 @@ std::vector<string> Network::validateInputs(string& str, const string& lr_range)
 			continue;
 	}
 
-	temp.resize(str.size());
 	//checks the string of layer sizes
 	//erases all the unwanted characters and records the errors in the vector of wrong_inputs
 	do
 	{
+		j = 0;
+		temp.resize(str.size());
 		for (int i = 0; i < str.size(); i++)
 		{
 			string wrong_data;
@@ -592,14 +597,18 @@ std::vector<string> Network::validateInputs(string& str, const string& lr_range)
 				if (str[i] == ' ') go_ahead++;
 			}
 		}
+		str.resize(j);
+		str = temp;
 		if (!go_ahead)
 		{
+			string s;
 			cout << "\nCannot proceed..Enter at least two layers for the network: " << endl;
-			getline(cin, str);
+			cin.ignore();
+			getline(cin, s);
+			str.resize(s.size());
+			str = s;
 		}
 	} while (go_ahead < 1);
-	str.resize(j);
-	str = temp;
 	return wrong_inputs;		//returns wrong_inputs vector with the string of all errors
 }
 
