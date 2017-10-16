@@ -26,7 +26,6 @@ bool Network::writeToFile() const
 	std::vector<int>::const_iterator i1;
 	int i;
 	int j (0);
-	int k;
 	string a("Previous_Network_");
 	time_t _tm = time(NULL);
 	struct tm * curtime = localtime(&_tm);
@@ -80,25 +79,16 @@ void Network::readInit() // reading from console
 	cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
 	cout << "Enter a string of integers that correspond to the layers and desired nodes in each layer of your network:" << endl;
 	string layers;  getline(cin, layers);
-
+	checkLayerString(layers);
 	cout << "\nPlease enter a double for the learning rate (usually in the range [x-y]):" << endl;
 	cin >> learningRate;
-
+	checkLearningRate();
 	cout << "\nPlease enter an integer for the number of epochs (number of times to parse through test data):" << endl;
 	cin >> epochs;
-
+	checkEpochs();
 	cout << "\nPlease enter an integer for the mini batch size:" << endl;
 	cin >> batchSize;
 	
-	//--------However the vector returned needs to be saved till train() is called
-	//--------I was thinking to have a class data member to save this data (-Ami)
-	//It requires trainingDataInfile to be open in order to validate the batchSize. Still confused where should we place it! Any comments? (-Ami)
-	
-	std::vector<string>	v = validateInputs(layers);
-	
-	//didn't really think about if vector returned will be whether useful inside readInit() or not.
-	//layers with only digits and whitespace returned, which can be now stored in the vector
-		
 	char* cStrLayers = new char[layers.size() + 1];
 	strcpy(cStrLayers, layers.c_str());
 
@@ -449,6 +439,7 @@ Network::Network()
 		getline(cin, trainingDataFilename);
 		trainingDataInfile.open(trainingDataFilename);
 	}
+	checkBatchSize();
 	//Ask for expected values filename and open it
 	cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:" << endl;
 	getline(cin, expectedValuesFilename);
@@ -509,30 +500,39 @@ Network::Network()
 Network::Network(const string& networkFilename, const string& validationDataFilename)
 {
 	readInit(networkFilename);
+	trainingDataInfile.open(trainingDataFilename);
+	if (!trainingDataInfile.is_open())
+	{
+		trainingDataInfile.clear();
+		trainingDataInfile.close();
+		trainingDataInfile.open(trainingDataFilename);
+		if (!trainingDataInfile.is_open())
+			cout << "\nServer Error 408: Could not open the requested training data file" << endl;
+		else;
+	}
+	checkBatchSize();
+	expectedValuesInfile.open(expectedValuesFilename);
+	if (!expectedValuesInfile.is_open())
+	{
+		expectedValuesInfile.clear();
+		expectedValuesInfile.close();
+		expectedValuesInfile.open(expectedValuesFilename);
+		if (!expectedValuesInfile.is_open())
+			cout << "\nServer Error 409: Could not open the requested expected values file" << endl;
+		else;
+	}
 	Classify(validationDataFilename);
 }
 
-//validateInputs() checks all the inputs the user enters or the class gets from the file
-//However, this only checks the hyperparameters for now but I am working on the method to validate the input and output layer size by parsing through the file
-//This method takes two parameters, one is the layersizes string and the other one is range for learning Rate (which is by default set to 0 to 1)
-//It returns a vector of string which contains all the wrong inputs entered by the user or read from the file 
-//That can be used later on to display on the screen while debugging to let the user know what was wrong
-
-//	std::vector<string>	validateInputs(string&, const string& = ("0 1"));   --->prototype in class `Network`
-
-std::vector<string> Network::validateInputs(string& str, const string& lr_range)
+//lr_highest can be decided by us later and till then the default value is set to 1 (-Ami)
+void Network::checkLearningRate(int lr_highest)
 {
 	bool result;
-	int go_ahead(0);
 	string temp;
-	int j(0);
-	//int end_of_file = filesize(trainingDataInfile);
-	std::vector<string> wrong_inputs;
-	std::vector<double> range = Strtok<double>(lr_range, " ");
-	while (!(result = ((learningRate > range[0]) && (learningRate < range[1]))))	//loop continues until the learning rate is between two given end points
+	while (!(result = ((learningRate > 0) && (learningRate < lr_highest))))	//loop continues until the learning rate is between 0 and given end point
 	{
 		//If learning rate is not in range, displays an error message
-		cout << "\nError: The learning rate you entered is out of range.." << endl;
+		cout << "\nError: The learning rate you entered is too high.." << endl;
 
 		//also, it prompts the user if the user wants to continue or change the value entered
 		cout << "Press 'end' to continue with the value entered or 'change' to change the value" << endl;
@@ -542,29 +542,20 @@ std::vector<string> Network::validateInputs(string& str, const string& lr_range)
 			string wrong_data;
 			wrong_data = "Incorrect learning rate: ";
 			wrong_data += static_cast<int> (learningRate + '0');
-			wrong_inputs.push_back(wrong_data);
+			wrongInputs.push_back(wrong_data);
 			break;
 		}
 		else
 		{
-			cout << "Enter the value of learning rate in range (" << range[0] << " < x < " << range[1] << "): " << endl;
+			cout << "Enter the value of learning rate in range ( 0 x < " << lr_highest << "): " << endl;
 			if (!(cin >> learningRate))
 				continue;
 		}
 	}
 
-	//checks if the batchSize is not greater than the size of file
-
-	//use this piece of code only if training data file is opened before you call this function
-	
-	//------------------------------------------------------------------------------------------------------
-	/*while ((batchSize > end_of_file)||(batchSize < 0))
-	{
-	cout << "\nInvalid batch size..";
-	cout << "\nCannot proceed..Enter a valid number for batch size (0 < x < " << end_of_file << "): " << endl;
-	if (!(cin >> batchSize))
-	continue;
-	}*/
+}
+void Network::checkEpochs()
+{
 	//--------------------------------------------------------------------------------------------------------
 	//checks if the number of epochs is a positive integer
 	//consider using size_t instead of int
@@ -575,41 +566,72 @@ std::vector<string> Network::validateInputs(string& str, const string& lr_range)
 		if (!(cin >> epochs))
 			continue;
 	}
+}
 
+void Network::checkNumLayers()
+{
+	//--------------------------------------------------------------------------------------------------------
+	//checks if the number of layers read from the file is a valid positive integer
+	//consider using size_t instead of int
+	if (numLayers < 2)
+	{
+		cout << "\nInvalid number of layers..";
+		numLayers = layerSizes.size(); 
+	}
+}
+
+void Network::checkBatchSize()
+{
+	//checks if the batchSize is not greater than the size of file
+	//use this piece of code only if training data file is opened before you call this function
+	//------------------------------------------------------------------------------------------------------
+	int end_of_file = filesize(trainingDataInfile);
+	while ((batchSize > end_of_file) || (batchSize < 0))
+	{
+		cout << "\nInvalid batch size..";
+		cout << "\nCannot proceed..Enter a valid number for batch size (0 < x < " << end_of_file << "): " << endl;
+		if (!(cin >> batchSize))
+			continue;
+	}
+}
+void Network::checkLayersString(string& layer_string)
+{
 	//checks the string of layer sizes
 	//erases all the unwanted characters and records the errors in the vector of wrong_inputs
+	int go_ahead(0);
+	int j(0);
+	string temp;
 	do
 	{
 		j = 0;
-		temp.resize(str.size());
-		for (int i = 0; i < str.size(); i++)
+		temp.resize(layer_string.size());
+		for (int i = 0; i < layer_string.size(); i++)
 		{
 			string wrong_data;
-			if ((!isdigit(str[i])) && (str[i] != ' '))
+			if ((!isdigit(layer_string[i])) && (layer_string[i] != ' '))
 			{
 				wrong_data = "layer size with ";
-				wrong_data += str[i];
-				wrong_inputs.push_back(wrong_data);
+				wrong_data += layer_string[i];
+				wrongInputs.push_back(wrong_data);
 			}
 			else
 			{
-				temp[j++] = str[i];
-				if (str[i] == ' ') go_ahead++;
+				temp[j++] = layer_string[i];
+				if (layer_string[i] == ' ') go_ahead++;
 			}
 		}
-		str.resize(j);
-		str = temp;
+		layer_string.resize(j);
+		layer_string = temp;
 		if (!go_ahead)
 		{
 			string s;
 			cout << "\nCannot proceed..Enter at least two layers for the network: " << endl;
 			cin.ignore();
 			getline(cin, s);
-			str.resize(s.size());
-			str = s;
+			layer_string.resize(s.size());
+			layer_string = s;
 		}
 	} while (go_ahead < 1);
-	return wrong_inputs;		//returns wrong_inputs vector with the string of all errors
 }
 
 //An overloaded readInit() to read the required values, to create or classify a network, from the given file
@@ -631,13 +653,16 @@ bool Network::readInit(const string & file)
 		getline(fin, trainingDataFilename);
 		getline(fin, expectedValuesFilename);
 		fin >> learningRate;
+		checkLearningRate();
 		fin >> batchSize;
 		fin >> epochs;
+		checkEpochs();
 		fin >> numLayers;
-		fin.seekg(2, ios::cur);	
+		fin.seekg(2, ios::cur);
 		getline(fin, cLayers);
-		std::vector<string>	v = validateInputs(cLayers); //---> can be stored inside the data member of the class
+		checkLayersString(cLayers);
 		layerSizes = Strtok<int>(cLayers, " ");
+		checkNumLayers();
 
 		//Resize the vectors of the matrices to numLayers
 		weights.resize(numLayers);
@@ -715,6 +740,27 @@ bool Network::readInit(const string & file)
 Network::Network(const string& previous_network_filename)
 {
 	readInit(previous_network_filename);	
+	trainingDataInfile.open(trainingDataFilename);
+	if (!trainingDataInfile.is_open())
+	{
+		trainingDataInfile.clear();
+		trainingDataInfile.close();
+		trainingDataInfile.open(trainingDataFilename);
+		if (!trainingDataInfile.is_open())
+			cout << "\nServer Error 406: Could not open the requested training data file" << endl;
+		else;
+	}
+	checkBatchSize();
+	expectedValuesInfile.open(expectedValuesFilename);
+	if (!expectedValuesInfile.is_open())
+	{
+		expectedValuesInfile.clear();
+		expectedValuesInfile.close();
+		expectedValuesInfile.open(expectedValuesFilename);
+		if (!expectedValuesInfile.is_open())
+			cout << "\nServer Error 407: Could not open the requested expected values file" << endl;
+		else;
+	}
 	char c;
 	string str;
 	cout << "\nWould you like to change the values of hyperparameters? Press Y/N:-> ";
