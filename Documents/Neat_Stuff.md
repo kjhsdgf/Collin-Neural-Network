@@ -36,3 +36,5 @@
 	* ##### https://www.youtube.com/watch?v=wvsE8jm1GzE
 * #### Deep Visualization Toolbox
 	* ##### https://www.youtube.com/watch?v=AgkfIQ4IGaM
+* #### WaveNet by Google DeepMind
+	* ##### https://www.youtube.com/watch?v=CqFIVCD1WWo
