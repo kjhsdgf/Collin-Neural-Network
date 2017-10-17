@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <MKLProductDir>C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2017.4.210\windows</MKLProductDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_PropertySheetDisplayName>MKLProductDir</_PropertySheetDisplayName>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>libiomp5md.lib;mkl_blas95.lib;mkl_intel_thread.lib;mkl_core.lib;mkl_sequential.lib;mkl_intel_lp64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\IntelSWTools\compilers_and_libraries_2017.4.210\windows\mkl\lib\intel64_win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\IntelSWTools\compilers_and_libraries_2017.4.210\windows\mkl\include\intel64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="MKLProductDir">
+      <Value>$(MKLProductDir)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

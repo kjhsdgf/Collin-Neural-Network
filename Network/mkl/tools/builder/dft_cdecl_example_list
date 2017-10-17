@@ -1,0 +1,177 @@
+;===============================================================================
+; Copyright 2006-2017 Intel Corporation All Rights Reserved.
+;
+; The source code,  information  and material  ("Material") contained  herein is
+; owned by Intel Corporation or its  suppliers or licensors,  and  title to such
+; Material remains with Intel  Corporation or its  suppliers or  licensors.  The
+; Material  contains  proprietary  information  of  Intel or  its suppliers  and
+; licensors.  The Material is protected by  worldwide copyright  laws and treaty
+; provisions.  No part  of  the  Material   may  be  used,  copied,  reproduced,
+; modified, published,  uploaded, posted, transmitted,  distributed or disclosed
+; in any way without Intel's prior express written permission.  No license under
+; any patent,  copyright or other  intellectual property rights  in the Material
+; is granted to  or  conferred  upon  you,  either   expressly,  by implication,
+; inducement,  estoppel  or  otherwise.  Any  license   under such  intellectual
+; property rights must be express and approved by Intel in writing.
+;
+; Unless otherwise agreed by Intel in writing,  you may not remove or alter this
+; notice or  any  other  notice   embedded  in  Materials  by  Intel  or Intel's
+; suppliers or licensors in any way.
+;===============================================================================
+
+; Intel(R) Math Kernel Library (Intel(R) MKL) DFTI External symbols for custom
+; DLL builder.
+; Select the most appropriate list of symbols and feel free 
+; to adjust it to your needs.
+
+;----------------------------------------------------------------------
+; C/C++ interface (full)
+;----------------------------------------------------------------------
+DftiCommitDescriptor
+DftiComputeBackward
+DftiComputeForward
+DftiCopyDescriptor
+DftiCreateDescriptor
+DftiCreateDescriptor_d_1d
+DftiCreateDescriptor_d_md
+DftiCreateDescriptor_s_1d
+DftiCreateDescriptor_s_md
+DftiErrorClass
+DftiErrorMessage
+DftiFreeDescriptor
+DftiGetValue
+DftiSetValue
+
+;----------------------------------------------------------------------
+; C/C++ interface (single precision only)
+;----------------------------------------------------------------------
+DftiCommitDescriptor
+DftiComputeBackward
+DftiComputeForward
+DftiCopyDescriptor
+;DftiCreateDescriptor
+;DftiCreateDescriptor_d_1d
+;DftiCreateDescriptor_d_md
+DftiCreateDescriptor_s_1d
+DftiCreateDescriptor_s_md
+DftiErrorClass
+DftiErrorMessage
+DftiFreeDescriptor
+DftiGetValue
+DftiSetValue
+
+;----------------------------------------------------------------------
+; C/C++ interface (double precision only)
+;----------------------------------------------------------------------
+DftiCommitDescriptor
+DftiComputeBackward
+DftiComputeForward
+DftiCopyDescriptor
+;DftiCreateDescriptor
+DftiCreateDescriptor_d_1d
+DftiCreateDescriptor_d_md
+;DftiCreateDescriptor_s_1d
+;DftiCreateDescriptor_s_md
+DftiErrorClass
+DftiErrorMessage
+DftiFreeDescriptor
+DftiGetValue
+DftiSetValue
+
+;----------------------------------------------------------------------
+; Fortran interface (UPPERCASE decoration, full)
+;----------------------------------------------------------------------
+DFTI_COMMIT_DESCRIPTOR_EXTERNAL
+DFTI_COMPUTE_BACKWARD_C
+DFTI_COMPUTE_BACKWARD_CC
+DFTI_COMPUTE_BACKWARD_CS
+DFTI_COMPUTE_BACKWARD_D
+DFTI_COMPUTE_BACKWARD_DD
+DFTI_COMPUTE_BACKWARD_DDDD
+DFTI_COMPUTE_BACKWARD_S
+DFTI_COMPUTE_BACKWARD_SS
+DFTI_COMPUTE_BACKWARD_SSSS
+DFTI_COMPUTE_BACKWARD_Z
+DFTI_COMPUTE_BACKWARD_ZD
+DFTI_COMPUTE_BACKWARD_ZZ
+DFTI_COMPUTE_FORWARD_C
+DFTI_COMPUTE_FORWARD_CC
+DFTI_COMPUTE_FORWARD_D
+DFTI_COMPUTE_FORWARD_DD
+DFTI_COMPUTE_FORWARD_DDDD
+DFTI_COMPUTE_FORWARD_DZ
+DFTI_COMPUTE_FORWARD_S
+DFTI_COMPUTE_FORWARD_SC
+DFTI_COMPUTE_FORWARD_SS
+DFTI_COMPUTE_FORWARD_SSSS
+DFTI_COMPUTE_FORWARD_Z
+DFTI_COMPUTE_FORWARD_ZZ
+DFTI_COPY_DESCRIPTOR_EXTERNAL
+DFTI_CREATE_DESCRIPTOR_1D
+DFTI_CREATE_DESCRIPTOR_D_1D
+DFTI_CREATE_DESCRIPTOR_D_MD
+DFTI_CREATE_DESCRIPTOR_HIGHD
+DFTI_CREATE_DESCRIPTOR_S_1D
+DFTI_CREATE_DESCRIPTOR_S_MD
+DFTI_ERROR_CLASS_EXTERNAL
+DFTI_ERROR_MESSAGE_EXTERNAL
+DFTI_FREE_DESCRIPTOR_EXTERNAL
+DFTI_GET_VALUE_CHARS
+DFTI_GET_VALUE_DBLVAL
+DFTI_GET_VALUE_INTVAL
+DFTI_GET_VALUE_INTVEC
+DFTI_GET_VALUE_SGLVAL
+DFTI_SET_VALUE_CHARS
+DFTI_SET_VALUE_DBLVAL
+DFTI_SET_VALUE_INTVAL
+DFTI_SET_VALUE_INTVEC
+DFTI_SET_VALUE_SGLVAL
+
+;----------------------------------------------------------------------
+; Fortran interface (C decoration, full)
+;----------------------------------------------------------------------
+dfti_commit_descriptor_external
+dfti_compute_backward_c
+dfti_compute_backward_cc
+dfti_compute_backward_cs
+dfti_compute_backward_d
+dfti_compute_backward_dd
+dfti_compute_backward_dddd
+dfti_compute_backward_s
+dfti_compute_backward_ss
+dfti_compute_backward_ssss
+dfti_compute_backward_z
+dfti_compute_backward_zd
+dfti_compute_backward_zz
+dfti_compute_forward_c
+dfti_compute_forward_cc
+dfti_compute_forward_d
+dfti_compute_forward_dd
+dfti_compute_forward_dddd
+dfti_compute_forward_dz
+dfti_compute_forward_s
+dfti_compute_forward_sc
+dfti_compute_forward_ss
+dfti_compute_forward_ssss
+dfti_compute_forward_z
+dfti_compute_forward_zz
+dfti_copy_descriptor_external
+dfti_create_descriptor_1d
+dfti_create_descriptor_d_1d
+dfti_create_descriptor_d_md
+dfti_create_descriptor_highd
+dfti_create_descriptor_s_1d
+dfti_create_descriptor_s_md
+dfti_error_class_external
+dfti_error_message_external
+dfti_free_descriptor_external
+dfti_get_value_chars
+dfti_get_value_dblval
+dfti_get_value_intval
+dfti_get_value_intvec
+dfti_get_value_sglval
+dfti_set_value_chars
+dfti_set_value_dblval
+dfti_set_value_intval
+dfti_set_value_intvec
+dfti_set_value_sglval

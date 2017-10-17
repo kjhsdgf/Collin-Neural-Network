@@ -64,6 +64,7 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="MKLLibraryDir.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -75,7 +76,7 @@
     <LibraryPath>C:\Users\patel\Desktop\CASMNS Research\dlib-19.7;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\Elijah\source\repos\Collin-Neural-Network\Network\mkl\include;C:\Users\Elijah\source\repos\Collin-Neural-Network\Network\dlib-19.7;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,14 +101,17 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Elijah\source\repos\Collin-Neural-Network\Network\mkl\include;C:\Users\Elijah\source\repos\Collin-Neural-Network\Network\dlib-19.7;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>mkl_core.lib;mkl_sequential.lib;mkl_intel_lp64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Elijah\source\repos\Collin-Neural-Network\Network\mkl\lib\intel64_win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -144,21 +148,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="G:\CASMNS\Network\Network\Network.h" />
+    <ClInclude Include="Network.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="G:\CASMNS\Network\Network\AuxiliaryMethods.cpp" />
-    <ClCompile Include="G:\CASMNS\Network\Network\Network.cpp" />
-    <ClCompile Include="G:\CASMNS\Network\Network\Source.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="G:\CASMNS\Network\Network\D100.txt" />
-    <Text Include="G:\CASMNS\Network\Network\D1000.txt" />
-    <Text Include="G:\CASMNS\Network\Network\Data10.txt" />
-    <Text Include="G:\CASMNS\Network\Network\T100.txt" />
-    <Text Include="G:\CASMNS\Network\Network\T1000.txt" />
-    <Text Include="G:\CASMNS\Network\Network\Truth10.txt" />
-    <Text Include="G:\CASMNS\Network\Network\truth10000.txt" />
+    <ClCompile Include="AuxiliaryMethods.cpp" />
+    <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
