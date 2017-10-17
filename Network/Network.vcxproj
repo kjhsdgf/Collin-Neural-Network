@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1AAA2442-6DE4-492F-BEB1-0D06113924A7}</ProjectGuid>
+    <ProjectGuid>{F7BC890E-9C78-4D34-9BD0-32596D0CBC30}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Network</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -144,21 +144,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="G:\CASMNS\Network\Network\Network.h" />
+    <ClInclude Include="Network.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="G:\CASMNS\Network\Network\AuxiliaryMethods.cpp" />
-    <ClCompile Include="G:\CASMNS\Network\Network\Network.cpp" />
-    <ClCompile Include="G:\CASMNS\Network\Network\Source.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="G:\CASMNS\Network\Network\D100.txt" />
-    <Text Include="G:\CASMNS\Network\Network\D1000.txt" />
-    <Text Include="G:\CASMNS\Network\Network\Data10.txt" />
-    <Text Include="G:\CASMNS\Network\Network\T100.txt" />
-    <Text Include="G:\CASMNS\Network\Network\T1000.txt" />
-    <Text Include="G:\CASMNS\Network\Network\Truth10.txt" />
-    <Text Include="G:\CASMNS\Network\Network\truth10000.txt" />
+    <ClCompile Include="AuxiliaryMethods.cpp" />
+    <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

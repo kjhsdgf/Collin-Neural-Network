@@ -15,19 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AuxiliaryMethods.cpp">
+    <ClInclude Include="G:\CASMNS\Network\Network\Network.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="G:\CASMNS\Network\Network\AuxiliaryMethods.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Network.cpp">
+    <ClCompile Include="G:\CASMNS\Network\Network\Network.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="G:\CASMNS\Network\Network\Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Network.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <Text Include="G:\CASMNS\Network\Network\D100.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="G:\CASMNS\Network\Network\D1000.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="G:\CASMNS\Network\Network\Data10.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="G:\CASMNS\Network\Network\T100.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="G:\CASMNS\Network\Network\T1000.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="G:\CASMNS\Network\Network\Truth10.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="G:\CASMNS\Network\Network\truth10000.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
