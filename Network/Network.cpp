@@ -602,3 +602,102 @@ int Network::filesize(istream& in)
 	in.seekg(0, ios::beg);
 	return count;
 }
+
+Network::layerReport Network::outputLayerReport()
+{
+	layerReport output;
+	output.cleanOutput.set_size(activations[numLayers - 1].nr(), 1);
+	output.isAmbiguous = false;
+	int biggestElementIndice = 0;
+	double biggestElementValue = -DBL_MAX;
+	double currentNeuronOutput = 0;
+
+	for (int i = 0; i < activations[numLayers - 1].nr(); i++)
+	{
+		currentNeuronOutput = activations[numLayers - 1](i, 0);
+		if (currentNeuronOutput > biggestElementValue)
+		{
+			biggestElementIndice = i;
+			biggestElementValue = activations[numLayers - 1](i, 0);
+			output.isAmbiguous = false;
+		}
+		else if (currentNeuronOutput == biggestElementValue)
+			output.isAmbiguous = true;
+	}
+
+	for (int i = 0; i < activations[numLayers - 1].nr(); i++)
+	{
+		if (activations[numLayers - 1](i, 0) == biggestElementValue)
+			output.cleanOutput(i, 0) = 1;
+		else
+			output.cleanOutput(i, 0) = 0;
+	}
+
+	return output;
+}
+
+void Network::classify(const string &validation_data_filename)
+{
+	//SETUP
+	//create an infile object for validation data, and open it
+	ifstream validationDataInfile(validation_data_filename, ios::ate);	//opened at end for calc of numClassifications
+	if (validationDataInfile.fail())
+	{
+		std::cout << "File \'" << validation_data_filename << "\' not found!\n";
+		std::cout << "Exiting classify()...\n";
+		return;
+	}
+
+	//create outfile for output and open it
+	string outputFilename = "classification";							//what filename starts with
+	const int MAX_SIZE(80);												//buffer (maximum) size for the intermediary cstring
+	time_t currentTime = time(NULL);									//returns current time
+	struct tm * currentTimeInfo = localtime(&currentTime);				//stores current time into a struct
+	char outputFileTime[MAX_SIZE];										//creates cstring intermediary
+	strftime(outputFileTime, MAX_SIZE, "%a%H%M", currentTimeInfo);		//converts cstring intermediary into a string containing the current time
+	string filetype = ".txt";											//small filetype appendage
+	outputFilename += outputFileTime + filetype;						//appends Day(of week)HourMinute
+	ofstream classificationOutput(outputFilename, ios::trunc);			//creates and opens output file
+
+																		//variables used in the classification loop
+	layerReport report;													//stores generated "clean" output and ambiguity state
+	int i = 0;															//index for the while loop
+	bool isAmbiguous = report.isAmbiguous;								//stores state of ambiguity in network output
+	Matrix cleanedOutput = report.cleanOutput;							//stores "cleaned" output of network
+	int numAmbiguousData = 0;											//counts number of data in an ambiguous state
+	int numClassifications = filesize(validationDataInfile);			//counts number of data in validation data file
+	Matrix currentSample(layerSizes[numLayers - 1], 1);
+
+	//CLASSIFY
+	//Loop through samples
+	while (!validationDataInfile.eof())
+	{
+		currentSample = getM<double>(validationDataInfile, i);
+		forwardProp(i, validationDataInfile);
+		report = outputLayerReport();
+		isAmbiguous = report.isAmbiguous;
+		cleanedOutput = report.cleanOutput;
+
+		if (isAmbiguous)
+			numAmbiguousData++;
+
+		//print out the classification into a file
+		classificationOutput << "Network Input:  " << dlib::trans(getM<double>(validationDataInfile, i));
+		classificationOutput << "Network Output: " << dlib::trans(activations[numLayers - 1]);
+		classificationOutput << "Classification: " << dlib::trans(cleanedOutput) << '\n';
+
+		//print out classification into cmd prompt
+		std::cout << "Network Input:  " << dlib::trans(getM<double>(validationDataInfile, i++));	//NOTICE, the i++ is in this line!
+		std::cout << "Network Output: " << dlib::trans(activations[numLayers - 1]);
+		std::cout << "Classification: " << dlib::trans(cleanedOutput) << '\n';
+	}
+	//Print out number classified, and % classified
+	std::cout << numClassifications - numAmbiguousData << " out of " << numClassifications << " classified, " <<
+		(numClassifications - numAmbiguousData) / (double)numClassifications * 100 << " %";
+	classificationOutput << numClassifications - numAmbiguousData << " out of " << numClassifications << " classified, " <<
+		(numClassifications - numAmbiguousData) / (double)numClassifications * 100 << " %";
+	//CLOSING
+	//close the files
+	classificationOutput.close();
+	validationDataInfile.close();
+}
