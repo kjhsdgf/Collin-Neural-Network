@@ -61,13 +61,16 @@ private:
 	string				expectedValuesFilename;
 	ifstream			trainingDataInfile;
 	ifstream			expectedValuesInfile;
+	
+	struct 				layerReport 			{ bool isAmbiguous; Matrix cleanOutput; };
+
 
 	//Private Functions:->
 	bool				writeToFile() const;
 	bool				backProp(int);
 	void				forwardProp(int, ifstream &);
 	int					SGD();
-
+	layerReport			outputLayerReport();
 	void				checkLearningRate(int = 1);
 	void				checkEpochs();
 	void				checkBatchSize();
