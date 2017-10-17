@@ -2,7 +2,7 @@
 ## Stuff Eli thinks is really important to sort out before we continue
 1. ### Have a `master` branch that runs on everyone's computer...
 	* #### ideally self-contained
-2. ### Code commentary for the next generation of developers on this code
+2. ### Code commentary for the next generation of CASMNS-Neural-Network developers
 
 ## Long-term Goals
 1. ### filetype-to-binary data conversion
