@@ -14,7 +14,7 @@
 ## Concrete Improvements
 1. ### Read/write files in binary mode
 2. ### Redefine `ambiguousData()` to implement a threshold value
-3. ### Save file path for training/expected data files
+3. ### Save file path for training/expected data files, previous network files, etc.
 4. ### Introduce additional cost and activation functions (set up menu of defaults)
 	* #### Updating initialization to allow for these selections
 5. ### Running the program from console (i.e. making a `main()` with `argc` and `argv[]`)
