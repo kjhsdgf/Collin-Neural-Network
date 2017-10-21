@@ -330,7 +330,6 @@ OpenCover/
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
