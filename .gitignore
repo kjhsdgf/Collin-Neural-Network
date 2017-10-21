@@ -340,3 +340,4 @@ OpenCover/
 # Stuff that should stay in master
 Documents/
 Network Class/
+*.md
