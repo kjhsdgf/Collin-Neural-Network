@@ -27,9 +27,11 @@ void	Network::initStateTable()
 	int i = 0, j = 0;
 	while (i < StateTable.nr())
 	{
+		j = 0;
 		while (j < StateTable.nc())
 		{
-			StateTable(i, j) = j++;
+			StateTable(i, j) = i;
+			j++;
 		}
 		i++;
 	}
@@ -56,15 +58,19 @@ void	Network::initStateTable()
 /* inputCosine				{		14,		14,		14,		14,		14,	}	*/						
 //};
 
-void Network::takeInput()
+Matrix Network::takeInput(int index)
 {
-	int i(0);
-	for (; i < numLayers; i++)
-	{
-		cout << "Enter an activation function for layer " << i << " -> ";
-		//TBD
-	}
+	int j;
+	Matrix prime;
+	std::vector<string> strings;
+	strings.resize(numLayers);
+	cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
+	cin >> j;
+	cin.ignore();
+	prime = activationFuncs[StateTable(j, index)](index);
+	return prime;
 }
+
 Network::Network()
 {
 	//Call readInit() to fill numLayers, layerSizes[], learningRate, epochs, batchSize
