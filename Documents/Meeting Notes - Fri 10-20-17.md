@@ -7,7 +7,7 @@
 ## 4. Getting a `main()` with `argc` and `argv[]` that can be run from console
 ## 5. Think super hard about implementation of thresholds into `ambiguousData()`
 ### * What is ambiguous data? How much should we hard code into the class?
-## 6. Coding a GUI for the classes 
-### *Writing a function by which a user can easily set up the directory for visual studio to acces the files*
+## 6. Coding a Graphic User Interface (GUI) for the classes 
+#### * Also: Writing a function by which a user can easily set up the directory to access the files
 
 This is from memory, so edit as your personal notes reflect. [~Eli]
