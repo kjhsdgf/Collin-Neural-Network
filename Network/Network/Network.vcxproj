@@ -144,9 +144,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="G:\CASMNS\Network\Network\Network.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="G:\CASMNS\Network\Network\AuxiliaryMethods.cpp" />
     <ClCompile Include="G:\CASMNS\Network\Network\Network.cpp" />
     <ClCompile Include="G:\CASMNS\Network\Network\Source.cpp" />
@@ -159,6 +156,9 @@
     <Text Include="G:\CASMNS\Network\Network\T1000.txt" />
     <Text Include="G:\CASMNS\Network\Network\Truth10.txt" />
     <Text Include="G:\CASMNS\Network\Network\truth10000.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Network.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

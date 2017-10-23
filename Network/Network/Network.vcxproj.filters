@@ -15,11 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="G:\CASMNS\Network\Network\Network.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="G:\CASMNS\Network\Network\AuxiliaryMethods.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,5 +47,10 @@
     <Text Include="G:\CASMNS\Network\Network\truth10000.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Network.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
