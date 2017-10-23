@@ -19,6 +19,14 @@ typedef matrix<double> Matrix;
 typedef std::vector<Matrix> VMatrix;
 typedef std::vector<int> Vector;
 
+typedef Matrix(*activationsType) (int);
+//---------------------------------------------------------------------
+//Any function of type activationsType:
+		//Returns a matrix of double with the activation prime
+		//Take a parameter of int which is the index of the layer
+		//Assigns the activations at the index being passed 
+//---------------------------------------------------------------------
+
 class Network
 {
 public:
@@ -44,6 +52,27 @@ public:
 	void				checkBatchSize();
 	void				checkLayersString(string&);
 	void				checkNumLayers();
+	
+	//----Enums
+	enum Inputs {
+		inputLinear,
+		inputSigmoid,
+		inputComplementaryLog_Log,
+		inputBipolarSigmoid,
+		inputTanh,
+		inputLeCun_stanh,
+		inputRectifier,
+		inputSmoothRectifier,
+		inputLogit,
+		inputSoftmax,
+		inputRadialGaussian,
+		inputProbit,
+		inputMaxout,
+		inputLeakyRelu,
+		inputCosine,
+
+		numActivations
+	};
 
 private:
 
@@ -94,6 +123,33 @@ private:
 
 	template <class T>
 	std::vector<T>			Strtok(const string& , char[]);
+	
+	//Activation Methods:
+	static Matrix		linear(int);
+	static Matrix		sigmoid(int);
+	static Matrix		log_Log(int);
+	static Matrix		bipolarSigmoid(int);
+	static Matrix		tanh(int);
+	static Matrix		LeCun_stanh(int);
+	static Matrix		rectifier(int);
+	static Matrix		smoothRectifier(int);
+	static Matrix		logit(int);
+	static Matrix		softmax(int);
+	static Matrix		radialGaussian(int);
+	static Matrix		probit(int);
+	static Matrix		maxout(int);
+	static Matrix		leakyRelu(int);
+	static Matrix		cosine(int);
+
+	//--------------------Declarations related to state table------------------------------------
+
+	//Required Attritubes ->
+	static activationsType		activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
+	static matrix<unsigned char>	StateTable;
+
+	//Required Methods ->
+	void				initStateTable();
+	void				takeInput();
 	
 };
 
