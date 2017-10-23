@@ -1,6 +1,6 @@
-#ifndef NETWORK_H
+#ifndef NETWORKCLASS_H
 
-#define NETWORK_H
+#define NETWORKCLASS_H
 
 #include <iostream>
 #include <fstream>

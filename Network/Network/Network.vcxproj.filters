@@ -49,7 +49,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Network.h">
+    <ClInclude Include="NetworkClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

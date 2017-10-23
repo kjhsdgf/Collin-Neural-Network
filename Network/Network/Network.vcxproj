@@ -158,7 +158,7 @@
     <Text Include="G:\CASMNS\Network\Network\truth10000.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Network.h" />
+    <ClInclude Include="NetworkClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
