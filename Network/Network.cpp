@@ -1,6 +1,70 @@
 #include "Network.h"
 
+activationsType	Network :: activationFuncs[numActivations] = {
+/* 0	 */		linear,				//	weightedInputs(i,j)
+/* 1	 */		sigmoid,			//	1 / (1-exp(weightedInputs(i,j))
+/* 2	 */		log_Log,			//	1 − exp(−exp(weightedInputs(i,j)))
+/* 3	 */		bipolarSigmoid,			//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
+/* 4	 */		tanh,				//	tanh(weightedInputs(i,j))
+/* 5	 */		LeCun_stanh,			//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
+							//	considered for efficient backpropagation
+/* 6	 */		rectifier,			//	max (0, weightedInputs(i,j))
+							//	most commonly used, but using it increases the percent of 'dead' neurons in the network
+/* 7	 */		smoothRectifier,		//	log(1 + exp(weightedInputs(i,j))
+/* 8	 */		logit,				//  	log(weightedInputs(i,j) / (1 - weightedInputs(i,j)))
+/* 9	 */		softmax,			//	exp(weightedInputs(i,j)) / sum of exp(weightedInputs(i,j)) for the last layer
+/* 10	 */		radialGaussian,			//	exp( -(1/2)*((weightedInputs(i,j)^2))
+/* 11	 */		probit,				//	based on cummulative distribution function based on mcLaurin series
+/* 12	 */		maxout,				//	actiavtions[i-1].weights[i] + biases[i]
+/* 13	 */		leakyRelu,			//  	alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
+							//	weightedInputs(i,j)	     z > 0
+/* 14	 */		cosine,				//	cos(weightedInputs(i,j))
+};
 
+void	Network::initStateTable()
+{
+	StateTable.set_size(numActivations + 1, numLayers);
+	int i = 0, j = 0;
+	while (i < StateTable.nr())
+	{
+		while (j < StateTable.nc())
+		{
+			StateTable(i, j) = j++;
+		}
+		i++;
+	}
+}
+
+//-----------------------------------------------------	~ AN EXAMPLE ~ ----------------------------------------------------------
+//unsigned char	Network::StateTable[numActivations + 1][if numLayers := 5] = {
+
+					//Layers:	0		1		2		3		4		
+/* inputLinear			      	{		0,		0,		0,		0,		0,	},	*/	
+/* inputSigmoid				{		1,		1,		1,		1,		1,	},	*/	
+/* inputComplementaryLog_Log 		{		2,		2,		2, 		2, 		2, 	},	*/	
+/* inputBipolarSigmoid		 	{		3,		3,		3, 		3, 		3, 	},	*/	
+/* inputTanh				{		4,		4,		4, 		4, 		4, 	},	*/	
+/* inputLeCun_stanh			{		5,		5,		5, 		5, 		5, 	},	*/	
+/* inputRectifier			{		6,		6,		6, 		6, 		6, 	},	*/	
+/* inputSmoothRectifier		 	{		7,		7,		7, 		7, 		7, 	},	*/	
+/* inputLogit				{		8,		8, 		8, 		8, 		8, 	},	*/	
+/* inputSoftmax				{		9,		9,		9,		9,		9,	},	*/	
+/* inputRadialGaussian		 	{		10,		10, 		10,		10,		10,	},	*/	
+/* inputProbit				{		11,		11,		11,		11,		11,	},	*/	
+/* inputMaxout				{		12,		12,		12,		12,		12,	},	*/	
+/* inputLeakyRelu			{		13,		13,		13,		13,		13,	},	*/	
+/* inputCosine				{		14,		14,		14,		14,		14,	}	*/						
+//};
+
+void Network::takeInput()
+{
+	int i(0);
+	for (; i < numLayers; i++)
+	{
+		cout << "Enter an activation function for layer " << i << " -> ";
+		//TBD
+	}
+}
 Network::Network()
 {
 	//Call readInit() to fill numLayers, layerSizes[], learningRate, epochs, batchSize
