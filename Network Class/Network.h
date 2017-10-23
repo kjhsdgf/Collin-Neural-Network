@@ -36,6 +36,13 @@ public:
 	//---------------------------Also, the number of layers is calculated in these methods----------------------------------------
 	bool				readInit(const string&);
 	void				readInit();
+	
+	//---------------------Methods to check the typo errors by the users--------------------
+	void				checkLearningRate(int = 1);		//the highest value for the learning rate is set to 1 but can be changed while calling the function
+	void				checkEpochs();
+	void				checkBatchSize();
+	void				checkLayersString(string&);
+	void				checkNumLayers();
 
 private:
 
@@ -55,6 +62,7 @@ private:
 
 	Vector				miniBatchIndices;
 	Vector				layerSizes;
+	std::vector<string>	wrongInputs;				//contains all the input errors
 	string				trainingDataFilename;
 	string				expectedValuesFilename;
 	ifstream			trainingDataInfile;
@@ -71,6 +79,8 @@ private:
 	bool				compareOutput(const Matrix&);
 	const Matrix		hadamardProduct(const Matrix&, const Matrix&);
 	layerReport			outputLayerReport();
+	
+
 
 	template <class T>
 	void				FYShuffle(std::vector<T>& v);
