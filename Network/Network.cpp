@@ -17,7 +17,7 @@ activationsType	Network :: activationFuncs[numActivations] = {
 /* 11	 */		probit,				//	based on cummulative distribution function based on mcLaurin series
 /* 12	 */		maxout,				//	actiavtions[i-1].weights[i] + biases[i]
 /* 13	 */		leakyRelu,			//  	alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
-							//	weightedInputs(i,j)	 z > 0
+							//	weightedInputs(i,j)	     z > 0
 /* 14	 */		cosine,				//	cos(weightedInputs(i,j))
 };
 
@@ -38,22 +38,22 @@ void	Network::initStateTable()
 //-----------------------------------------------------	~ AN EXAMPLE ~ ----------------------------------------------------------
 //unsigned char	Network::StateTable[numActivations + 1][if numLayers := 5] = {
 
-							//Layers:	0		1		2		3		4		
-	/* inputLinear				 	{		0,		0,		0,		0,		0,		},	*/	
-	/* inputSigmoid				 	{		1,		1,		1,		1,		1,		},	*/	
-	/* inputComplementaryLog_Log 			{		2,		2,		2, 		2, 		2, 		},	*/	
-	/* inputBipolarSigmoid		 		{		3,		3,		3, 		3, 		3, 		},	*/	
-	/* inputTanh				 	{		4,		4,		4, 		4, 		4, 		},	*/	
-	/* inputLeCun_stanh			 	{		5,		5,		5, 		5, 		5, 		},	*/	
-	/* inputRectifier			 	{		6,		6,		6, 		6, 		6, 		},	*/	
-	/* inputSmoothRectifier		 		{		7,		7,		7, 		7, 		7, 		},	*/	
-	/* inputLogit				 	{		8,		8, 		8, 		8, 		8, 		},	*/	
-	/* inputSoftmax				 	{		9,		9,		9,		9,		9,		},	*/	
-	/* inputRadialGaussian		 		{		10,		10, 		10,		10,		10,		},	*/	
-	/* inputProbit				 	{		11,		11,		11,		11,		11,		},	*/	
-	/* inputMaxout				 	{		12,		12,		12,		12,		12,		},	*/	
-	/* inputLeakyRelu			 	{		13,		13,		13,		13,		13,		},	*/	
-	/* inputCosine				 	{		14,		14,		14,		14,		14,		}	*/						
+					//Layers:	0		1		2		3		4		
+/* inputLinear			      	{		0,		0,		0,		0,		0,	},	*/	
+/* inputSigmoid				{		1,		1,		1,		1,		1,	},	*/	
+/* inputComplementaryLog_Log 		{		2,		2,		2, 		2, 		2, 	},	*/	
+/* inputBipolarSigmoid		 	{		3,		3,		3, 		3, 		3, 	},	*/	
+/* inputTanh				{		4,		4,		4, 		4, 		4, 	},	*/	
+/* inputLeCun_stanh			{		5,		5,		5, 		5, 		5, 	},	*/	
+/* inputRectifier			{		6,		6,		6, 		6, 		6, 	},	*/	
+/* inputSmoothRectifier		 	{		7,		7,		7, 		7, 		7, 	},	*/	
+/* inputLogit				{		8,		8, 		8, 		8, 		8, 	},	*/	
+/* inputSoftmax				{		9,		9,		9,		9,		9,	},	*/	
+/* inputRadialGaussian		 	{		10,		10, 		10,		10,		10,	},	*/	
+/* inputProbit				{		11,		11,		11,		11,		11,	},	*/	
+/* inputMaxout				{		12,		12,		12,		12,		12,	},	*/	
+/* inputLeakyRelu			{		13,		13,		13,		13,		13,	},	*/	
+/* inputCosine				{		14,		14,		14,		14,		14,	}	*/						
 //};
 
 void Network::takeInput()
