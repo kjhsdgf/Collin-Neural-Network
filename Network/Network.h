@@ -149,7 +149,7 @@ private:
 
 	//Required Methods ->
 	void				initStateTable();
-	void				takeInput();
+	Matrix				takeInput(int);
 	
 };
 
