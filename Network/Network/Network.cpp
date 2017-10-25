@@ -1,4 +1,57 @@
 #include "Network.h"
+///
+//State Machine Assets
+///
+
+activationsType Network::activationFuncs[numActivations] = {
+	bipolarSigmoid,
+	cosine,
+	leakyRelu,
+	LeCun_stanh,
+	linear,
+	log_Log,
+	logit,
+	maxout,
+	probit,
+	rectifier,
+	radialGaussian,
+	sigmoid,
+	smoothRectifier,
+	softmax,
+	tanh
+};
+
+void Network::initStateTable()
+{
+
+	//stateTable.set_size(numActivations + 1, numLayers);
+	stateTable.set_size(0, 0);
+	int i = 0;
+	int j = 0;
+	while (i < stateTable.nr())
+	{
+		j = 0;
+		while (j < stateTable.nc())
+		{
+			stateTable(i, j) = i;
+			j++;
+		}
+		i++;
+	}
+}
+
+Matrix Network::takeInput(int index)
+{
+	int j;
+	Matrix prime;
+	std::vector<string> strings;
+	strings.resize(numLayers);
+	cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
+	cin >> j;
+	cin.ignore();
+	prime = activationFuncs[stateTable(j, index)](index);
+	return prime;
+}
 
 ///
 //Network Class Functions
@@ -128,6 +181,114 @@ Network::~Network()
 
 /**********Public Methods*******************************/
 
+//checks if the batchSize is not greater than the size of file
+//use this piece of code only if training data file is open
+void Network::checkBatchSize()
+{
+	int end_of_file = fileSize(trainingDataInfile);
+	while ((batchSize > end_of_file) || (batchSize < 0))
+	{
+		cout << "\nInvalid batch size..";
+		cout << "\nCannot proceed..Enter a valid number for batch size (0 < x < " << end_of_file << "): " << endl;
+		if (!(cin >> batchSize))
+			continue;
+	}
+}
+
+//checks if the number of epochs is a positive integer
+//consider using size_t instead of int
+void Network::checkEpochs()
+{
+	while (epochs < 1)
+	{
+		cout << "\nInvalid number of epochs..";
+		cout << "\nCannot proceed..Enter a valid number of epochs (x > 0): " << endl;
+		if (!(cin >> epochs))
+			continue;
+	}
+}
+
+//checks the string of layer sizes
+//erases all the unwanted characters and records the errors in the vector of wrong_inputs
+void Network::checkLayersString(string& layer_string)
+{
+	int go_ahead(0);
+	int j(0);
+	string temp;
+	do
+	{
+		j = 0;
+		temp.resize(layer_string.size());
+		for (int i = 0; i < layer_string.size(); i++)
+		{
+			string wrong_data;
+			if ((!isdigit(layer_string[i])) && (layer_string[i] != ' '))
+			{
+				wrong_data = "layer size with ";
+				wrong_data += layer_string[i];
+				wrongInputs.push_back(wrong_data);
+			}
+			else
+			{
+				temp[j++] = layer_string[i];
+				if (layer_string[i] == ' ') go_ahead++;
+			}
+		}
+		layer_string.resize(j);
+		layer_string = temp;
+		if (!go_ahead)
+		{
+			string s;
+			cout << "\nCannot proceed..Enter at least two layers for the network: " << endl;
+			cin.ignore();
+			getline(cin, s);
+			layer_string.resize(s.size());
+			layer_string = s;
+		}
+	} while (go_ahead < 1);
+}
+
+void Network::checkLearningRate(int lr_highest)
+{
+	bool result;
+	string temp;
+	while (!(result = ((learningRate > 0) && (learningRate < lr_highest))))	//loop continues until the learning rate is between 0 and given end point
+	{
+		//If learning rate is not in range, displays an error message
+		cout << "\nError: The learning rate you entered is too high.." << endl;
+
+		//also, it prompts the user if the user wants to continue or change the value entered
+		cout << "Press 'end' to continue with the value entered or 'change' to change the value" << endl;
+		cin >> temp;
+		if (temp == "end")
+		{
+			string wrong_data;
+			wrong_data = "Incorrect learning rate: ";
+			wrong_data += static_cast<int> (learningRate + '0');
+			wrongInputs.push_back(wrong_data);
+			break;
+		}
+		else
+		{
+			cout << "Enter the value of learning rate in range ( 0 x < " << lr_highest << "): " << endl;
+			if (!(cin >> learningRate))
+				continue;
+		}
+	}
+
+}
+
+//checks if the number of layers read from the file is a valid positive integer
+//consider using size_t instead of int
+void Network::checkNumLayers()
+{
+	if (numLayers < 2)
+	{
+		cout << "\nInvalid number of layers..";
+		numLayers = layerSizes.size();
+	}
+}
+
 //when passed a text file, will classify data therein and output to console as well as a file
 void Network::classify(const string &validation_data_filename)
 {
@@ -254,12 +415,16 @@ bool Network::readInit(const string & file)
 		getline(fin, trainingDataFilename);
 		getline(fin, expectedValuesFilename);
 		fin >> learningRate;
+		checkLearningRate();
 		fin >> batchSize;
 		fin >> epochs;
+		checkEpochs();
 		fin >> numLayers;
 		fin.seekg(2, ios::cur);
 		getline(fin, cLayers);
+		checkLayersString(cLayers);
 		layerSizes = Strtok<int>(cLayers, " ");
+		checkNumLayers();
 
 		//Resize the vectors of the matrices to numLayers
 		weights.resize(numLayers);
@@ -331,10 +496,6 @@ bool Network::readInit(const string & file)
 		return false;
 	}
 }
-
-// thought it might be nice if train also returned a vector of the network's efficiency at each epoch
-// but if we're having that info printed out to console (though i think it's better served storing somewhere for later access)
-// this is not necessary and can be changed with juust a couple deletions
 
 // train calls SGD on every mini batch in a training data set until the set has been exhausted as many times as epochs
 // randomizing the set between each epoch
@@ -624,21 +785,6 @@ void Network::forwardProp(ifstream &infile, const int batchIndex)
 	}
 }
 
-void Network::randomizeMatrix(Matrix &input_matrix)
-{
-	if (input_matrix.nc() == 1)
-	{
-		for (int i = 0; i < input_matrix.nr(); i++)
-			input_matrix(i) = distribution(-1);
-	}
-	else
-	{
-		for (int i = 0; i < input_matrix.nr(); i++)
-			for (int j = 0; j < input_matrix.nc(); j++)
-				input_matrix(i, j) = distribution(input_matrix.nc());
-	}
-}
-
 //Updates weights and biases for the network by overwriting weights and biases.
 //helps if sumNablaW and sumNablaB VMatrix's have been filled.
 void Network::updateWeightsAndBiases()
@@ -720,4 +866,113 @@ std::vector<T> Network::Strtok(const string &str, char Separator[])
 	}
 	delete[] p;
 	return v;
+}
+
+///
+//Static Methods
+///
+
+Matrix Network::bipolarSigmoid(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::cosine(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::leakyRelu(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::LeCun_stanh(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::linear(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::log_Log(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::logit(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::maxout(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::probit(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::rectifier(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::radialGaussian(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::sigmoid(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::smoothRectifier(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::softmax(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
+}
+
+Matrix Network::tanh(int)
+{
+	Matrix temp(1, 1);
+	temp = zeros_matrix<double>(1, 1);
+	return temp;
 }

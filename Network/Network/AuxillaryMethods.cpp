@@ -56,3 +56,18 @@ void FYShuffle(Vector &v)
 		v[randI] = temp;
 	}
 };
+
+void randomizeMatrix(Matrix &input_matrix)
+{
+	if (input_matrix.nc() == 1)
+	{
+		for (int i = 0; i < input_matrix.nr(); i++)
+			input_matrix(i) = distribution(-1);
+	}
+	else
+	{
+		for (int i = 0; i < input_matrix.nr(); i++)
+			for (int j = 0; j < input_matrix.nc(); j++)
+				input_matrix(i, j) = distribution(input_matrix.nc());
+	}
+}
