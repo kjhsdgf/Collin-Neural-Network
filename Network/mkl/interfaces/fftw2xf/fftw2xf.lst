@@ -1,0 +1,122 @@
+#===============================================================================
+# Copyright 2006-2017 Intel Corporation All Rights Reserved.
+#
+# The source code,  information  and material  ("Material") contained  herein is
+# owned by Intel Corporation or its  suppliers or licensors,  and  title to such
+# Material remains with Intel  Corporation or its  suppliers or  licensors.  The
+# Material  contains  proprietary  information  of  Intel or  its suppliers  and
+# licensors.  The Material is protected by  worldwide copyright  laws and treaty
+# provisions.  No part  of  the  Material   may  be  used,  copied,  reproduced,
+# modified, published,  uploaded, posted, transmitted,  distributed or disclosed
+# in any way without Intel's prior express written permission.  No license under
+# any patent,  copyright or other  intellectual property rights  in the Material
+# is granted to  or  conferred  upon  you,  either   expressly,  by implication,
+# inducement,  estoppel  or  otherwise.  Any  license   under such  intellectual
+# property rights must be express and approved by Intel in writing.
+#
+# Unless otherwise agreed by Intel in writing,  you may not remove or alter this
+# notice or  any  other  notice   embedded  in  Materials  by  Intel  or Intel's
+# suppliers or licensors in any way.
+#===============================================================================
+
+WRAP = $(wrapf) $(wrapc)
+
+wrapf = \
+fftw_f77+ \
+fftw_f77_create_plan+ \
+fftw_f77_destroy_plan+ \
+fftw_f77_one+ \
+fftw_f77_threads+ \
+fftw_f77_threads_init+ \
+fftw_f77_threads_one+ \
+fftw2d_f77_create_plan+ \
+fftw3d_f77_create_plan+ \
+fftwnd_f77+ \
+fftwnd_f77_create_plan+ \
+fftwnd_f77_destroy_plan+ \
+fftwnd_f77_one+ \
+fftwnd_f77_threads+ \
+fftwnd_f77_threads_one+ \
+rfftw_f77+ \
+rfftw_f77_create_plan+ \
+rfftw_f77_destroy_plan+ \
+rfftw_f77_one+ \
+rfftw_f77_threads+ \
+rfftw_f77_threads_one+ \
+rfftw2d_f77_create_plan+ \
+rfftw3d_f77_create_plan+ \
+rfftwnd_f77_complex_to_real+ \
+rfftwnd_f77_create_plan+ \
+rfftwnd_f77_destroy_plan+ \
+rfftwnd_f77_one_complex_to_real+ \
+rfftwnd_f77_one_real_to_complex+ \
+rfftwnd_f77_real_to_complex+ \
+rfftwnd_f77_threads_complex_to_real+ \
+rfftwnd_f77_threads_one_complex_to_real+ \
+rfftwnd_f77_threads_one_real_to_complex+ \
+rfftwnd_f77_threads_real_to_complex+
+
+wrapc = \
+fftw+ \
+fftw_check_memory_leaks+ \
+fftw_create_plan+ \
+fftw_create_plan_specific+ \
+fftw_destroy_plan+ \
+fftw_die+ \
+fftw_export_wisdom+ \
+fftw_export_wisdom_to_file+ \
+fftw_export_wisdom_to_string+ \
+fftw_forget_wisdom+ \
+fftw_fprint_plan+ \
+fftw_free+ \
+fftw_import_wisdom+ \
+fftw_import_wisdom_from_file+ \
+fftw_import_wisdom_from_string+ \
+fftw_malloc+ \
+fftw_one+ \
+fftw_print_max_memory_usage+ \
+fftw_print_plan+ \
+fftw_sizeof_fftw_real+ \
+fftw_threads+ \
+fftw_threads_init+ \
+fftw_threads_one+ \
+fftw2d_create_plan+ \
+fftw2d_create_plan_specific+ \
+fftw3d_create_plan+ \
+fftw3d_create_plan_specific+ \
+fftwnd+ \
+fftwnd_create_plan+ \
+fftwnd_create_plan_specific+ \
+fftwnd_destroy_plan+ \
+fftwnd_fprint_plan+ \
+fftwnd_one+ \
+fftwnd_print_plan+ \
+fftwnd_threads+ \
+fftwnd_threads_one+ \
+rfftw+ \
+rfftw_create_plan+ \
+rfftw_create_plan_specific+ \
+rfftw_destroy_plan+ \
+rfftw_executor_simple+ \
+rfftw_fprint_plan+ \
+rfftw_one+ \
+rfftw_print_plan+ \
+rfftw_threads+ \
+rfftw_threads_one+ \
+rfftw2d_create_plan+ \
+rfftw2d_create_plan_specific+ \
+rfftw3d_create_plan+ \
+rfftw3d_create_plan_specific+ \
+rfftwnd_complex_to_real+ \
+rfftwnd_create_plan+ \
+rfftwnd_create_plan_specific+ \
+rfftwnd_destroy_plan+ \
+rfftwnd_fprint_plan+ \
+rfftwnd_one_complex_to_real+ \
+rfftwnd_one_real_to_complex+ \
+rfftwnd_print_plan+ \
+rfftwnd_real_to_complex+ \
+rfftwnd_threads_complex_to_real+ \
+rfftwnd_threads_one_complex_to_real+ \
+rfftwnd_threads_one_real_to_complex+ \
+rfftwnd_threads_real_to_complex+
