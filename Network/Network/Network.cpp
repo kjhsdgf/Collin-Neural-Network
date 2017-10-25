@@ -24,8 +24,7 @@ activationsType Network::activationFuncs[numActivations] = {
 void Network::initStateTable()
 {
 
-	//stateTable.set_size(numActivations + 1, numLayers);
-	stateTable.set_size(0, 0);
+	/*stateTable.set_size(numActivations + 1, numLayers);
 	int i = 0;
 	int j = 0;
 	while (i < stateTable.nr())
@@ -37,7 +36,7 @@ void Network::initStateTable()
 			j++;
 		}
 		i++;
-	}
+	}*/
 }
 
 Matrix Network::takeInput(int index)
@@ -49,7 +48,11 @@ Matrix Network::takeInput(int index)
 	cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
 	cin >> j;
 	cin.ignore();
-	prime = activationFuncs[stateTable(j, index)](index);
+	//prime = activationFuncs[stateTable(j, index)](index);
+
+	int TEST = 0;
+	prime = activationFuncs[TEST](index);
+
 	return prime;
 }
 
