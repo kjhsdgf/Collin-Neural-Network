@@ -1,0 +1,57 @@
+Continued...
+//this contains the other required functions like Hadamard_Product(), Shuffle() and the main(), which the user will see
+
+#include<iostream.h>
+#include<string.h>
+#include<dlib/matrixabstract>
+
+using namespace std;
+
+class Network
+{
+    //Assume the parameters to be declared as that in the part 1 of the pseudocode
+    
+    //Hadamard_Product() is a scalar multiplication of two matrices where we obtain a matrix by multiplying an element in one matrix with 
+    //that respective in the other matrix.
+    matrix Hadamard_Product (matrix M1, matrix M2)
+    {
+          matrix M;
+          //check the size of the matrix
+              //if, equal:
+                  //Create a matrix M of same size as that of either M1 or M2
+                  //Start the loop for i = 1 to i = the number of columns in M1 
+                      //Start an inner loop for j = 1 to j = number of rows in M1
+                            //Every element in M, M[j][i] = M1[j][i] * M2[j][i];
+                      //end of the loop
+                  //end of the loop
+                  //return the matrix M
+               
+               //else
+                  //throw an exception or display the error message;
+    }
+    
+    void Shuffle(vector<int> test_data)
+    {
+          //Shuffle() will be called at the starting of every epoch to randomize the data provided by the user
+          //This will create a vector<int> of the same size as that of Data Set and every element of the vector will point to 
+          //a particular input data in the data file.
+          //Shuffle() will randomize this array of int by swapping different indices, using fisher method
+          //This will assign created vector<int>, once done with the shuffling
+    }
+};    //this ends the class
+
+void main()
+{
+      //Display a menu to ask user if he wants to train the data or classify
+      //If user chooses to train the data:
+            //Network::ReadIn()
+            //Check the validity of the parameters user entered
+            //call the train() in the class network
+      //If user chooses to Classify:
+            //call the classify() in the class network
+      //else
+           //display a server error
+}
+   
+                          
+                            
