@@ -335,7 +335,3 @@ OpenCover/
 *.exe
 *.out
 *.app
-
-# Files that should stay in master
-Documents/
-Network Class/
