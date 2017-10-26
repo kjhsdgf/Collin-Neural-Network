@@ -74,8 +74,8 @@ private:
 	int							batchSize;
 	int							epochs;
 	int 							numLayers;
-	struct layerReport				 bool isAmbiguous; Matrix cleanOutput; };
-	std::vector<string>				wrongInputs;
+	struct layerReport				 	{bool isAmbiguous; Matrix cleanOutput; };
+	std::vector<string>					wrongInputs;
 
 	VMatrix							weights;
 	VMatrix							sumNablaW;
@@ -96,10 +96,10 @@ private:
 	/**********Private Methods******************************/
 	bool							backProp(int);
 	bool							writeToFile() const;
-	const Matrix					hadamardProduct(const Matrix&, const Matrix&);
-	int								compareOutput(const Matrix&);
-	int								fileSize(istream&);
-	int								SGD();
+	const Matrix						hadamardProduct(const Matrix&, const Matrix&);
+	int							compareOutput(const Matrix&);
+	int							fileSize(istream&);
+	int							SGD();
 	layerReport						outputLayerReport();
 	void							forwardProp(ifstream&, const int);
 	void							updateWeightsAndBiases();
@@ -132,9 +132,9 @@ private:
 	//Declarations related to state table:
 		//Required Attributes:
 	static activationsType			activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
-		   matrix<unsigned char>	StateTable;
+	       matrix<unsigned char>		StateTable;
 
-		//Required Methods:
+	//Required Methods:
 	void							initStateTable();
 	Matrix							takeInput(int);
 };
