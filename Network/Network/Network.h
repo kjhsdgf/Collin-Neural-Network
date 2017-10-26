@@ -8,6 +8,7 @@
 #include <string>
 #include <time.h>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 using namespace dlib;
@@ -56,7 +57,6 @@ public:
 									inputLinear,
 									inputLogit,
 									inputMaxout,
-									inputProbit,
 									inputRadialGaussian,
 									inputRectifier,
 									inputSigmoid,
@@ -122,7 +122,6 @@ private:
 	static Matrix					log_Log(int);
 	static Matrix					logit(int);
 	static Matrix					maxout(int);
-	static Matrix					probit(int);
 	static Matrix					rectifier(int);
 	static Matrix					radialGaussian(int);
 	static Matrix					sigmoid(int);
@@ -133,7 +132,7 @@ private:
 	//Declarations related to state table:
 		//Required Attributes:
 	static activationsType			activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
-	//static matrix<unsigned char>	stateTable;
+	static matrix<unsigned char>	StateTable;
 
 		//Required Methods:
 	void							initStateTable();
