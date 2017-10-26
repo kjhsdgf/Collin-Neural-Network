@@ -38,7 +38,7 @@ public:
 	~Network();
 
 	//**********Public Accessible Methods**********************
-	std::vector<double>		train();
+	std::vector<double>	train();
 	void				classify(const string&);
 
 	//***********Methods that read size of each layer, number of epochs, learning rate and the batch size for the network*********
@@ -92,7 +92,7 @@ private:
 
 	Vector				miniBatchIndices;
 	Vector				layerSizes;
-	std::vector<string>		wrongInputs;
+	std::vector<string>	wrongInputs;
 	string				trainingDataFilename;
 	string				expectedValuesFilename;
 	ifstream			trainingDataInfile;
@@ -144,7 +144,7 @@ private:
 	//--------------------Declarations related to state table------------------------------------
 
 	//Required Attritubes ->
-	static activationsType		activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
+	static activationsType			activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
 	static matrix<unsigned char>	StateTable;
 
 	//Required Methods ->
@@ -158,7 +158,7 @@ const Matrix activationFunction(const Matrix& weighted_inputs);
 const Matrix activationPrime(const Matrix &input_matrix);
 const Matrix costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
 const double distribution(const int num_neurons_in);
-void   randomizeMatrix(Matrix &);
+	  void   randomizeMatrix(Matrix &);
 
 //---------------------------------------------------------------------------------------------------
 
