@@ -14,7 +14,7 @@ using namespace std;
 using namespace dlib;
 
 typedef matrix<double>		Matrix;
-typedef std::vector<Matrix> VMatrix;
+typedef std::vector<Matrix> 	VMatrix;
 typedef std::vector<int>	Vector;
 typedef Matrix(*activationsType) (int);
 
@@ -134,8 +134,8 @@ private:
 	static activationsType			activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
 	       matrix<unsigned char>		StateTable;
 
-	//Required Methods:
-	void							initStateTable();
-	Matrix							takeInput(int);
+		//Required Methods:
+	void					initStateTable();
+	Matrix					takeInput(int);
 };
 #endif
