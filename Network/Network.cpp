@@ -11,19 +11,19 @@ activationsType	Network::activationFuncs[numActivations] = {
 	/* 0	*/	 	linear,					//	weightedInputs(i,j)
 	/* 1	 */		Sigmoid,				//	1 / (1 + exp(-weightedInputs(i,j))
 	/* 2	 */		log_Log,				//	1 − exp(−exp(weightedInputs(i,j)))
-	/* 3	 */		bipolarSigmoid,			//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
+	/* 3	 */		bipolarSigmoid,				//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
 	/* 4	 */		Tanh,					//	tanh(weightedInputs(i,j))
-	/* 5	 */		LeCun_stanh,			//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
-											//	considered for efficient backpropagation
+	/* 5	 */		LeCun_stanh,				//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
+									//	considered for efficient backpropagation
 	/* 6	 */		rectifier,				//	max (0, weightedInputs(i,j))
-											//	most commonly used, but using it increases the percent of 'dead' neurons in the network
-	/* 7	 */		smoothRectifier,		//	log(1 + exp(weightedInputs(i,j))
+									//	most commonly used, but using it increases the percent of 'dead' neurons in the network
+	/* 7	 */		smoothRectifier,			//	log(1 + exp(weightedInputs(i,j))
 	/* 8	 */		logit,					//  log(weightedInputs(i,j) / (1 - weightedInputs(i,j)))
 	/* 9	 */		softmax,				//	exp(weightedInputs(i,j)) / sum of exp(weightedInputs(i,j)) for the last layer
-	/* 10	 */		radialGaussian,			//	exp( -(1/2)*((weightedInputs(i,j)^2))
+	/* 10	 */		radialGaussian,				//	exp( -(1/2)*((weightedInputs(i,j)^2))
 	/* 11	 */		maxout,					//	max of activations[i-1].weights[i] + biases[i]
 	/* 12	 */		leakyRelu,				//  alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
-											//	weightedInputs(i,j)			 z > 0
+									//	weightedInputs(i,j)	 z > 0
 	/* 13	 */		cosine,					//	cos(weightedInputs(i,j))
 
 };
@@ -47,18 +47,18 @@ void	Network::initStateTable()
 //-----------------------------------------------------	~ AN EXAMPLE ~ ----------------------------------------------------------
 //unsigned char	Network::StateTable[numActivations + 1][(if numLayers =) 5] = {
 
-							//Layers:	0		1		2		3		4		
+						//Layers:	0		1		2		3		4		
 /* inputLinear				 	{		0,		0,		0,		0,		0,		},	*/
 /* inputSigmoid				 	{		1,		1,		1,		1,		1,		},	*/
-/* inputComplementaryLog_Log 	{		2,		2,		2, 		2, 		2, 		},	*/
-/* inputBipolarSigmoid		 	{		3,		3,		3, 		3, 		3, 		},	*/
+/* inputComplementaryLog_Log 			{		2,		2,		2, 		2, 		2, 		},	*/
+/* inputBipolarSigmoid		 		{		3,		3,		3, 		3, 		3, 		},	*/
 /* inputTanh				 	{		4,		4,		4, 		4, 		4, 		},	*/
 /* inputLeCun_stanh			 	{		5,		5,		5, 		5, 		5, 		},	*/
 /* inputRectifier			 	{		6,		6,		6, 		6, 		6, 		},	*/
-/* inputSmoothRectifier		 	{		7,		7,		7, 		7, 		7, 		},	*/
+/* inputSmoothRectifier		 		{		7,		7,		7, 		7, 		7, 		},	*/
 /* inputLogit				 	{		8,		8, 		8, 		8, 		8, 		},	*/
 /* inputSoftmax				 	{		9,		9,		9,		9,		9,		},	*/
-/* inputRadialGaussian		 	{		10,		10, 	10,		10,		10,		},	*/
+/* inputRadialGaussian		 		{		10,		10, 		10,		10,		10,		},	*/
 /* inputMaxout				 	{		11,		11,		11,		11,		11,		},	*/
 /* inputLeakyRelu			 	{		12,		12,		12,		12,		12,		},	*/
 /* inputCosine				 	{		13,		13,		13,		13,		13,		}	*/
@@ -190,7 +190,7 @@ void Network::maxout(int index)
 void Network::leakyRelu(int index)
 {
 	//  alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
-	//	weightedInputs(i,j)			 z > 0
+	//	weightedInputs(i,j)	 z > 0
 
 	float alpha(0.000718);
 	int i;
