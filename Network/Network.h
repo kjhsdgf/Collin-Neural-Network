@@ -66,7 +66,6 @@ public:
 		inputLogit,
 		inputSoftmax,
 		inputRadialGaussian,
-		inputProbit,
 		inputMaxout,
 		inputLeakyRelu,
 		inputCosine,
@@ -136,7 +135,6 @@ private:
 	static Matrix		logit(int);
 	static Matrix		softmax(int);
 	static Matrix		radialGaussian(int);
-	static Matrix		probit(int);
 	static Matrix		maxout(int);
 	static Matrix		leakyRelu(int);
 	static Matrix		cosine(int);
