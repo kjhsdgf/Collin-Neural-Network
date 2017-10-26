@@ -1,29 +1,30 @@
-#include "Network.h"
 #include <math.h>
+#include "Network.h"
 
-VMatrix		Network::		activations(1);		//just because these are static members so it was required to initialize them before writing the other static methods for the class
-VMatrix		Network::		weightedInputs(1);	//However, we are resizing them back in the constructor
-Vector		Network::		layerSizes(1,1);
+VMatrix		Network::activations(1);
+VMatrix		Network::weightedInputs(1);
+Vector		Network::layerSizes(1, 1);
+VMatrix		Network::activationPrime(1);
 
-activationsType	Network :: activationFuncs[numActivations] = {
+activationsType	Network::activationFuncs[numActivations] = {
 
-/* 0	*/	 	linear,					//	weightedInputs(i,j)
-/* 1	 */		sigmoid,				//	1 / (1 + exp(-weightedInputs(i,j))
-/* 2	 */		log_Log,				//	1 − exp(−exp(weightedInputs(i,j)))
-/* 3	 */		bipolarSigmoid,			//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
-/* 4	 */		tanh,					//	tanh(weightedInputs(i,j))
-/* 5	 */		LeCun_stanh,			//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
-										//	considered for efficient backpropagation
-/* 6	 */		rectifier,				//	max (0, weightedInputs(i,j))
-										//	most commonly used, but using it increases the percent of 'dead' neurons in the network
-/* 7	 */		smoothRectifier,		//	log(1 + exp(weightedInputs(i,j))
-/* 8	 */		logit,					//  log(weightedInputs(i,j) / (1 - weightedInputs(i,j)))
-/* 9	 */		softmax,				//	exp(weightedInputs(i,j)) / sum of exp(weightedInputs(i,j)) for the last layer
-/* 10	 */		radialGaussian,			//	exp( -(1/2)*((weightedInputs(i,j)^2))
-/* 11	 */		maxout,					//	max of activations[i-1].weights[i] + biases[i]
-/* 12	 */		leakyRelu,				//  alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
-										//	weightedInputs(i,j)			 z > 0
-/* 13	 */		cosine,					//	cos(weightedInputs(i,j))
+	/* 0	*/	 	linear,					//	weightedInputs(i,j)
+	/* 1	 */		Sigmoid,				//	1 / (1 + exp(-weightedInputs(i,j))
+	/* 2	 */		log_Log,				//	1 − exp(−exp(weightedInputs(i,j)))
+	/* 3	 */		bipolarSigmoid,			//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
+	/* 4	 */		Tanh,					//	tanh(weightedInputs(i,j))
+	/* 5	 */		LeCun_stanh,			//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
+											//	considered for efficient backpropagation
+	/* 6	 */		rectifier,				//	max (0, weightedInputs(i,j))
+											//	most commonly used, but using it increases the percent of 'dead' neurons in the network
+	/* 7	 */		smoothRectifier,		//	log(1 + exp(weightedInputs(i,j))
+	/* 8	 */		logit,					//  log(weightedInputs(i,j) / (1 - weightedInputs(i,j)))
+	/* 9	 */		softmax,				//	exp(weightedInputs(i,j)) / sum of exp(weightedInputs(i,j)) for the last layer
+	/* 10	 */		radialGaussian,			//	exp( -(1/2)*((weightedInputs(i,j)^2))
+	/* 11	 */		maxout,					//	max of activations[i-1].weights[i] + biases[i]
+	/* 12	 */		leakyRelu,				//  alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
+											//	weightedInputs(i,j)			 z > 0
+	/* 13	 */		cosine,					//	cos(weightedInputs(i,j))
 
 };
 
@@ -46,21 +47,21 @@ void	Network::initStateTable()
 //-----------------------------------------------------	~ AN EXAMPLE ~ ----------------------------------------------------------
 //unsigned char	Network::StateTable[numActivations + 1][(if numLayers =) 5] = {
 
-								//Layers:	0		1		2		3		4		
-	/* inputLinear				 	{		0,		0,		0,		0,		0,		},	*/	
-	/* inputSigmoid				 	{		1,		1,		1,		1,		1,		},	*/	
-	/* inputComplementaryLog_Log 	{		2,		2,		2, 		2, 		2, 		},	*/	
-	/* inputBipolarSigmoid		 	{		3,		3,		3, 		3, 		3, 		},	*/	
-	/* inputTanh				 	{		4,		4,		4, 		4, 		4, 		},	*/	
-	/* inputLeCun_stanh			 	{		5,		5,		5, 		5, 		5, 		},	*/	
-	/* inputRectifier			 	{		6,		6,		6, 		6, 		6, 		},	*/	
-	/* inputSmoothRectifier		 	{		7,		7,		7, 		7, 		7, 		},	*/	
-	/* inputLogit				 	{		8,		8, 		8, 		8, 		8, 		},	*/	
-	/* inputSoftmax				 	{		9,		9,		9,		9,		9,		},	*/	
-	/* inputRadialGaussian		 	{		10,		10, 	10,		10,		10,		},	*/	
-	/* inputMaxout				 	{		11,		11,		11,		11,		11,		},	*/	
-	/* inputLeakyRelu			 	{		12,		12,		12,		12,		12,		},	*/	
-	/* inputCosine				 	{		13,		13,		13,		13,		13,		}	*/						
+							//Layers:	0		1		2		3		4		
+/* inputLinear				 	{		0,		0,		0,		0,		0,		},	*/
+/* inputSigmoid				 	{		1,		1,		1,		1,		1,		},	*/
+/* inputComplementaryLog_Log 	{		2,		2,		2, 		2, 		2, 		},	*/
+/* inputBipolarSigmoid		 	{		3,		3,		3, 		3, 		3, 		},	*/
+/* inputTanh				 	{		4,		4,		4, 		4, 		4, 		},	*/
+/* inputLeCun_stanh			 	{		5,		5,		5, 		5, 		5, 		},	*/
+/* inputRectifier			 	{		6,		6,		6, 		6, 		6, 		},	*/
+/* inputSmoothRectifier		 	{		7,		7,		7, 		7, 		7, 		},	*/
+/* inputLogit				 	{		8,		8, 		8, 		8, 		8, 		},	*/
+/* inputSoftmax				 	{		9,		9,		9,		9,		9,		},	*/
+/* inputRadialGaussian		 	{		10,		10, 	10,		10,		10,		},	*/
+/* inputMaxout				 	{		11,		11,		11,		11,		11,		},	*/
+/* inputLeakyRelu			 	{		12,		12,		12,		12,		12,		},	*/
+/* inputCosine				 	{		13,		13,		13,		13,		13,		}	*/
 //};
 
 Matrix Network::takeInput(int index)
@@ -72,118 +73,106 @@ Matrix Network::takeInput(int index)
 	cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
 	cin >> j;
 	cin.ignore();
-	prime = activationFuncs[StateTable(j, index)](index);
+	activationFuncs[StateTable(j, index)](index);
 	return prime;
 }
 
-Matrix Network::linear(int index)
+void Network::linear(int index)
 {
 	activations[index] = weightedInputs[index];
-	return ones_matrix<double>(layerSizes[index], 1);
+	activationPrime[index] = ones_matrix<double>(layerSizes[index], 1);
 }
 
-Matrix Network::sigmoid(int index)
+void Network::Sigmoid(int index)
 {
 	activations[index] = sigmoid(weightedInputs[index]);
-	return pointwise_multiply(activations[index], ones_matrix(activations[index]) - activations[index]);
+	activationPrime[index] = pointwise_multiply(activations[index], ones_matrix(activations[index]) - activations[index]);
 }
 
-Matrix Network::log_Log(int index)
- {
+void Network::log_Log(int index)
+{
 	//1 − exp(−exp(weightedInputs(i, j)))
 	activations[index] = (ones_matrix<double>(layerSizes[index], 1) - exp(zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index])));
-	return pointwise_multiply(activations[index] - ones_matrix(activations[index]), zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
- }
+	activationPrime[index] = pointwise_multiply(activations[index] - ones_matrix(activations[index]), zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
+}
 
-Matrix Network::bipolarSigmoid(int index)
- {
+void Network::bipolarSigmoid(int index)
+{
 	//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
 	int i;
-	Matrix m;
-	m.set_size(layerSizes[index], 1);
 	for (i = 0; i < layerSizes[index]; i++)
+	{
 		activations[index](i) = (1 - exp(0 - weightedInputs[index](i))) / (1 + exp(0 - weightedInputs[index](i)));
-	for (i = 0; i < layerSizes[index]; i++)
-		m(i) = (2 * exp(- weightedInputs[index](i))) / (pow(1 + exp(-weightedInputs[index] (i)) , 2));
-	return m;
+		activationPrime[index](i) = (2 * exp(-weightedInputs[index](i))) / (pow(1 + exp(-weightedInputs[index](i)), 2));
+	}
 }
 
-Matrix Network::tanh(int index)
- {
+void Network::Tanh(int index)
+{
 	activations[index] = tanh(weightedInputs[index]);
-	return ones_matrix<double>(layerSizes[index], 1) - squared(activations[index]);
- }
+	activationPrime[index] = ones_matrix<double>(layerSizes[index], 1) - squared(activations[index]);
+}
 
-Matrix Network::LeCun_stanh(int index)
- {
+void Network::LeCun_stanh(int index)
+{
 	//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
 	activations[index] = (1.7159) * tanh((2 / 3) * weightedInputs[index]);
-	return 0.98143 * (ones_matrix<double>(layerSizes[index], 1) - (0.33964 * squared(activations[index])));
- }
-
-Matrix Network::rectifier(int index)
-{
-	Matrix m;
-	int i;
-	m.set_size(layerSizes[index], 1);
-	for (i = 0; i < layerSizes[index]; i++)
-		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : (0);
-	for (i = 0; i < layerSizes[index]; i++)
-		m(i) = (activations[index](i) != 0) ? (1) : (0);
-	return m;
+	activationPrime[index] = 0.98143 * (ones_matrix<double>(layerSizes[index], 1) - (0.33964 * squared(activations[index])));
 }
 
-Matrix Network::smoothRectifier(int index)
- {
+void Network::rectifier(int index)
+{
+	int i;
+	for (i = 0; i < layerSizes[index]; i++)
+	{
+		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : (0);
+		activationPrime[index](i) = (activations[index](i) != 0) ? (1) : (0);
+	}
+}
+
+void Network::smoothRectifier(int index)
+{
 	//	log(1 + exp(weightedInputs(i,j))
 	int i;
-	Matrix m;
-	m.set_size(layerSizes[index], 1);
 	activations[index] = log(ones_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
 	for (i = 0; i < layerSizes[index]; i++)
-		m(i) = 1 / (1 + exp(- weightedInputs[index](i)));
-	return m;
- }
+		activationPrime[index](i) = 1 / (1 + exp(-weightedInputs[index](i)));
+}
 
-Matrix Network::logit(int index)
- {
+void Network::logit(int index)
+{
 	//  log(weightedInputs(i,j) / (1 - weightedInputs(i,j)))
 	int i;
-	Matrix m;
-	m.set_size(layerSizes[index], 1);
 	for (i = 0; i < layerSizes[index]; i++)
 	{
 		activations[index](i) = log(weightedInputs[index](i) / (1 - weightedInputs[index](i)));
-		m(i) = 1 / (weightedInputs[index](i) * (1 - weightedInputs[index](i)));
+		activationPrime[index](i) = 1 / (weightedInputs[index](i) * (1 - weightedInputs[index](i)));
 	}
-	return m;
 }
 
-Matrix Network::softmax(int index)
- {
+void Network::softmax(int index)
+{
 	//	exp(weightedInputs(i,j)) / sum of exp(weightedInputs(i,j)) for the last l
 	int i;
 	double sum(0);
 	for (i = 0; i < layerSizes[index]; i++)
 		sum += exp(weightedInputs[index](i));
 	activations[index] = (1 / sum) * (exp(weightedInputs[index]));
-	return (activations[index] - squared(activations[index]));
- }
+	activationPrime[index] = (activations[index] - squared(activations[index]));
+}
 
-Matrix Network::radialGaussian(int index)
- {
+void Network::radialGaussian(int index)
+{
 	//	exp( -(1/2)*((weightedInputs(i,j)^2))
 	activations[index] = exp((-1 / 2) * (squared(weightedInputs[index])));
-	return pointwise_multiply(zeros_matrix<double>(layerSizes[index], 1) - weightedInputs[index], activations[index]);
- }
+	activationPrime[index] = pointwise_multiply(zeros_matrix<double>(layerSizes[index], 1) - weightedInputs[index], activations[index]);
+}
 
-Matrix Network::maxout(int index)
- {
+void Network::maxout(int index)
+{
 	//	max of activations[i-1].weights[i] + biases[i]
-	double biggest = weightedInputs[index](1,1);
+	double biggest = weightedInputs[index](1, 1);
 	int  i;
-	Matrix m;
-	m.set_size(layerSizes[index], 1);
 	int biggestIndex(0);
 	for (i = 0; i < layerSizes[index]; i++)
 		if (weightedInputs[index](i) > biggest)
@@ -194,31 +183,36 @@ Matrix Network::maxout(int index)
 	for (i = 0; i < layerSizes[index]; i++)
 	{
 		activations[index](i) = biggest;
-		m(i) = ((i == biggestIndex) ? (1) : (0));
+		activationPrime[index](i) = ((i == biggestIndex) ? (1) : (0));
 	}
-	return m;
 }
 
-Matrix Network::leakyRelu(int index)
- {
+void Network::leakyRelu(int index)
+{
 	//  alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
 	//	weightedInputs(i,j)			 z > 0
-	Matrix m;
+
 	float alpha(0.000718);
 	int i;
-	m.set_size(layerSizes[index], 1);
 	for (i = 0; i < layerSizes[index]; i++)
-		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : ((alpha) * weightedInputs[index](i));
-	for (i = 0; i < layerSizes[index]; i++)
-		m(i) = (activations[index](i) != 0) ? (1) : (-1 * alpha);
-	return m;
- }
+	{
+		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : ((alpha)* weightedInputs[index](i));
+		activationPrime[index](i) = (activations[index](i) != 0) ? (1) : (-1 * alpha);
+	}
+}
 
-Matrix Network::cosine(int index)
- {
+void Network::cosine(int index)
+{
 	activations[index] = cos(weightedInputs[index]);
-	return (zeros_matrix<double>(layerSizes[index],1) - sin(activations[index])) ;
- }
+	activationPrime[index] = (zeros_matrix<double>(layerSizes[index], 1) - sin(activations[index]));
+}
+
+/*----------------------------------------------------------------------------------------------------------
+TBD:
+- Working on the implementation of above written functions into the actual class we wrote before
+- Also, trying to make a setActivation function by which the user can set an activation function for the complete network
+if the user wants
+-----------------------------------------------------------------------------------------------------------*/
 
 Network::Network()
 {
@@ -229,7 +223,7 @@ Network::Network()
 	cout << "Please enter the location of your training file [C:\\...\\TrainingDataFilename.txt:";
 	cin >> trainingDataFilename;
 	cout << endl;
-	trainingDataInfile.open(trainingDataFilename);
+	trainingDataInfile.open(trainingDataFilename, ios_base::in);
 	while (trainingDataInfile.fail())
 	{
 		trainingDataInfile.clear();
@@ -256,6 +250,7 @@ Network::Network()
 	weights.resize(numLayers);
 	biases.resize(numLayers);
 	activations.resize(numLayers);
+	activationPrime.resize(numLayers);
 	weightedInputs.resize(numLayers);
 	errors.resize(numLayers);
 	sumNablaB.resize(numLayers);
@@ -277,6 +272,9 @@ Network::Network()
 
 		activations[i].set_size(layerSizes[i], 1);
 		activations[i] = zeros_matrix(activations[i]);
+
+		activationPrime[i].set_size(layerSizes[i], 1);
+		activationPrime[i] = zeros_matrix(activationPrime[i]);
 
 		weightedInputs[i].set_size(layerSizes[i], 1);
 		weightedInputs[i] = zeros_matrix(weightedInputs[i]);
@@ -420,7 +418,7 @@ void Network::checkNumLayers()
 	if (numLayers < 2)
 	{
 		cout << "\nInvalid number of layers..";
-		numLayers = layerSizes.size(); 
+		numLayers = layerSizes.size();
 	}
 }
 
@@ -512,6 +510,7 @@ bool Network::readInit(const string & file)
 		weights.resize(numLayers);
 		biases.resize(numLayers);
 		activations.resize(numLayers);
+		activationPrime.resize(numLayers);
 		weightedInputs.resize(numLayers);
 		errors.resize(numLayers);
 		sumNablaB.resize(numLayers);
@@ -533,6 +532,9 @@ bool Network::readInit(const string & file)
 			//activations matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
 			activations[i].set_size(layerSizes[i], 1);
 			activations[i] = zeros_matrix(activations[i]);
+
+			activationPrime[i].set_size(layerSizes[i], 1);
+			activationPrime[i] = zeros_matrix(activationPrime[i]);
 
 			//weightedInputs matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
 			weightedInputs[i].set_size(layerSizes[i], 1);
@@ -624,7 +626,7 @@ Network::Network(const string& previous_network_filename)
 	else;
 }
 
-int Network :: SGD()
+int Network::SGD()
 {
 	int numCorrect = 0;
 	for (int i = 0; i < miniBatchIndices.size(); i++)
@@ -647,12 +649,12 @@ int Network :: SGD()
 void Network::forwardProp(const int batchIndex, ifstream& infile)
 {
 	//extract data point from training data file at input indice into first layer of activations
-	activations[0] = getM<double>(infile, batchIndex); //<--untested!
-													   //run forward propagation
+	activations[0] = getM<double>(infile, batchIndex);
+	initStateTable();
 	for (int i = 1; i < numLayers; i++)
 	{
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
-		activations[i] = activationFunction(weightedInputs[i]);
+		takeInput(i);
 	}
 }
 
@@ -664,10 +666,9 @@ void Network::updateWeightsAndBiases()
 		weights[i] -= k * sumNablaW[i];
 		biases[i] -= k * sumNablaB[i];
 	}
-
 }
 
-bool Network:: backProp(int index)
+bool Network::backProp(int index)
 {
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
@@ -675,14 +676,15 @@ bool Network:: backProp(int index)
 
 	bool correct = compareOutput(expectedValues);
 
-	errors[lastInd] = hadamardProduct(costPrime(activations[lastInd], expectedValues), activationPrime(weightedInputs[lastInd]));
+
+	errors[lastInd] = hadamardProduct(costPrime(activations[lastInd], expectedValues), activationPrime[lastInd]);
 	sumNablaB[lastInd] += errors[lastInd];
 	sumNablaW[lastInd] += (errors[lastInd]) * trans(activations[lastInd - 1]);
 
 	for (int i = lastInd - 1; i > 0; i--)
 	{
 		errors[i] = hadamardProduct(trans(weights[i + 1]) * errors[i + 1],
-			activationPrime(weightedInputs[i]));
+			activationPrime[i]);
 		sumNablaB[i] += errors[i];
 		sumNablaW[i] += errors[i] * trans(activations[i - 1]);
 	}
@@ -703,7 +705,7 @@ bool Network::compareOutput(const Matrix& expectedValues)
 	{
 		double output = activations[lastInd](i, 0);
 		if (output > biggest)
-	{
+		{
 			biggestI = i;
 			biggest = output;
 			numBiggest = 0; // we found a new biggest so numBiggest's previous data is invalid
@@ -811,7 +813,7 @@ std::vector<double> Network::train()
 int Network::filesize(istream& in)
 
 {
-	int count (0);
+	int count(0);
 	in.seekg(0, ios::beg);
 	while (!in.eof())
 	{
