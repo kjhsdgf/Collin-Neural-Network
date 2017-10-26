@@ -23,58 +23,58 @@ const Matrix						activationFunction(const Matrix&);
 const Matrix						activationPrime(const Matrix&);
 const Matrix						costPrime(const Matrix&, const Matrix&);
 const double						distribution(const int num_neurons_in);
-void								FYShuffle(Vector&);
-void								randomizeMatrix(Matrix &);
+void							FYShuffle(Vector&);
+void							randomizeMatrix(Matrix &);
 
 class Network
 {
 public:
 	/**********Constructors and Destructors*******************/
-									Network();
-									Network(const string&);
-									Network(const string&, const string&);
-									~Network();
+							Network();
+							Network(const string&);
+							Network(const string&, const string&);
+							~Network();
 
 	/**********Public Methods*********************************/
-	void							checkBatchSize();
-	void							checkEpochs();
-	void							checkLayersString(string&);
-	void							checkLearningRate(int = 1);
-	void							checkNumLayers();
-	//void							classify();
-	void							classify(const string&);
-	void							readInit();
-	bool							readInit(const string&);
-	std::vector<double>				train();
+void							checkBatchSize();
+void							checkEpochs();
+void							checkLayersString(string&);
+void							checkLearningRate(int = 1);
+void							checkNumLayers();
+//void							classify();
+void							classify(const string&);
+void							readInit();
+bool							readInit(const string&);
+std::vector<double>					train();
 
 	//----Enums
 	enum Inputs {
-									inputBipolarSigmoid,
-									inputComplementaryLog_Log,
-									inputCosine,
-									inputLeakyRelu,
-									inputLeCun_stanh,
-									inputLinear,
-									inputLogit,
-									inputMaxout,
-									inputRadialGaussian,
-									inputRectifier,
-									inputSigmoid,
-									inputSmoothRectifier,
-									inputSoftmax,
-									inputTanh,
+							inputBipolarSigmoid,
+							inputComplementaryLog_Log,
+							inputCosine,
+							inputLeakyRelu,
+							inputLeCun_stanh,
+							inputLinear,
+							inputLogit,
+							inputMaxout,
+							inputRadialGaussian,
+							inputRectifier,
+							inputSigmoid,
+							inputSmoothRectifier,
+							inputSoftmax,
+							inputTanh,
 
-									numActivations
+							numActivations
 	};
 
 private:
 
 	/**********Private Data Members***************************/
 	double							learningRate;
-	int								batchSize;
-	int								epochs;
+	int							batchSize;
+	int							epochs;
 	int 							numLayers;
-	struct layerReport				{ bool isAmbiguous; Matrix cleanOutput; };
+	struct layerReport				 bool isAmbiguous; Matrix cleanOutput; };
 	std::vector<string>				wrongInputs;
 
 	VMatrix							weights;
