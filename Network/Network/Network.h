@@ -132,7 +132,7 @@ private:
 	//Declarations related to state table:
 		//Required Attributes:
 	static activationsType			activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
-	static matrix<unsigned char>	StateTable;
+		   matrix<unsigned char>	StateTable;
 
 		//Required Methods:
 	void							initStateTable();
