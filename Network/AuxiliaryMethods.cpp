@@ -15,7 +15,7 @@ void randomizeMatrix(Matrix &input_matrix)
 	}
 }
 
-const Matrix activationFunction(const Matrix& weighted_inputs)
+/*const Matrix activationFunction(const Matrix& weighted_inputs)
 {
 	return sigmoid(weighted_inputs);
 }
@@ -23,7 +23,7 @@ const Matrix activationFunction(const Matrix& weighted_inputs)
 const Matrix activationPrime(const Matrix &input_matrix)
 {
 	return pointwise_multiply(sigmoid(input_matrix), ones_matrix(input_matrix) - sigmoid(input_matrix));
-}
+}*/
 
 const Matrix costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector)
 {
