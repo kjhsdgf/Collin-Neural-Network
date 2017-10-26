@@ -19,12 +19,12 @@ typedef matrix<double> Matrix;
 typedef std::vector<Matrix> VMatrix;
 typedef std::vector<int> Vector;
 
-typedef Matrix(*activationsType) (int);
+typedef void (*activationsType) (int);
 //---------------------------------------------------------------------
 //Any function of type activationsType:
-		//Returns a matrix of double with the activation prime
-		//Take a parameter of int which is the index of the layer
-		//Assigns the activations at the index being passed 
+//Returns a matrix of double with the activation prime
+//Take a parameter of int which is the index of the layer
+//Assigns the activations at the index being passed 
 //---------------------------------------------------------------------
 
 class Network
@@ -32,27 +32,27 @@ class Network
 public:
 
 	//**********Constructors and Destructors*******************
-					Network();
-					Network(const string&, const string&);	
-					Network(const string&);					
-					~Network();
+	Network();
+	Network(const string&, const string&);
+	Network(const string&);
+	~Network();
 
 	//**********Public Accessible Methods**********************
-	std::vector<double>		train();
-	void				classify(const string&);
+	std::vector<double>	train();
+	void			classify(const string&);
 
 	//***********Methods that read size of each layer, number of epochs, learning rate and the batch size for the network*********
 	//---------------------------Also, the number of layers is calculated in these methods----------------------------------------
 	bool				readInit(const string&);
 	void				readInit();
-	
+
 	//---------------------Methods to check the typo errors by the users--------------------
 	void				checkLearningRate(int = 1);		//the highest value for the learning rate is set to 1 but can be changed while calling the function
 	void				checkEpochs();
 	void				checkBatchSize();
 	void				checkLayersString(string&);
 	void				checkNumLayers();
-	
+
 	//----Enums
 	enum Inputs {
 		inputLinear,
@@ -66,6 +66,7 @@ public:
 		inputLogit,
 		inputSoftmax,
 		inputRadialGaussian,
+		inputProbit,
 		inputMaxout,
 		inputLeakyRelu,
 		inputCosine,
@@ -84,20 +85,21 @@ private:
 	VMatrix				weights;
 	VMatrix				sumNablaW;
 	VMatrix				biases;
-	VMatrix				activations;
-	VMatrix				weightedInputs;
+	static VMatrix			activations;
+	static VMatrix			weightedInputs;
 	VMatrix				errors;
 	VMatrix				sumNablaB;
 
 	Vector				miniBatchIndices;
-	Vector				layerSizes;
+	static Vector			layerSizes;
+	static VMatrix			activationPrime;
 	std::vector<string>		wrongInputs;
 	string				trainingDataFilename;
 	string				expectedValuesFilename;
 	ifstream			trainingDataInfile;
 	ifstream			expectedValuesInfile;
-	
-	struct 				layerReport 			{ bool isAmbiguous; Matrix cleanOutput; };
+
+	struct 				layerReport { bool isAmbiguous; Matrix cleanOutput; };
 
 
 	//Private Functions:->
@@ -121,42 +123,42 @@ private:
 	std::vector<T>			getV(ifstream&, int);
 
 	template <class T>
-	std::vector<T>			Strtok(const string& , char[]);
-	
+	std::vector<T>			Strtok(const string&, char[]);
+
 	//Activation Methods:
-	static Matrix		linear(int);
-	static Matrix		sigmoid(int);
-	static Matrix		log_Log(int);
-	static Matrix		bipolarSigmoid(int);
-	static Matrix		tanh(int);
-	static Matrix		LeCun_stanh(int);
-	static Matrix		rectifier(int);
-	static Matrix		smoothRectifier(int);
-	static Matrix		logit(int);
-	static Matrix		softmax(int);
-	static Matrix		radialGaussian(int);
-	static Matrix		maxout(int);
-	static Matrix		leakyRelu(int);
-	static Matrix		cosine(int);
+	static void		linear(int);
+	static void		Sigmoid(int);
+	static void		log_Log(int);
+	static void		bipolarSigmoid(int);
+	static void		Tanh(int);
+	static void		LeCun_stanh(int);
+	static void		rectifier(int);
+	static void		smoothRectifier(int);
+	static void		logit(int);
+	static void		softmax(int);
+	static void		radialGaussian(int);
+	static void		maxout(int);
+	static void		leakyRelu(int);
+	static void		cosine(int);
 
 	//--------------------Declarations related to state table------------------------------------
 
 	//Required Attritubes ->
 	static activationsType		activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
-	static matrix<unsigned char>	StateTable;
+	       matrix<unsigned char>	StateTable;
 
 	//Required Methods ->
 	void				initStateTable();
 	Matrix				takeInput(int);
-	
+
 };
 
 //---------Functions outside the class (Auxiliary functions)----------------------------------------
-const Matrix activationFunction(const Matrix& weighted_inputs);
-const Matrix activationPrime(const Matrix &input_matrix);
+//const Matrix activationFunction(const Matrix& weighted_inputs);
+//const Matrix activationPrime(const Matrix &input_matrix);
 const Matrix costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
 const double distribution(const int num_neurons_in);
-      void   randomizeMatrix(Matrix &);
+void   randomizeMatrix(Matrix &);
 
 //---------------------------------------------------------------------------------------------------
 
@@ -167,7 +169,7 @@ inline const Matrix Network::hadamardProduct(const Matrix &input_matrix_L, const
 }
 
 template <class T>
-std::vector<T> Network:: Strtok(const string& str, char Separator[])
+std::vector<T> Network::Strtok(const string& str, char Separator[])
 {
 	char * pN;
 	std::vector<T> v;
@@ -184,7 +186,7 @@ std::vector<T> Network:: Strtok(const string& str, char Separator[])
 }
 
 template <class T>
-void Network:: FYShuffle(std::vector<T>& v)
+void Network::FYShuffle(std::vector<T>& v)
 {
 	for (int i = v.size() - 1; i > 0; i--)
 	{
@@ -218,7 +220,7 @@ const matrix<T> Network::getM(ifstream& fin, int i)
 	else
 	{
 		cout << "\n Server error 403: Found Invalid Index" << endl;
-		m.set_size(0,0);
+		m.set_size(0, 0);
 		return m;
 	}
 }
@@ -245,4 +247,5 @@ std::vector<T> Network::getV(ifstream& fin, int i)
 }
 
 #endif
+
 
