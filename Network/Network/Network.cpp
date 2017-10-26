@@ -3,41 +3,66 @@
 //State Machine Assets
 ///
 
-activationsType Network::activationFuncs[numActivations] = {
-	bipolarSigmoid,
-	cosine,
-	leakyRelu,
-	LeCun_stanh,
-	linear,
-	log_Log,
-	logit,
-	maxout,
-	probit,
-	rectifier,
-	radialGaussian,
-	sigmoid,
-	smoothRectifier,
-	softmax,
-	tanh
-};
+#include <math.h>
+#include "NetworkClass.h"
 
-void Network::initStateTable()
+VMatrix		Network::activations(1);	//This was necessary because the static members need to be intialized before they're used
+VMatrix		Network::weightedInputs(1);	//in static methods
+Vector		Network::layerSizes(1, 1);	//However, we are resizing them back in the constructor
+
+activationsType	Network :: activationFuncs[numActivations] = {
+
+															/* 0	*/	 	linear,					
+															/* 1	 */		sigmoid,				
+															/* 2	 */		log_Log,				
+															/* 3	 */		bipolarSigmoid,			
+															/* 4	 */		tanh,					
+															/* 5	 */		LeCun_stanh,	
+															/* 6	 */		rectifier,
+															/* 7	 */		smoothRectifier,		
+															/* 8	 */		logit,					
+															/* 9	 */		softmax,				 
+															/* 10	 */		radialGaussian,			
+															/* 11	 */		maxout,					
+															/* 12	 */		leakyRelu,								
+															/* 13	 */		cosine,					
+
+															};
+void	Network::initStateTable()
 {
-
-	/*stateTable.set_size(numActivations + 1, numLayers);
-	int i = 0;
-	int j = 0;
-	while (i < stateTable.nr())
+	StateTable.set_size(numActivations + 1, numLayers);
+	int i = 0, j = 0;
+	while (i < StateTable.nr())
 	{
 		j = 0;
-		while (j < stateTable.nc())
+		while (j < StateTable.nc())
 		{
-			stateTable(i, j) = i;
+			StateTable(i, j) = i;
 			j++;
 		}
 		i++;
-	}*/
+	}
 }
+
+//-----------------------------------------------------	~ AN EXAMPLE ~ ----------------------------------------------------------
+//unsigned char	Network::StateTable[numActivations + 1][(if numLayers =) 5] = {
+
+								//Layers:	0		1		2		3		4		
+	/* inputLinear				 	{		0,		0,		0,		0,		0,		},	*/	
+	/* inputSigmoid				 	{		1,		1,		1,		1,		1,		},	*/	
+	/* inputComplementaryLog_Log 	{		2,		2,		2, 		2, 		2, 		},	*/	
+	/* inputBipolarSigmoid		 	{		3,		3,		3, 		3, 		3, 		},	*/	
+	/* inputTanh				 	{		4,		4,		4, 		4, 		4, 		},	*/	
+	/* inputLeCun_stanh			 	{		5,		5,		5, 		5, 		5, 		},	*/	
+	/* inputRectifier			 	{		6,		6,		6, 		6, 		6, 		},	*/	
+	/* inputSmoothRectifier		 	{		7,		7,		7, 		7, 		7, 		},	*/	
+	/* inputLogit				 	{		8,		8, 		8, 		8, 		8, 		},	*/	
+	/* inputSoftmax				 	{		9,		9,		9,		9,		9,		},	*/	
+	/* inputRadialGaussian		 	{		10,		10, 	10,		10,		10,		},	*/	
+	/* inputMaxout				 	{		11,		11,		11,		11,		11,		},	*/	
+	/* inputLeakyRelu			 	{		12,		12,		12,		12,		12,		},	*/	
+	/* inputCosine				 	{		13,		13,		13,		13,		13,		}	*/						
+//};
 
 Matrix Network::takeInput(int index)
 {
@@ -48,13 +73,165 @@ Matrix Network::takeInput(int index)
 	cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
 	cin >> j;
 	cin.ignore();
-	//prime = activationFuncs[stateTable(j, index)](index);
-
-	int TEST = 0;
-	prime = activationFuncs[TEST](index);
-
+	prime = activationFuncs[StateTable(j, index)](index);
 	return prime;
 }
+
+Matrix Network::linear(int index)
+{
+	//	weightedInputs(i,j)
+	activations[index] = weightedInputs[index];
+	return ones_matrix<double>(layerSizes[index], 1);
+}
+
+Matrix Network::sigmoid(int index)
+{
+	//	1 / (1 + exp(-weightedInputs(i,j))
+	activations[index] = sigmoid(weightedInputs[index]);
+	return pointwise_multiply(activations[index], ones_matrix(activations[index]) - activations[index]);
+}
+
+Matrix Network::log_Log(int index)
+ {
+	//1 − exp(−exp(weightedInputs(i, j)))
+	activations[index] = (ones_matrix<double>(layerSizes[index], 1) - exp(zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index])));
+	return pointwise_multiply(activations[index] - ones_matrix(activations[index]), zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
+ }
+
+Matrix Network::bipolarSigmoid(int index)
+ {
+	//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
+	int i;
+	Matrix m;
+	m.set_size(layerSizes[index], 1);
+	for (i = 0; i < layerSizes[index]; i++)
+		activations[index](i) = (1 - exp(0 - weightedInputs[index](i))) / (1 + exp(0 - weightedInputs[index](i)));
+	for (i = 0; i < layerSizes[index]; i++)
+		m(i) = (2 * exp(- weightedInputs[index](i))) / (pow(1 + exp(-weightedInputs[index] (i)) , 2));
+	return m;
+}
+
+Matrix Network::tanh(int index)
+ {
+	//	tanh(weightedInputs(i,j))
+	activations[index] = tanh(weightedInputs[index]);
+	return ones_matrix<double>(layerSizes[index], 1) - squared(activations[index]);
+ }
+
+Matrix Network::LeCun_stanh(int index)
+ {
+	//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
+	activations[index] = (1.7159) * tanh((2 / 3) * weightedInputs[index]);
+	return 0.98143 * (ones_matrix<double>(layerSizes[index], 1) - (0.33964 * squared(activations[index])));
+ }
+
+Matrix Network::rectifier(int index)
+{
+	//	max (0, weightedInputs(i,j))
+	Matrix m;
+	int i;
+	m.set_size(layerSizes[index], 1);
+	for (i = 0; i < layerSizes[index]; i++)
+		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : (0);
+	for (i = 0; i < layerSizes[index]; i++)
+		m(i) = (activations[index](i) != 0) ? (1) : (0);
+	return m;
+}
+
+Matrix Network::smoothRectifier(int index)
+ {
+	//	log(1 + exp(weightedInputs(i,j))
+	int i;
+	Matrix m;
+	m.set_size(layerSizes[index], 1);
+	activations[index] = log(ones_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
+	for (i = 0; i < layerSizes[index]; i++)
+		m(i) = 1 / (1 + exp(- weightedInputs[index](i)));
+	return m;
+ }
+
+Matrix Network::logit(int index)
+ {
+	//  log(weightedInputs(i,j) / (1 - weightedInputs(i,j)))
+	int i;
+	Matrix m;
+	m.set_size(layerSizes[index], 1);
+	for (i = 0; i < layerSizes[index]; i++)
+	{
+		activations[index](i) = log(weightedInputs[index](i) / (1 - weightedInputs[index](i)));
+		m(i) = 1 / (weightedInputs[index](i) * (1 - weightedInputs[index](i)));
+	}
+	return m;
+}
+
+Matrix Network::softmax(int index)
+ {
+	//	exp(weightedInputs(i,j)) / sum of exp(weightedInputs(i,j)) for the last l
+	int i;
+	double sum(0);
+	for (i = 0; i < layerSizes[index]; i++)
+		sum += exp(weightedInputs[index](i));
+	activations[index] = (1 / sum) * (exp(weightedInputs[index]));
+	return (activations[index] - squared(activations[index]));
+ }
+
+Matrix Network::radialGaussian(int index)
+ {
+	//	exp( -(1/2)*((weightedInputs(i,j)^2))
+	activations[index] = exp((-1 / 2) * (squared(weightedInputs[index])));
+	return pointwise_multiply(zeros_matrix<double>(layerSizes[index], 1) - weightedInputs[index], activations[index]);
+ }
+
+Matrix Network::maxout(int index)
+ {
+	//	max of activations[i-1].weights[i] + biases[i]
+	double biggest = weightedInputs[index](1,1);
+	int  i;
+	Matrix m;
+	m.set_size(layerSizes[index], 1);
+	int biggestIndex(0);
+	for (i = 0; i < layerSizes[index]; i++)
+		if (weightedInputs[index](i) > biggest)
+		{
+			biggest = weightedInputs[index](i);
+			biggestIndex = i;
+		}
+	for (i = 0; i < layerSizes[index]; i++)
+	{
+		activations[index](i) = biggest;
+		m(i) = ((i == biggestIndex) ? (1) : (0));
+	}
+	return m;
+}
+
+Matrix Network::leakyRelu(int index)
+ {
+	//  alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
+	//	weightedInputs(i,j)			 z > 0
+	Matrix m;
+	float alpha(0.000718);
+	int i;
+	m.set_size(layerSizes[index], 1);
+	for (i = 0; i < layerSizes[index]; i++)
+		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : ((alpha) * weightedInputs[index](i));
+	for (i = 0; i < layerSizes[index]; i++)
+		m(i) = (activations[index](i) != 0) ? (1) : (-1 * alpha);
+	return m;
+ }
+
+Matrix Network::cosine(int index)
+ {
+	//	cos(weightedInputs(i.j)
+	activations[index] = cos(weightedInputs[index]);
+	return (zeros_matrix<double>(layerSizes[index],1) - sin(activations[index])) ;
+ }
+
+/*----------------------------------------------------------------------------------------------------------
+TBD:
+- Working on the implementation of above written functions into the actual class we wrote before
+- Also, trying to make a setActivation function by which the user can set an activation function for the complete network
+  if the user wants
+-----------------------------------------------------------------------------------------------------------*/
 
 ///
 //Network Class Functions
