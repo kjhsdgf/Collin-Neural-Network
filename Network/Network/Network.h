@@ -136,7 +136,7 @@ private:
 	//Required Methods ->
 	void								Switch(unsigned char, int);
 	void								initStateTable();
-	Matrix								takeInput(int);*/
+	void								takeInput(int);*/
 
 };
 
