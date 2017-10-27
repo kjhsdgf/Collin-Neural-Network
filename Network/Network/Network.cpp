@@ -239,17 +239,13 @@ unsigned char Network::stateTable[numActivations + 1][(if numLayers =) 5] = {
 	/* inputCosine				 	{		13,		13,		13,		13,		13,		}					
 };*/
 
-/*Matrix Network::takeInput(int index)
+/*void Network::takeInput(int index)
 {
 	int j;
-	Matrix prime;
-	std::vector<string> strings;
-	strings.resize(numLayers);
 	cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
 	cin >> j;
 	cin.ignore();
 	Switch(stateTable(j, index), index);
-	return prime;
 }*/
 
 /*----------------------------------------------------------------------------------------------------------
