@@ -3,44 +3,71 @@
 //State Machine Assets
 ///
 
-/*
-	These don't work. Probably because in your .h file, they are static members. We may be able to avoid doing this by making the activation functions
-	nonstatic, as seen in http://www.drdobbs.com/cpp/state-machine-design-in-c/184401236 
-						  https://www.codeproject.com/Articles/1087619/State-Machine-Design-in-Cplusplus
-						  https://stackoverflow.com/questions/14676709/c-code-for-state-machine
-						  and so on.
-	
-*/
+/*void Network::Switch(unsigned char e, int index)
+{
+	switch (e)
+	{
+	case inputLinear:
+		linear(index);
+		break;
+	case inputSigmoid:
+		Sigmoid(index);
+		break;
+	case inputComplementaryLog_Log:
+		logLog(index);
+		break;
+	case inputBipolarSigmoid:
+		bipolarSigmoid(index);
+		break;
+	case inputTanh:
+		Tanh(index);
+		break;
+	case inputLeCun_stanh:
+		LeCun_stanh(index);
+		break;
+	case inputLogit:
+		logit(index);
+		break;
+	case inputSoftmax:
+		softmax(index);
+		break;
+	case inputRadialGaussian:
+		radialGaussian(index);
+		break;
+	case inputMaxout:
+		maxout(index);
+		break;
+	case inputLeakyRelu:
+		leakyRelu(index);
+		break;
+	case inputCosine:
+		cosine(index);
+		break;
+	default:
+		{
+			cout << "Unknown input..Try again";
+			takeInput(index);
+		}
+	}
+}	 
 
-/*
-//VMatrix		Network::activations(1);	//This was necessary because the static members need to be intialized before they're used
-//VMatrix		Network::weightedInputs(1);	//in static methods
-//Vector		Network::layerSizes(1, 1);	//However, we are resizing them back in the constructor
-*/
-
-activationsType	Network::activationFuncs[numActivations] = {
-
-															/* 0	*/	 	bipolarSigmoid,					
-															/* 1	 */		cosine,				
-															/* 2	 */		leakyRelu,				
-															/* 3	 */		LeCun_stanh,			
-															/* 4	 */		linear,					
-															/* 5	 */		log_Log,	
-															/* 6	 */		logit,
-															/* 7	 */		maxout,		
-															/* 8	 */		rectifier,					
-															/* 9	 */		radialGaussian,				 
-															/* 10	 */		sigmoid,			
-															/* 11	 */		smoothRectifier,					
-															/* 12	 */		softmax,								
-															/* 13	 */		tanh,					
-
-															};
 void Network::initStateTable()
 {
-	Network::activations.resize(1);
-	Network::weightedInputs.resize(1);
-	Network::layerSizes.resize(1);
+	cout << "-------------Here's the list of all the valid activation functions that can be used for the network---------------";
+	cout << "1) Linear Function" << endl;
+	cout << "\n2) Sigmoid Function" << endl;
+	cout << "\n3) Complementary Log-Log Function" << endl;
+	cout << "\n4) Bipolar Sigmoid Function" << endl;
+	cout << "\n5) Tanh Function " << endl;
+	cout << "\n6) LeCun's Tanh Function " << endl;
+	cout << "\n7) Rectifier Linear Function" << endl;
+	cout << "\n8) Smooth Rectifier Function " << endl;
+	cout << "\n9) Logit Function " << endl;
+	cout << "\n10) Softmax Function" << endl;
+	cout << "\n11) RadialGaussian Function" << endl;
+	cout << "\n12) Maxout Function " << endl;
+	cout << "\n13) Leaky Rectifier Linear Function" << endl;
+	cout << "\n14) Cosine Function " << endl;
 
 	stateTable.set_size(numActivations + 1, numLayers);
 	int i = 0, j = 0;
@@ -54,90 +81,109 @@ void Network::initStateTable()
 		}
 		i++;
 	}
-}
+}*/
 
 ///
 //Activation Functions for State Machine
 ///
 //Need to properly scope the Network members, or else make them nonstatic.
 /*
-Matrix Network::bipolarSigmoid(int index)
+ void Network::linear(int index)
 {
-	//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
-	int i;
-	Matrix m;
-	m.set_size(layerSizes[index], 1);
-	for (i = 0; i < layerSizes[index]; i++)
-		activations[index](i) = (1 - exp(0 - weightedInputs[index](i))) / (1 + exp(0 - weightedInputs[index](i)));
-	for (i = 0; i < layerSizes[index]; i++)
-		m(i) = (2 * exp(-weightedInputs[index](i))) / (pow(1 + exp(-weightedInputs[index](i)), 2));
-	return m;
-}
-
-Matrix Network::cosine(int index)
-{
-	//	cos(weightedInputs(i.j)
-	activations[index] = cos(weightedInputs[index]);
-	return (zeros_matrix<double>(layerSizes[index], 1) - sin(activations[index]));
-}
-
-Matrix Network::leakyRelu(int index)
-{
-	//  alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
-	//	weightedInputs(i,j)			 z > 0
-	Matrix m;
-	float alpha(0.000718);
-	int i;
-	m.set_size(layerSizes[index], 1);
-	for (i = 0; i < layerSizes[index]; i++)
-		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : ((alpha)* weightedInputs[index](i));
-	for (i = 0; i < layerSizes[index]; i++)
-		m(i) = (activations[index](i) != 0) ? (1) : (-1 * alpha);
-	return m;
-}
-
-Matrix Network::LeCun_stanh(int index)
-{
-	//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
-	activations[index] = (1.7159) * tanh((2 / 3) * weightedInputs[index]);
-	return 0.98143 * (ones_matrix<double>(layerSizes[index], 1) - (0.33964 * squared(activations[index])));
-}
-
-Matrix Network::linear(int index)
-{
-	//	weightedInputs(i,j)
 	activations[index] = weightedInputs[index];
-	return ones_matrix<double>(layerSizes[index], 1);
+	activationPrime[index] = ones_matrix<double>(layerSizes[index], 1);
 }
 
-Matrix Network::log_Log(int index)
+void Network::Sigmoid(int index)
+{
+	activations[index] = sigmoid(weightedInputs[index]);
+	activationPrime[index] = pointwise_multiply(activations[index], ones_matrix(activations[index]) - activations[index]);
+}
+
+void Network::logLog(int index)
 {
 	//1 − exp(−exp(weightedInputs(i, j)))
 	activations[index] = (ones_matrix<double>(layerSizes[index], 1) - exp(zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index])));
-	return pointwise_multiply(activations[index] - ones_matrix(activations[index]), zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
+	activationPrime[index] = pointwise_multiply(activations[index] - ones_matrix(activations[index]), zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
 }
 
-Matrix Network::logit(int index)
+void Network::bipolarSigmoid(int index)
+{
+	//	(1 - exp(-(weightedInputs(i,j))) / (1 + exp(-weightedInputs(i,j)))
+	int i;
+	for (i = 0; i < layerSizes[index]; i++)
+	{
+		activations[index](i) = (1 - exp(0 - weightedInputs[index](i))) / (1 + exp(0 - weightedInputs[index](i)));
+		activationPrime[index](i) = (2 * exp(-weightedInputs[index](i))) / (pow(1 + exp(-weightedInputs[index](i)), 2));
+	}
+}
+
+void Network::Tanh(int index)
+{
+	activations[index] = tanh(weightedInputs[index]);
+	activationPrime[index] = ones_matrix<double>(layerSizes[index], 1) - squared(activations[index]);
+}
+
+void Network::LeCun_stanh(int index)
+{
+	//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
+	activations[index] = (1.7159) * tanh((2 / 3) * weightedInputs[index]);
+	activationPrime[index] = 0.98143 * (ones_matrix<double>(layerSizes[index], 1) - (0.33964 * squared(activations[index])));
+}
+
+void Network::rectifier(int index)
+{
+	int i;
+	for (i = 0; i < layerSizes[index]; i++)
+	{
+		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : (0);
+		activationPrime[index](i) = (activations[index](i) != 0) ? (1) : (0);
+	}
+}
+
+void Network::smoothRectifier(int index)
+{
+	//	log(1 + exp(weightedInputs(i,j))
+	int i;
+	activations[index] = log(ones_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
+	for (i = 0; i < layerSizes[index]; i++)
+		activationPrime[index](i) = 1 / (1 + exp(-weightedInputs[index](i)));
+}
+
+void Network::logit(int index)
 {
 	//  log(weightedInputs(i,j) / (1 - weightedInputs(i,j)))
 	int i;
-	Matrix m;
-	m.set_size(layerSizes[index], 1);
 	for (i = 0; i < layerSizes[index]; i++)
 	{
 		activations[index](i) = log(weightedInputs[index](i) / (1 - weightedInputs[index](i)));
-		m(i) = 1 / (weightedInputs[index](i) * (1 - weightedInputs[index](i)));
+		activationPrime[index](i) = 1 / (weightedInputs[index](i) * (1 - weightedInputs[index](i)));
 	}
-	return m;
 }
 
-Matrix Network::maxout(int index)
+void Network::softmax(int index)
+{
+	//	exp(weightedInputs(i,j)) / sum of exp(weightedInputs(i,j)) for the last l
+	int i;
+	double sum(0);
+	for (i = 0; i < layerSizes[index]; i++)
+		sum += exp(weightedInputs[index](i));
+	activations[index] = (1 / sum) * (exp(weightedInputs[index]));
+	activationPrime[index] = (activations[index] - squared(activations[index]));
+}
+
+void Network::radialGaussian(int index)
+{
+	//	exp( -(1/2)*((weightedInputs(i,j)^2))
+	activations[index] = exp((-1 / 2) * (squared(weightedInputs[index])));
+	activationPrime[index] = pointwise_multiply(zeros_matrix<double>(layerSizes[index], 1) - weightedInputs[index], activations[index]);
+}
+
+void Network::maxout(int index)
 {
 	//	max of activations[i-1].weights[i] + biases[i]
 	double biggest = weightedInputs[index](1, 1);
 	int  i;
-	Matrix m;
-	m.set_size(layerSizes[index], 1);
 	int biggestIndex(0);
 	for (i = 0; i < layerSizes[index]; i++)
 		if (weightedInputs[index](i) > biggest)
@@ -148,66 +194,28 @@ Matrix Network::maxout(int index)
 	for (i = 0; i < layerSizes[index]; i++)
 	{
 		activations[index](i) = biggest;
-		m(i) = ((i == biggestIndex) ? (1) : (0));
+		activationPrime[index](i) = ((i == biggestIndex) ? (1) : (0));
 	}
-	return m;
 }
 
-Matrix Network::rectifier(int index)
+void Network::leakyRelu(int index)
 {
-	//	max (0, weightedInputs(i,j))
-	Matrix m;
+	//  alpha * weightedInputs(i,j)  z < 0, alpha = 0 < x < 1
+	//	weightedInputs(i,j)			 z > 0
+
+	float alpha(0.000718);
 	int i;
-	m.set_size(layerSizes[index], 1);
 	for (i = 0; i < layerSizes[index]; i++)
-		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : (0);
-	for (i = 0; i < layerSizes[index]; i++)
-		m(i) = (activations[index](i) != 0) ? (1) : (0);
-	return m;
+	{
+		activations[index](i) = (weightedInputs[index](i) > 0) ? (weightedInputs[index](i)) : ((alpha)* weightedInputs[index](i));
+		activationPrime[index](i) = (activations[index](i) != 0) ? (1) : (-1 * alpha);
+	}
 }
 
-Matrix Network::radialGaussian(int index)
+void Network::cosine(int index)
 {
-	//	exp( -(1/2)*((weightedInputs(i,j)^2))
-	activations[index] = exp((-1 / 2) * (squared(weightedInputs[index])));
-	return pointwise_multiply(zeros_matrix<double>(layerSizes[index], 1) - weightedInputs[index], activations[index]);
-}
-
-Matrix Network::sigmoid(int index)
-{
-	//	1 / (1 + exp(-weightedInputs(i,j))
-	activations[index] = sigmoid(weightedInputs[index]);
-	return pointwise_multiply(activations[index], ones_matrix(activations[index]) - activations[index]);
-}
-
-Matrix Network::smoothRectifier(int index)
-{
-	//	log(1 + exp(weightedInputs(i,j))
-	int i;
-	Matrix m;
-	m.set_size(layerSizes[index], 1);
-	activations[index] = log(ones_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
-	for (i = 0; i < layerSizes[index]; i++)
-		m(i) = 1 / (1 + exp(-weightedInputs[index](i)));
-	return m;
-}
-
-Matrix Network::softmax(int index)
-{
-	//	exp(weightedInputs(i,j)) / sum of exp(weightedInputs(i,j)) for the last l
-	int i;
-	double sum(0);
-	for (i = 0; i < layerSizes[index]; i++)
-		sum += exp(weightedInputs[index](i));
-	activations[index] = (1 / sum) * (exp(weightedInputs[index]));
-	return (activations[index] - squared(activations[index]));
-}
-
-Matrix Network::tanh(int index)
-{
-	//	tanh(weightedInputs(i,j))
-	activations[index] = tanh(weightedInputs[index]);
-	return ones_matrix<double>(layerSizes[index], 1) - squared(activations[index]);
+	activations[index] = cos(weightedInputs[index]);
+	activationPrime[index] = (zeros_matrix<double>(layerSizes[index], 1) - sin(activations[index]));
 }*/
 
 //Belongs in Documentation.md
@@ -215,7 +223,7 @@ Matrix Network::tanh(int index)
 unsigned char Network::stateTable[numActivations + 1][(if numLayers =) 5] = {
 
 								//Layers:	0		1		2		3		4		
-	inputLinear				 	{		0,		0,		0,		0,		0,		},
+	/* inputLinear				 	{		0,		0,		0,		0,		0,		},
 	/* inputSigmoid				 	{		1,		1,		1,		1,		1,		},
 	/* inputComplementaryLog_Log 	{		2,		2,		2, 		2, 		2, 		},
 	/* inputBipolarSigmoid		 	{		3,		3,		3, 		3, 		3, 		},
@@ -231,7 +239,7 @@ unsigned char Network::stateTable[numActivations + 1][(if numLayers =) 5] = {
 	/* inputCosine				 	{		13,		13,		13,		13,		13,		}					
 };*/
 
-Matrix Network::takeInput(int index)
+/*Matrix Network::takeInput(int index)
 {
 	int j;
 	Matrix prime;
@@ -240,13 +248,12 @@ Matrix Network::takeInput(int index)
 	cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
 	cin >> j;
 	cin.ignore();
-	prime = activationFuncs[stateTable(j, index)](index);
+	Switch(stateTable(j, index), index);
 	return prime;
-}
+}*/
 
 /*----------------------------------------------------------------------------------------------------------
 TBD:
-- Working on the implementation of above written functions into the actual class we wrote before
 - Also, trying to make a setActivation function by which the user can set an activation function for the complete network
   if the user wants
 -----------------------------------------------------------------------------------------------------------*/
@@ -276,6 +283,8 @@ Network::Network()
 		getline(cin, trainingDataFilename);
 		trainingDataInfile.open(trainingDataFilename);
 	}
+
+	checkBatchSize();
 	//Ask for expected values filename and open it
 	std::cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:\n";
 	getline(cin, expectedValuesFilename);
@@ -289,10 +298,14 @@ Network::Network()
 		expectedValuesInfile.open(expectedValuesFilename);
 	}
 
+	//------------------------------------
+	//initStateTable();
+
 	//resize the VMatrix's to match input
 	weights.resize(numLayers);
 	biases.resize(numLayers);
 	activations.resize(numLayers);
+	//activationPrime.resize(numLayers);
 	weightedInputs.resize(numLayers);
 	errors.resize(numLayers);
 	sumNablaB.resize(numLayers);
@@ -314,6 +327,9 @@ Network::Network()
 
 		activations[i].set_size(layerSizes[i], 1);
 		activations[i] = zeros_matrix(activations[i]);
+
+		/*activationPrime[i].set_size(layerSizes[i], 1);
+		activationPrime[i] = zeros_matrix(activationPrime[i]);*/
 
 		weightedInputs[i].set_size(layerSizes[i], 1);
 		weightedInputs[i] = zeros_matrix(weightedInputs[i]);
@@ -337,25 +353,51 @@ Network::Network()
 Network::Network(const string& previous_network_filename)
 {
 	readInit(previous_network_filename);
+	trainingDataInfile.open(trainingDataFilename);
+	if (!trainingDataInfile.is_open())
+	{
+		trainingDataInfile.clear();
+		trainingDataInfile.close();
+		trainingDataInfile.open(trainingDataFilename);
+		if (!trainingDataInfile.is_open())
+			cout << "\nServer Error 406: Could not open the requested training data file" << endl;
+		else;
+	}
+	checkBatchSize();
+	expectedValuesInfile.open(expectedValuesFilename);
+	if (!expectedValuesInfile.is_open())
+	{
+		expectedValuesInfile.clear();
+		expectedValuesInfile.close();
+		expectedValuesInfile.open(expectedValuesFilename);
+		if (!expectedValuesInfile.is_open())
+			cout << "\nServer Error 407: Could not open the requested expected values file" << endl;
+		else;
+	}
 	char c;
 	string str;
-	std::cout << "\nWould you like to change the values of hyperparameters? Press Y/N:-> ";
+	cout << "\nWould you like to change the values of hyperparameters? Press Y/N:-> ";
 	cin >> c;
 	if ((c == 'y') || (c == 'Y'))
 	{
-		std::cout << "\nEnter a value for learning Rate (0 < x < 1): ";
+		cout << "\nEnter a value for learning Rate (0 < x < 1): ";
 		cin >> learningRate;
-		std::cout << "\nEnter a value for batch size (x > 1): ";
+		checkLearningRate();
+		cout << "\nEnter a value for batch size (x > 1): ";
 		cin >> batchSize;
-		std::cout << "\nEnter a value for epochs (x > 1): ";
+		checkBatchSize();
+		cout << "\nEnter a value for epochs (x > 1): ";
 		cin >> epochs;
+		checkEpochs();
 
-		std::cout << "\nYou have successfully updated the hyparameters with following values:";
-		std::cout << "\nLearning Rate: " << learningRate;
-		std::cout << "\nBatch Size: " << batchSize;
-		std::cout << "\nNumber of epochs: " << epochs;
+		cout << "\nYou have successfully updated the hyparameters with following values:";
+		cout << "\nLearning Rate: " << learningRate;
+		cout << "\nBatch Size: " << batchSize;
+		cout << "\nNumber of epochs: " << epochs;
 	}
 	else;
+	//-------------------------------
+	//initStateTable();
 }
 
 //Classify constructor. data initializing handled by readInit
@@ -379,24 +421,49 @@ Network::~Network()
 
 /**********Public Methods*******************************/
 
-//checks if the batchSize is not greater than the size of file
-//use this piece of code only if training data file is open
-void Network::checkBatchSize()
+//user can set the highest value to the learning rate by passing it as a parameter to the checkLearningRate()
+//In case if user doesn't set any highest learning rate, the lr_highest is by default set to 1
+//It asks user if the user wants to continue with the entered learning rate if it finds anything wrong
+//if,
+		//the user agrees to the learning rate entered, the loop breaks and the program continues
+//else,
+		//user is asked to enter a value within the range
+
+void Network::checkLearningRate(int lr_highest)
 {
-	int end_of_file = fileSize(trainingDataInfile);
-	while ((batchSize > end_of_file) || (batchSize < 0))
+	bool result;
+	string temp;
+	while (!(result = ((learningRate > 0) && (learningRate < lr_highest))))	//loop continues until the learning rate is between 0 and given end point
 	{
-		cout << "\nInvalid batch size..";
-		cout << "\nCannot proceed..Enter a valid number for batch size (0 < x < " << end_of_file << "): " << endl;
-		if (!(cin >> batchSize))
-			continue;
+		//If learning rate is not in range, displays an error message
+		cout << "\nError: The learning rate you entered is too high.." << endl;
+
+		//also, it prompts the user if the user wants to continue or change the value entered
+		cout << "Press 'end' to continue with the value entered or 'change' to change the value" << endl;
+		cin >> temp;
+		if (temp == "end")
+		{
+			string wrong_data;
+			wrong_data = "Incorrect learning rate: ";
+			wrong_data += static_cast<int> (learningRate + '0');
+			wrongInputs.push_back(wrong_data);
+			break;
+		}
+		else
+		{
+			cout << "Enter the value of learning rate in range ( 0 x < " << lr_highest << "): " << endl;
+			if (!(cin >> learningRate))
+				continue;
+		}
 	}
+
 }
 
-//checks if the number of epochs is a positive integer
-//consider using size_t instead of int
 void Network::checkEpochs()
 {
+	//--------------------------------------------------------------------------------------------------------
+	//checks if the number of epochs is a positive integer
+	//consider using size_t instead of int
 	while (epochs < 1)
 	{
 		cout << "\nInvalid number of epochs..";
@@ -406,10 +473,36 @@ void Network::checkEpochs()
 	}
 }
 
-//checks the string of layer sizes
-//erases all the unwanted characters and records the errors in the vector of wrong_inputs
+void Network::checkNumLayers()
+{
+	//--------------------------------------------------------------------------------------------------------
+	//checks if the number of layers read from the file is a valid positive integer
+	//consider using size_t instead of int
+	if (numLayers < 2)
+	{
+		cout << "\nInvalid number of layers..";
+		numLayers = layerSizes.size();
+	}
+}
+
+void Network::checkBatchSize()
+{
+	//checks if the batchSize is not greater than the size of file
+	//use this piece of code only if training data file is opened before you call this function
+	//------------------------------------------------------------------------------------------------------
+	int end_of_file = fileSize(trainingDataInfile);
+	while ((batchSize > end_of_file) || (batchSize < 0))
+	{
+		cout << "\nInvalid batch size..";
+		cout << "\nCannot proceed..Enter a valid number for batch size (0 < x < " << end_of_file << "): " << endl;
+		if (!(cin >> batchSize))
+			continue;
+	}
+}
 void Network::checkLayersString(string& layer_string)
 {
+	//checks the string of layer sizes
+	//erases all the unwanted characters and records the errors in the vector of wrong_inputs
 	int go_ahead(0);
 	int j(0);
 	string temp;
@@ -444,47 +537,6 @@ void Network::checkLayersString(string& layer_string)
 			layer_string = s;
 		}
 	} while (go_ahead < 1);
-}
-
-void Network::checkLearningRate(int lr_highest)
-{
-	bool result;
-	string temp;
-	while (!(result = ((learningRate > 0) && (learningRate < lr_highest))))	//loop continues until the learning rate is between 0 and given end point
-	{
-		//If learning rate is not in range, displays an error message
-		cout << "\nError: The learning rate you entered is too high.." << endl;
-
-		//also, it prompts the user if the user wants to continue or change the value entered
-		cout << "Press 'end' to continue with the value entered or 'change' to change the value" << endl;
-		cin >> temp;
-		if (temp == "end")
-		{
-			string wrong_data;
-			wrong_data = "Incorrect learning rate: ";
-			wrong_data += static_cast<int> (learningRate + '0');
-			wrongInputs.push_back(wrong_data);
-			break;
-		}
-		else
-		{
-			cout << "Enter the value of learning rate in range ( 0 x < " << lr_highest << "): " << endl;
-			if (!(cin >> learningRate))
-				continue;
-		}
-	}
-
-}
-
-//checks if the number of layers read from the file is a valid positive integer
-//consider using size_t instead of int
-void Network::checkNumLayers()
-{
-	if (numLayers < 2)
-	{
-		cout << "\nInvalid number of layers..";
-		numLayers = layerSizes.size();
-	}
 }
 
 //when passed a text file, will classify data therein and output to console as well as a file
@@ -559,6 +611,7 @@ void Network::readInit() // reading from console
 	std::cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
 	std::cout << "Enter a string of integers that correspond to the layers and desired nodes in each layer of your network:" << endl;
 	string layers;  getline(cin, layers);
+	checkLayersString(layers);
 
 	char* cStrLayers = new char[layers.size() + 1];
 	strcpy(cStrLayers, layers.c_str());
@@ -571,9 +624,11 @@ void Network::readInit() // reading from console
 
 	std::cout << "\nPlease enter a double for the learning rate (usually in the range [x-y]):" << endl;
 	cin >> learningRate;
+	checkLearningRate();
 
 	std::cout << "\nPlease enter an integer for the number of epochs (number of times to parse through test data):" << endl;
 	cin >> epochs;
+	checkEpochs();
 
 	std::cout << "\nPlease enter an integer for the mini batch size:" << endl;
 	cin >> batchSize;
@@ -628,6 +683,7 @@ bool Network::readInit(const string & file)
 		weights.resize(numLayers);
 		biases.resize(numLayers);
 		activations.resize(numLayers);
+		//activationPrime.resize(numLayers);
 		weightedInputs.resize(numLayers);
 		errors.resize(numLayers);
 		sumNablaB.resize(numLayers);
@@ -649,6 +705,9 @@ bool Network::readInit(const string & file)
 			//activations matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
 			activations[i].set_size(layerSizes[i], 1);
 			activations[i] = zeros_matrix(activations[i]);
+
+			/*activationPrime[i].set_size(layerSizes[i], 1);
+			activationPrime[i] = zeros_matrix(activationPrime[i]);*/
 
 			//weightedInputs matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
 			weightedInputs[i].set_size(layerSizes[i], 1);
@@ -725,10 +784,10 @@ std::vector<double> Network::train()
 
 		efficiency[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
 		std::cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
-
-		if (writeToFile())
-			std::cout << "Write successful\n";
 	}
+
+	if (writeToFile())
+		std::cout << "Write successful\n";
 
 	return efficiency;
 }
@@ -826,11 +885,6 @@ bool Network::writeToFile() const
 	}
 }
 
-//hadamardProduct utilizes dlib's pointwise_multiply() to compute the element-by-element product.
-const Matrix Network::hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
-{
-	return pointwise_multiply(input_matrix_L, input_matrix_R);
-}
 
 // checks if Network output matches expected
 // @param - takes a matrix of expected vals (could be changed to vector though or process both if need be)
@@ -979,7 +1033,7 @@ void Network::forwardProp(ifstream &infile, const int batchIndex)
 	for (int i = 1; i < numLayers; i++)
 	{
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
-		activations[i] = activationFunction(weightedInputs[i]);
+		activations[i] = activationFunction(weightedInputs[i]); //takeInput(i);
 	}
 }
 
@@ -996,72 +1050,3 @@ void Network::updateWeightsAndBiases()
 
 }
 
-template<class T>
-const matrix<T> Network::getM(ifstream& fin, const int i)
-{
-	std::vector<T> v;
-	matrix<T> m;
-	if (i >= 0)
-	{
-		fin.seekg(0);
-		string str;
-		for (int j = 0; j <= i; j++)
-			getline(fin, str);
-		getline(fin, str);
-		v = Strtok<T>(str, ",");
-		m.set_size(v.size(), 1);
-		for (int i = 0; i < v.size(); i++)
-		{
-			m(i, 0) = v[i];
-		}
-		return m;
-	}
-	else
-	{
-		cout << "\n Server error 403: Found Invalid Index" << endl;
-		m.set_size(0, 0);
-		return m;
-	}
-}
-
-template<class T>
-std::vector<T> Network::getV(ifstream& fin, const int i)
-{
-	std::vector<T> v;
-	if (i >= 0)
-	{
-		fin.seekg(0);
-		string str;
-		getline(fin, str);
-		fin.seekg(i * (str.size() + 2), ios_base::beg);
-		getline(fin, str);
-		v = Strtok<T>(str, ",");
-		return v;
-	}
-	else
-	{
-		cout << "\n Server error 404: Found Invalid Index" << endl;
-		v.resize(0);
-		return v;
-	}
-}
-
-//A Strtok(), which can help us assigning any vector later on while reading from a file
-//can be used in readInit() too
-//Considering the fact that we don't want any user or programmer to use it, Strtok<T> can be a private member of the class.
-template<class T>
-std::vector<T> Network::Strtok(const string &str, char Separator[])
-{
-	char * pN;
-	std::vector<T> v;
-	char *p = new char[str.size() + 1];
-	strcpy(p, str.c_str());
-	pN = strtok(p, Separator);
-	while (pN != NULL)
-	{
-		v.push_back(atof(pN));
-		pN = strtok(NULL, Separator);
-	}
-	delete[] p;
-	return v;
-}
