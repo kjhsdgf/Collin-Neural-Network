@@ -3,6 +3,8 @@
 //State Machine Assets
 ///
 
+//std::vector<int> strings;
+
 /*void Network::Switch(unsigned char e, int index)
 {
 	switch (e)
@@ -54,7 +56,7 @@
 void Network::initStateTable()
 {
 	cout << "-------------Here's the list of all the valid activation functions that can be used for the network---------------";
-	cout << "1) Linear Function" << endl;
+	cout << "\n1) Linear Function" << endl;
 	cout << "\n2) Sigmoid Function" << endl;
 	cout << "\n3) Complementary Log-Log Function" << endl;
 	cout << "\n4) Bipolar Sigmoid Function" << endl;
@@ -81,6 +83,9 @@ void Network::initStateTable()
 		}
 		i++;
 	}
+	strings.resize(numLayers);
+	for (i = 0; i < numLayers; i++)
+	strings[i] = 0;
 }*/
 
 ///
@@ -239,13 +244,20 @@ unsigned char Network::stateTable[numActivations + 1][(if numLayers =) 5] = {
 	/* inputCosine				 	{		13,		13,		13,		13,		13,		}					
 };*/
 
+//Sets the activation function for every layer in the network
 /*void Network::takeInput(int index)
 {
 	int j;
-	cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
-	cin >> j;
-	cin.ignore();
-	Switch(stateTable(j, index), index);
+	if (strings[index])
+		Switch(stateTable(strings[index], index), index);
+	else
+	{
+		cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
+		cin >> j;
+		cin.ignore();
+		strings[index] = (j - 1);
+		Switch(stateTable(strings[index], index), index);
+	}
 }*/
 
 /*----------------------------------------------------------------------------------------------------------
@@ -1029,8 +1041,15 @@ void Network::forwardProp(ifstream &infile, const int batchIndex)
 	for (int i = 1; i < numLayers; i++)
 	{
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
-		activations[i] = activationFunction(weightedInputs[i]); //takeInput(i);
+		activations[i] = activationFunction(weightedInputs[i]); 
 	}
+	//Alternate code will be:
+	/*for (int i = 1; i < numLayers; i++)
+		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
+	
+	//Functions like softmax() and maxout() requires that every weightedInputs matrix is assigned a value so, the need arises to use two loops
+	for (int i = 1; i < numLayers; i++)
+		takeInput(i); */
 }
 
 //Updates weights and biases for the network by overwriting weights and biases.
