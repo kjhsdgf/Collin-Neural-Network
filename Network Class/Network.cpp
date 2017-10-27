@@ -1,5 +1,128 @@
 #include "Network.h"
 
+//******************************************************************************//
+//									Constructors								//
+//******************************************************************************//
+
+//Default constructor for the class
+Network::Network()
+{
+	//Call readInit() to fill numLayers, layerSizes[], learningRate, epochs, batchSize
+	readInit();
+
+	//Ask for training data filename, then open it
+	cout << "Please enter the location of your training file [C:\\...\\TrainingDataFilename.txt:" << endl;
+	getline(cin, trainingDataFilename);
+	trainingDataInfile.open(trainingDataFilename);
+	while (trainingDataInfile.fail())
+	{
+		trainingDataInfile.clear();
+		trainingDataInfile.close();
+		cout << "Could not open " << trainingDataFilename << ".\n" << "Please try again:" << endl;
+		getline(cin, trainingDataFilename);
+		trainingDataInfile.open(trainingDataFilename);
+	}
+	checkBatchSize();
+	//Ask for expected values filename and open it
+	cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:" << endl;
+	getline(cin, expectedValuesFilename);
+	expectedValuesInfile.open(expectedValuesFilename);
+	while (expectedValuesInfile.fail())
+	{
+		expectedValuesInfile.clear();
+		expectedValuesInfile.close();
+		cout << "Could not open " << expectedValuesFilename << ".\n" << "Please try again:" << endl;
+		getline(cin, expectedValuesFilename);
+		expectedValuesInfile.open(expectedValuesFilename);
+	}
+
+	//resize the VMatrix's to match input
+	weights.resize(numLayers);
+	biases.resize(numLayers);
+	activations.resize(numLayers);
+	weightedInputs.resize(numLayers);
+	errors.resize(numLayers);
+	sumNablaB.resize(numLayers);
+	sumNablaW.resize(numLayers);
+
+	//fill out the 0th layer of activations, as they aren't covered
+	//in the following for loop.
+	cout << "\nasize: " << layerSizes.size() << "\n";
+	activations[0].set_size(layerSizes[0], 1);
+	activations[0] = zeros_matrix(activations[0]);
+
+	//set the sizes of each matrix, and fill with appropriate numbers
+	for (int i = 1; i < numLayers; i++)
+	{
+		weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
+		randomizeMatrix(weights[i]);
+
+		biases[i].set_size(layerSizes[i], 1);
+		randomizeMatrix(biases[i]);
+
+		activations[i].set_size(layerSizes[i], 1);
+		activations[i] = zeros_matrix(activations[i]);
+
+		weightedInputs[i].set_size(layerSizes[i], 1);
+		weightedInputs[i] = zeros_matrix(weightedInputs[i]);
+
+		errors[i].set_size(layerSizes[i], 1);
+		errors[i] = zeros_matrix(errors[i]);
+
+		sumNablaB[i].set_size(layerSizes[i], 1);
+		sumNablaB[i] = zeros_matrix(sumNablaB[i]);
+
+		sumNablaW[i].set_size(layerSizes[i], layerSizes[i - 1]);
+		sumNablaW[i] = zeros_matrix(sumNablaW[i]);
+	}
+
+	//resize miniBatchIndices to be batchSize elements
+	miniBatchIndices.resize(batchSize);
+}
+
+//Classify constructor. data initializing handled by readInit
+Network::Network(const string& networkFilename, const string& validationDataFilename)
+{
+	readInit(networkFilename);
+	trainingDataInfile.open(trainingDataFilename);
+	if (!trainingDataInfile.is_open())
+	{
+		trainingDataInfile.clear();
+		trainingDataInfile.close();
+		trainingDataInfile.open(trainingDataFilename);
+		if (!trainingDataInfile.is_open())
+			cout << "\nServer Error 408: Could not open the requested training data file" << endl;
+		else;
+	}
+	checkBatchSize();
+	expectedValuesInfile.open(expectedValuesFilename);
+	if (!expectedValuesInfile.is_open())
+	{
+		expectedValuesInfile.clear();
+		expectedValuesInfile.close();
+		expectedValuesInfile.open(expectedValuesFilename);
+		if (!expectedValuesInfile.is_open())
+			cout << "\nServer Error 409: Could not open the requested expected values file" << endl;
+		else;
+	}
+	classify(validationDataFilename);
+}
+
+//Destructor will be called at the end of the main(). Closes files.
+//Consider, having a close() to close the files, if there's going to be a loop in main()
+Network:: ~Network()
+{
+	trainingDataInfile.close();
+	expectedValuesInfile.close();
+}
+
+
+
+//******************************************************************************//
+//									Methods										//
+//******************************************************************************//
+
+
 bool Network::writeToFile() const
 {
 	/*This method creates a file named "Previous_Network_[Day][Time(hhmin)].txt" and 
@@ -12,7 +135,7 @@ bool Network::writeToFile() const
 	  trainingDataFilename
 	  expectedValuesFilename
 	  learningRate
-      	  batchSize
+	  batchSize
 	  epochs
 	  numLayers
 	  vector of layerSizes
@@ -74,12 +197,65 @@ bool Network::writeToFile() const
 	}
 }
 
+// binary version of write to file
+// saves in the same format but with no CR, LF, or delimiters, or the filenames of training/truth data
+bool Network::saveNetwork() const
+{
+	std::vector<int>::const_iterator i1;
+	int ind;
+	int j1(0);
+	string a("Previous_Network_");
+	time_t _tm = time(NULL);
+	struct tm * curtime = localtime(&_tm);
+	a += asctime(curtime);
+	string fileName;
+
+	fileName.resize(24);
+	for (ind = 0; ind < 20; ind++)			//gets the name "Previous_Network_[Day]"
+		fileName[j1++] = a[ind];
+
+	for (ind = 28; ind < 35; ind++)			//appends the [time (hhmin)] to name of the file
+		if (a[ind] != ':')
+			fileName[j1++] = a[ind];
+
+	fileName += ".bin";				//appends ".bin" to the name of the file
+
+	ofstream out(fileName, ios_base::binary);
+	if (!out.is_open())
+	{
+		cout << "Server error 401: Could not open the file requested! Try again later..";
+		return false;
+	}
+
+	write(out, learningRate);
+	write(out, batchSize);
+	write(out, epochs);
+	write(out, numLayers);
+	write(out, (int)layerSizes.size());
+
+	for (int i = 0; i < layerSizes.size(); i++)
+	{
+		write(out, layerSizes[i]);
+	}
+
+	for (int i = 0; i < layerSizes.size(); i++)
+	{
+		for (int j = 0; j < layerSizes[i]; j++)
+			for (int k = 0; k < layerSizes[i - 1]; k++)
+				write(out, weights[i](j, k));
+
+		for (int j = 0; j < layerSizes[i]; j++)
+			write(out, biases[i](j, 0));
+	}
+	return true;
+}
+
 void Network::readInit() // reading from console
 {
 	cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
 	cout << "Enter a string of integers that correspond to the layers and desired nodes in each layer of your network:" << endl;
 	string layers;  getline(cin, layers);
-	checkLayerString(layers);
+	checkLayersString(layers);
 	cout << "\nPlease enter a double for the learning rate (usually in the range [x-y]):" << endl;
 	cin >> learningRate;
 	checkLearningRate();
@@ -92,7 +268,7 @@ void Network::readInit() // reading from console
 	char* cStrLayers = new char[layers.size() + 1];
 	strcpy(cStrLayers, layers.c_str());
 
-	vector<int> layerSizes;
+
 	for (char *p = strtok(cStrLayers, " ,"); p != NULL; p = strtok(NULL, " ,"))
 	{
 		layerSizes.push_back(atoi(p));
@@ -113,6 +289,107 @@ void Network::readInit() // reading from console
 			"Epochs := " << epochs << endl <<
 			"Mini batch size := " << batchSize << endl;
 	delete[] cStrLayers;
+}
+
+//An overloaded readInit() to read the required values, to create or classify a network, from the given file
+bool Network::readInit(const string & file)
+{
+	ifstream fin;
+	fin.open(file, ios_base::in);
+	if (!fin.is_open())
+	{
+		fin.clear();
+		fin.open(file, ios_base::in);
+	}
+	else;
+
+	if (fin.is_open())
+	{
+		int i;
+		string cLayers;
+		getline(fin, trainingDataFilename);
+		getline(fin, expectedValuesFilename);
+		fin >> learningRate;
+		checkLearningRate();
+		fin >> batchSize;
+		fin >> epochs;
+		checkEpochs();
+		fin >> numLayers;
+		fin.seekg(2, ios::cur);
+		getline(fin, cLayers);
+		checkLayersString(cLayers);
+		layerSizes = Strtok<int>(cLayers, " ");
+		checkNumLayers();
+
+		//Resize the vectors of the matrices to numLayers
+		weights.resize(numLayers);
+		biases.resize(numLayers);
+		activations.resize(numLayers);
+		weightedInputs.resize(numLayers);
+		errors.resize(numLayers);
+		sumNablaB.resize(numLayers);
+		sumNablaW.resize(numLayers);
+
+		//resize the 0th member of the activations vector: layer_sizes[0] by 1, fill with zeros
+		activations[0].set_size(layerSizes[0], 1);
+		activations.push_back(zeros_matrix(activations[0]));
+
+		//Everything but the activations vector will have an effective size of num_layers-1, as their first element will be left unused.
+		for (i = 1; i < numLayers; i++)
+		{
+			//weights matrix at index i created of size: layerSizes[i] by layer_sizes[i-1]
+			weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
+
+			//biases matrix at index i created of size: layerSizes[i] by 1
+			biases[i].set_size(layerSizes[i], 1);
+
+			//activations matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			activations[i].set_size(layerSizes[i], 1);
+			activations[i] = zeros_matrix(activations[i]);
+
+			//weightedInputs matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			weightedInputs[i].set_size(layerSizes[i], 1);
+			weightedInputs[i] = zeros_matrix(weightedInputs[i]);
+
+			//errors matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			errors[i].set_size(layerSizes[i], 1);
+			errors[i] = zeros_matrix(errors[i]);
+
+			//sumNablaB matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			sumNablaB[i].set_size(layerSizes[i], 1);
+			sumNablaB[i] = zeros_matrix(sumNablaB[i]);
+
+			//sumNablaB matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
+			sumNablaW[i].set_size(layerSizes[i], layerSizes[i - 1]);
+			sumNablaW[i] = zeros_matrix(sumNablaW[i]);
+
+			//end of the loop
+		}
+
+		//resize mini_batch_indices to batch_size
+		miniBatchIndices.resize(batchSize);
+
+		for (int i = 1; i < layerSizes.size(); i++)
+		{
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+			for (int j = 0; j < layerSizes[i]; j++)
+				for (int k = 0; k < layerSizes[i - 1]; k++)
+					fin >> weights[i](j, k);
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+			for (int j = 0; j < layerSizes[i]; j++)
+				fin >> biases[i](j, 0);
+			fin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+
+		return true;
+	}
+	else
+	{
+		cout << "Server error 402: Could not open the file requested! Try again later..";
+		return false;
+	}
 }
 
 //hadamardProduct utilizes dlib's pointwise_multiply() to compute the element-by-element product.
@@ -273,10 +550,10 @@ void Network::forwardProp(ifstream& infile, const int batchIndex)
 // It propagates forward to compute an output then backwards to compute the errors in the newtwork for each input in the mini batch size
 // It then computes the average error for the mini batch size and updates the weights and biases accordingly
 // Returns an int representing how many times the network produced expected output for a given mini batch size
-int SGD()
+int Network::SGD()
 {
 	int numCorrect = 0;
-	for (int i = 0; i < miniBatchIndices.size(); i++)
+	for (int i = 0; i < batchSize; i++)
 	{
 		forwardProp(trainingDataInfile, miniBatchIndices[i]);
 		if (backProp(miniBatchIndices[i]))
@@ -301,11 +578,11 @@ int SGD()
 // randomizing the set between each epoch
 // no parameters
 // returns a vector of doubles containing the percentage of outputs the network successfully classified for each iteration of an epoch
-vector<double> Network::train()
+void Network::train()
 {
-	vector<double> efficiency(epochs);
+	std::vector<double> accuracy(epochs);
 
-	int trainingDataSize = filesize(trainingDataInfile);
+	int trainingDataSize = fileSize(trainingDataInfile);
 
 	Vector trainingDataIndices(trainingDataSize);
 	for (int i = 0; i < trainingDataSize; i++)
@@ -326,20 +603,16 @@ vector<double> Network::train()
 			numCorrect += SGD();
 		}
 
-		efficiency[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
-		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
+		accuracy[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
+		cout << "\nAccuracy at epoch: " << i << " = " << accuracy[i] << " %" << endl;
 	}
 
 	if(!writeToFile())
 		cout << "\n Server error 405: Could not write network to file." << endl;
+	//return accuracy;
 }
 
-
-// yes i know what you're thinking "parsing the whole file just for the size?!?!" but it's really NOT that slow
-// this should be fine for what data we have now or in the near/far future
-// i have a couple of benchmarks on a few pretty large files i generated so just ask me if you want to know the stats
-//  - Yon
-int Network::filesize(istream& in)
+int Network::fileSize(istream& in)
 {
 	int count = 0;
 
@@ -421,109 +694,6 @@ void Network::classify(const string &validation_data_filename)
 	validationDataInfile.close();
 }
 
-//Default constructor for the class
-Network::Network()
-{
-	//Call readInit() to fill numLayers, layerSizes[], learningRate, epochs, batchSize
-	readInit();
-	
-	//Ask for training data filename, then open it
-	cout << "Please enter the location of your training file [C:\\...\\TrainingDataFilename.txt:" << endl;
-	getline(cin, trainingDataFilename);
-	trainingDataInfile.open(trainingDataFilename);
-	while (trainingDataInfile.fail())
-	{
-		trainingDataInfile.clear();
-		trainingDataInfile.close();
-		cout << "Could not open " << trainingDataFilename << ".\n" << "Please try again:" << endl;
-		getline(cin, trainingDataFilename);
-		trainingDataInfile.open(trainingDataFilename);
-	}
-	checkBatchSize();
-	//Ask for expected values filename and open it
-	cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:" << endl;
-	getline(cin, expectedValuesFilename);
-	expectedValuesInfile.open(expectedValuesFilename);
-	while (expectedValuesInfile.fail())
-	{
-		expectedValuesInfile.clear();
-		expectedValuesInfile.close();
-		cout << "Could not open " << expectedValuesFilename << ".\n" << "Please try again:" << endl;
-		getline(cin, expectedValuesFilename);
-		expectedValuesInfile.open(expectedValuesFilename);
-	}
-	
-	//resize the VMatrix's to match input
-	weights.resize(numLayers);
-	biases.resize(numLayers);
-	activations.resize(numLayers);
-	weightedInputs.resize(numLayers);
-	errors.resize(numLayers);
-	sumNablaB.resize(numLayers);
-	sumNablaW.resize(numLayers);
-
-	//fill out the 0th layer of activations, as they aren't covered
-	//in the following for loop.
-	activations[0].set_size(layerSizes[0], 1);
-	activations[0] = zeros_matrix(activations[0]);
-	
-	//set the sizes of each matrix, and fill with appropriate numbers
-	for (int i = 1; i < numLayers; i++)
-	{
-		weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
-		randomizeMatrix(weights[i]);
-
-		biases[i].set_size(layerSizes[i], 1);
-		randomizeMatrix(biases[i]);
-
-		activations[i].set_size(layerSizes[i], 1);
-		activations[i] = zeros_matrix(activations[i]);
-
-		weightedInputs[i].set_size(layerSizes[i], 1);
-		weightedInputs[i] = zeros_matrix(weightedInputs[i]);
-
-		errors[i].set_size(layerSizes[i], 1);
-		errors[i] = zeros_matrix(errors[i]);
-
-		sumNablaB[i].set_size(layerSizes[i], 1);
-		sumNablaB[i] = zeros_matrix(sumNablaB[i]);
-
-		sumNablaW[i].set_size(layerSizes[i], layerSizes[i - 1]);
-		sumNablaW[i] = zeros_matrix(sumNablaW[i]);
-	}
-
-	//resize miniBatchIndices to be batchSize elements
-	miniBatchIndices.resize(batchSize);
-}
-
-//Classify constructor. data initializing handled by readInit
-Network::Network(const string& networkFilename, const string& validationDataFilename)
-{
-	readInit(networkFilename);
-	trainingDataInfile.open(trainingDataFilename);
-	if (!trainingDataInfile.is_open())
-	{
-		trainingDataInfile.clear();
-		trainingDataInfile.close();
-		trainingDataInfile.open(trainingDataFilename);
-		if (!trainingDataInfile.is_open())
-			cout << "\nServer Error 408: Could not open the requested training data file" << endl;
-		else;
-	}
-	checkBatchSize();
-	expectedValuesInfile.open(expectedValuesFilename);
-	if (!expectedValuesInfile.is_open())
-	{
-		expectedValuesInfile.clear();
-		expectedValuesInfile.close();
-		expectedValuesInfile.open(expectedValuesFilename);
-		if (!expectedValuesInfile.is_open())
-			cout << "\nServer Error 409: Could not open the requested expected values file" << endl;
-		else;
-	}
-	Classify(validationDataFilename);
-}
-
 //lr_highest can be decided by us later and till then the default value is set to 1 (-Ami)
 void Network::checkLearningRate(int lr_highest)
 {
@@ -585,7 +755,7 @@ void Network::checkBatchSize()
 	//checks if the batchSize is not greater than the size of file
 	//use this piece of code only if training data file is opened before you call this function
 	//------------------------------------------------------------------------------------------------------
-	int end_of_file = filesize(trainingDataInfile);
+	int end_of_file = fileSize(trainingDataInfile);
 	while ((batchSize > end_of_file) || (batchSize < 0))
 	{
 		cout << "\nInvalid batch size..";
@@ -634,106 +804,6 @@ void Network::checkLayersString(string& layer_string)
 	} while (go_ahead < 1);
 }
 
-//An overloaded readInit() to read the required values, to create or classify a network, from the given file
-bool Network::readInit(const string & file)
-{
-	ifstream fin;
-	fin.open(file, ios_base::in); 
-	if (!fin.is_open())
-	{
-		fin.clear();
-		fin.open(file, ios_base::in);
-	}
-	else;
-
-	if (fin.is_open())
-	{
-		int i;
-		string cLayers;
-		getline(fin, trainingDataFilename);
-		getline(fin, expectedValuesFilename);
-		fin >> learningRate;
-		checkLearningRate();
-		fin >> batchSize;
-		fin >> epochs;
-		checkEpochs();
-		fin >> numLayers;
-		fin.seekg(2, ios::cur);
-		getline(fin, cLayers);
-		checkLayersString(cLayers);
-		layerSizes = Strtok<int>(cLayers, " ");
-		checkNumLayers();
-
-		//Resize the vectors of the matrices to numLayers
-		weights.resize(numLayers);
-		biases.resize(numLayers);
-		activations.resize(numLayers);
-		weightedInputs.resize(numLayers);
-		errors.resize(numLayers);
-		sumNablaB.resize(numLayers);
-		sumNablaW.resize(numLayers);
-
-		//resize the 0th member of the activations vector: layer_sizes[0] by 1, fill with zeros
-		activations[0].set_size(layerSizes[0], 1);
-		activations.push_back(zeros_matrix(activations[0]));
-
-		//Everything but the activations vector will have an effective size of num_layers-1, as their first element will be left unused.
-		for (i = 1; i < numLayers; i++)
-		{
-			//weights matrix at index i created of size: layerSizes[i] by layer_sizes[i-1]
-			weights[i].set_size(layerSizes[i], layerSizes[i - 1]);
-
-			//biases matrix at index i created of size: layerSizes[i] by 1
-			biases[i].set_size(layerSizes[i], 1);
-
-			//activations matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
-			activations[i].set_size(layerSizes[i], 1);
-			activations[i] = zeros_matrix(activations[i]);
-
-			//weightedInputs matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
-			weightedInputs[i].set_size(layerSizes[i], 1);
-			weightedInputs[i] = zeros_matrix(weightedInputs[i]);
-
-			//errors matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
-			errors[i].set_size(layerSizes[i], 1);
-			errors[i] = zeros_matrix(errors[i]);
-
-			//sumNablaB matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
-			sumNablaB[i].set_size(layerSizes[i], 1);
-			sumNablaB[i] = zeros_matrix(sumNablaB[i]);
-
-			//sumNablaB matrix at index i created of size: layerSizes[i] by 1, filled with Zeroes
-			sumNablaW[i].set_size(layerSizes[i], layerSizes[i - 1]);
-			sumNablaW[i] = zeros_matrix(sumNablaW[i]);
-
-			//end of the loop
-		}
-
-		//resize mini_batch_indices to batch_size
-		miniBatchIndices.resize(batchSize);
-
-		for (int i = 1; i < layerSizes.size(); i++)
-		{
-			fin.ignore(numeric_limits<streamsize>::max(), '\n');
-			for (int j = 0; j < layerSizes[i]; j++)
-				for (int k = 0; k < layerSizes[i - 1]; k++)
-					fin >> weights[i](j, k);
-			fin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-			fin.ignore(numeric_limits<streamsize>::max(), '\n');
-			for (int j = 0; j < layerSizes[i]; j++)
-				fin >> biases[i](j, 0);
-			fin.ignore(numeric_limits<streamsize>::max(), '\n');
-		}
-
-		return true;
-	}
-	else
-	{
-			cout << "Server error 402: Could not open the file requested! Try again later..";
-			return false;
-	}
-}
 
 //This constructor will be called when the user wants to train an existing network. It will retrieve all the required information the given file
 //and will then, prompt the user if user wants to change the values of hyperparameters. If so, it updates the values of hyperparameters
@@ -780,15 +850,6 @@ Network::Network(const string& previous_network_filename)
 		cout << "\nNumber of epochs: " << epochs;
 	}
 	else;
-}
-
-//Destructor will be called at the end of the main(). It will be responsible to close all the files and deallocate the dynamic memory that was being used.
-//Consider, having a close() to close the files, if there's going to be a loop in main()
-Network:: ~Network()
-{
-	trainingDataInfile.close();
-	expectedValuesInfile.close();
-	//destructor of dlib and vector class called
 }
 
 
