@@ -30,4 +30,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Data\D100.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\..\Data\T100.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
