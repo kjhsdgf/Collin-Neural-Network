@@ -9,6 +9,7 @@
 	- #### [SNAP](https://snap.stanford.edu/snap/)
 	- #### [GraphViz](http://www.graphviz.org/)
 	- #### [StackExchange, coding and printing a graph](https://codereview.stackexchange.com/questions/36464/coding-and-printing-a-graph)
+## 3. Use MNIST dataset as training input to train the network 
 
 # Additional Tips from Slater
 ## 1. Use argv[0] to do file navigation! It contains the entire filepath!
