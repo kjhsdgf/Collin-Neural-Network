@@ -89,7 +89,7 @@ void	Network::initStateTable()
 	}
 	strings.resize(numLayers);
 	for (i = 0; i < numLayers; i++)
-		strings[i] = 0;
+		strings[i] = -1;
 }
 
 //-----------------------------------------------------	~ AN EXAMPLE ~ ----------------------------------------------------------
@@ -115,7 +115,7 @@ void	Network::initStateTable()
 void Network::takeInput(int index)
 {
 	int j;
-	if (strings[index])
+	if (strings[index] != -1)
 		Switch(stateTable(strings[index], index), index);
 	else
 	{
