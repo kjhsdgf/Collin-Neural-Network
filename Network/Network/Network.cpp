@@ -484,6 +484,7 @@ void Network::checkBatchSize()
 			continue;
 	}
 }
+
 void Network::checkLayersString(string& layer_string)
 {
 	//checks the string of layer sizes
