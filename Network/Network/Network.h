@@ -13,10 +13,9 @@
 using namespace std;
 using namespace dlib;
 
-typedef matrix<double>		Matrix;
+typedef matrix<double>			Matrix;
 typedef std::vector<Matrix> 	VMatrix;
-typedef std::vector<int>	Vector;
-typedef Matrix(*activationsType) (int);
+typedef std::vector<int>		Vector;
 
 	/**********Prototypes for Auxillary Methods***************/
 const Matrix		activationFunction(const Matrix&);
@@ -41,7 +40,6 @@ void										checkEpochs();
 void										checkLayersString(string&);
 void										checkLearningRate(int = 1);
 void										checkNumLayers();
-//void										classify();
 void										classify(const string&);
 void										readInit();
 bool										readInit(const string&);
@@ -49,22 +47,22 @@ std::vector<double>							train();
 
 	//----Enums
 	enum Inputs {
-							inputBipolarSigmoid,
-							inputComplementaryLog_Log,
-							inputCosine,
-							inputLeakyRelu,
-							inputLeCun_stanh,
-							inputLinear,
-							inputLogit,
-							inputMaxout,
-							inputRadialGaussian,
-							inputRectifier,
-							inputSigmoid,
-							inputSmoothRectifier,
-							inputSoftmax,
-							inputTanh,
+											inputBipolarSigmoid,
+											inputComplementaryLog_Log,
+											inputCosine,
+											inputLeakyRelu,
+											inputLeCun_stanh,
+											inputLinear,
+											inputLogit,
+											inputMaxout,
+											inputRadialGaussian,
+											inputRectifier,
+											inputSigmoid,
+											inputSmoothRectifier,
+											inputSoftmax,
+											inputTanh,
 
-							numActivations
+											numActivations
 	};
 
 private:
@@ -80,6 +78,7 @@ private:
 	VMatrix								sumNablaW;
 	VMatrix								biases;
 	VMatrix								activations;
+	//VMatrix							activationPrime;
 	VMatrix								weightedInputs;
 	VMatrix								errors;
 	VMatrix								sumNablaB;
@@ -113,28 +112,107 @@ private:
 	std::vector<T>						Strtok(const string&, char[]);
 
 	//Activation Functions:
-	static Matrix						bipolarSigmoid(int);
-	static Matrix						cosine(int);
-	static Matrix						leakyRelu(int);
-	static Matrix						LeCun_stanh(int);
-	static Matrix						linear(int);
-	static Matrix						log_Log(int);
-	static Matrix						logit(int);
-	static Matrix						maxout(int);
-	static Matrix						rectifier(int);
-	static Matrix						radialGaussian(int);
-	static Matrix						sigmoid(int);
-	static Matrix						smoothRectifier(int);
-	static Matrix						softmax(int);
-	static Matrix						tanh(int);
+	/*void								linear(int);
+	void								Sigmoid(int);
+	void								logLog(int);
+	void								bipolarSigmoid(int);
+	void								Tanh(int);
+	void								LeCun_stanh(int);
+	void								rectifier(int);
+	void								smoothRectifier(int);
+	void								logit(int);
+	void								softmax(int);
+	void								radialGaussian(int);
+	void								maxout(int);
+	void								leakyRelu(int);
+	void								cosine(int);*/
 
-	//Declarations related to state table:
-		//Required Attributes:
-	static activationsType				activationFuncs[numActivations];	//array of functions with return type matrix and parameter of int
+	/*//--------------------Declarations related to state table------------------------------------
+
+	//Required Attritubes ->
 	matrix<unsigned char>				stateTable;
+	std::vector<string>					setActivations;
 
-		//Required Methods:
+	//Required Methods ->
+	void								Switch(unsigned char, int);
 	void								initStateTable();
-	Matrix								takeInput(int);
+	Matrix								takeInput(int);*/
+
 };
+
+//--------------------------------------------------------------------------------------------------------------------
+//					Definitions of some inline and template functions related to the class
+//--------------------------------------------------------------------------------------------------------------------
+
+//hadamardProduct utilizes dlib's pointwise_multiply() to compute the element-by-element product.
+inline const Matrix Network::hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
+{
+	return pointwise_multiply(input_matrix_L, input_matrix_R);
+}
+
+template <class T>
+std::vector<T> Network::Strtok(const string& str, char Separator[])
+{
+	char * pN;
+	std::vector<T> v;
+	char *p = new char[str.size() + 1];
+	strcpy(p, str.c_str());
+	pN = strtok(p, Separator);
+	while (pN != NULL)
+	{
+		v.push_back(atof(pN));
+		pN = strtok(NULL, Separator);
+	}
+	delete[] p;
+	return v;
+}
+
+template<class T>
+const matrix<T> Network::getM(ifstream& fin, int i)
+{
+	std::vector<T> v2;
+	matrix<T> m;
+	if (i >= 0)
+	{
+		fin.seekg(0);
+		string str;
+		for (int j = 0; j <= i; j++)
+			getline(fin, str);
+		v2 = Strtok<T>(str, ",");
+		m.set_size(v2.size(), 1);
+		for (int i = 0; i < v2.size(); i++)
+		{
+			m(i, 0) = v2[i];
+		}
+		return m;
+	}
+	else
+	{
+		cout << "\n Server error 403: Found Invalid Index" << endl;
+		m.set_size(0, 0);
+		return m;
+	}
+}
+
+template<class T>
+std::vector<T> Network::getV(ifstream& fin, int i)
+{
+	std::vector<T> v;
+	if (i >= 0)
+	{
+		fin.seekg(0);
+		string str;
+		for (int j = 0; j <= i; j++)
+			getline(fin, str);
+		v = Strtok<T>(str, ",");
+		return v;
+	}
+	else
+	{
+		cout << "\n Server error 404: Found Invalid Index" << endl;
+		v.resize(0);
+		return v;
+	}
+}
+
 #endif
