@@ -1,150 +1,164 @@
 #ifndef NETWORK_H
+
 #define NETWORK_H
 
 #include <iostream>
 #include <fstream>
 #include <dlib\matrix.h>
-#include <dlib\matrix\matrix_math_functions.h>
 #include <string>
-#include <time.h>
+#include<ctype.h>
+#include<time.h>
 #include <vector>
-#include <math.h>
+#include <dlib\matrix\matrix_math_functions.h>
+
 
 using namespace std;
 using namespace dlib;
 
-typedef matrix<double>			Matrix;
-typedef std::vector<Matrix> 	VMatrix;
-typedef std::vector<int>		Vector;
-
-	/**********Prototypes for Auxillary Methods***************/
-const Matrix		activationFunction(const Matrix&);
-const Matrix		activationPrime(const Matrix&);
-const Matrix		costPrime(const Matrix&, const Matrix&);
-const double		distribution(const int num_neurons_in);
-void				FYShuffle(Vector&);
-void				randomizeMatrix(Matrix &);
+typedef matrix<double> Matrix;
+typedef std::vector<Matrix> VMatrix;
+typedef std::vector<int> Vector;
 
 class Network
 {
 public:
-	/**********Constructors and Destructors*******************/
-											Network();
-											Network(const string&);
-											Network(const string&, const string&);
-											~Network();
 
-	/**********Public Methods*********************************/
-void										checkBatchSize();
-void										checkEpochs();
-void										checkLayersString(string&);
-void										checkLearningRate(int = 1);
-void										checkNumLayers();
-void										classify(const string&);
-void										readInit();
-bool										readInit(const string&);
-std::vector<double>							train();
+	//**********Constructors and Destructors*******************
+						Network();
+						Network(const string&, const string&);
+						Network(const string&);
+						~Network();
+
+	//**********Public Accessible Methods**********************
+	std::vector<double>	train();
+	void				classify(const string&);
+
+	//***********Methods that read size of each layer, number of epochs, learning rate and the batch size for the network*********
+	//---------------------------Also, the number of layers is calculated in these methods----------------------------------------
+	bool				readInit(const string&);
+	void				readInit();
+
+	//---------------------Methods to check the typo errors by the users--------------------
+	void				checkLearningRate(int = 1);		//the highest value for the learning rate is set by default to 1 but can be changed while calling the function
+	void				checkEpochs();
+	void				checkBatchSize();
+	void				checkLayersString(string&);
+	void				checkNumLayers();
+
+	//---------------------Methods to output the patterns generated--------------------------
+	void				displayActivations(const Matrix& , ostream&  = cout);
+	void				displayActivationPrimes(ostream& = cout);
+	void				createActivationsFile(const Matrix&);
 
 	//----Enums
 	enum Inputs {
-											inputBipolarSigmoid,
-											inputComplementaryLog_Log,
-											inputCosine,
-											inputLeakyRelu,
-											inputLeCun_stanh,
-											inputLinear,
-											inputLogit,
-											inputMaxout,
-											inputRadialGaussian,
-											inputRectifier,
-											inputSigmoid,
-											inputSmoothRectifier,
-											inputSoftmax,
-											inputTanh,
+		inputLinear,
+		inputSigmoid,
+		inputComplementaryLog_Log,
+		inputBipolarSigmoid,
+		inputTanh,
+		inputLeCun_stanh,
+		inputRectifier,
+		inputSmoothRectifier,
+		inputLogit,
+		inputSoftmax,
+		inputRadialGaussian,
+		inputMaxout,
+		inputLeakyRelu,
+		inputCosine,
 
-											numActivations
+		numActivations
 	};
 
 private:
-	/**********Private Data Members***************************/
-	double								learningRate;
-	int									batchSize;
-	int									epochs;
-	int 								numLayers;
-	struct layerReport				 	{ bool isAmbiguous; Matrix cleanOutput; };
-	std::vector<string>					wrongInputs;
 
-	VMatrix								weights;
-	VMatrix								sumNablaW;
-	VMatrix								biases;
-	VMatrix								activations;
-	//VMatrix							activationPrime;
-	VMatrix								weightedInputs;
-	VMatrix								errors;
-	VMatrix								sumNablaB;
+	//Private Data Members:->
+	double				learningRate;
+	int					batchSize;
+	int					epochs;
+	int 				numLayers;
 
-	Vector								miniBatchIndices;
-	Vector								layerSizes;
+	VMatrix				weights;
+	VMatrix				sumNablaW;
+	VMatrix				biases;
+	VMatrix				activations;
+	VMatrix				weightedInputs;
+	VMatrix				errors;
+	VMatrix				sumNablaB;
 
-	string								trainingDataFilename;
-	string								expectedValuesFilename;
-	ifstream							trainingDataInfile;
-	ifstream							expectedValuesInfile;
+	Vector				miniBatchIndices;
+	Vector				layerSizes;
+	VMatrix				activationPrime;
+	std::vector<string>	wrongInputs;
+	string				trainingDataFilename;
+	string				expectedValuesFilename;
+	ifstream			trainingDataInfile;
+	ifstream			expectedValuesInfile;
 
-	/**********Private Methods******************************/
-	bool								backProp(int);
-	bool								writeToFile() const;
-	const Matrix						hadamardProduct(const Matrix&, const Matrix&);
-	int									compareOutput(const Matrix&);
-	int									fileSize(istream&);
-	int									SGD();
-	layerReport							outputLayerReport();
-	void								forwardProp(ifstream&, const int);
-	void								updateWeightsAndBiases();
-	
-	template<class T>
-	const matrix<T>						getM(ifstream&, const int);
-	
-	template <class T>	 
-	std::vector<T> 						getV(ifstream&, const int);
-	
+	struct 				layerReport { bool isAmbiguous; Matrix cleanOutput; };
+
+
+	//Private Functions:->
+	bool				writeToFile() const;
+	bool				backProp(int);
+	void				forwardProp(int, ifstream &);
+	int					SGD();
+	layerReport			outputLayerReport();
+	void				updateWeightsAndBiases();
+	int					filesize(istream&);
+	bool				compareOutput(const Matrix&);
+	const Matrix		hadamardProduct(const Matrix&, const Matrix&);
+
 	template <class T>
-	std::vector<T>						Strtok(const string&, char[]);
+	void				FYShuffle(std::vector<T>& v);
 
-	//Activation Functions:
-	/*void								linear(int);
-	void								Sigmoid(int);
-	void								logLog(int);
-	void								bipolarSigmoid(int);
-	void								Tanh(int);
-	void								LeCun_stanh(int);
-	void								rectifier(int);
-	void								smoothRectifier(int);
-	void								logit(int);
-	void								softmax(int);
-	void								radialGaussian(int);
-	void								maxout(int);
-	void								leakyRelu(int);
-	void								cosine(int);*/
+	template<class T>
+	const matrix<T>			getM(ifstream&, int);	//A function to return a column matrix at any position i in the given file
 
-	/*//--------------------Declarations related to state table------------------------------------
+	template<class T>
+	std::vector<T>			getV(ifstream&, int);
+
+	template <class T>
+	std::vector<T>			Strtok(const string&, char[]);
+
+	//Activation Methods:
+	 void		linear(int);
+	 void		Sigmoid(int);
+	 void		logLog(int);
+	 void		bipolarSigmoid(int);
+	 void		Tanh(int);
+	 void		LeCun_stanh(int);
+	 void		rectifier(int);
+	 void		smoothRectifier(int);
+	 void		logit(int);
+	 void		softmax(int);
+	 void		radialGaussian(int);
+	 void		maxout(int);
+	 void		leakyRelu(int);
+	 void		cosine(int);
+
+	//--------------------Declarations related to state table------------------------------------
 
 	//Required Attritubes ->
-	matrix<unsigned char>				stateTable;
-	std::vector<string>					setActivations;
+	matrix<unsigned char>	stateTable;
+	std::vector<string>		setActivations;
 
 	//Required Methods ->
-	void								Switch(unsigned char, int);
-	void								initStateTable();
-	void								takeInput(int);*/
-
+	void				Switch(unsigned char, int);
+	void				initStateTable();
+	void				takeInput(int);
 };
 
-//--------------------------------------------------------------------------------------------------------------------
-//					Definitions of some inline and template functions related to the class
-//--------------------------------------------------------------------------------------------------------------------
+//---------Functions outside the class (Auxiliary functions)----------------------------------------
+const Matrix activationFunction(const Matrix& weighted_inputs);
+const Matrix activationPrime(const Matrix &input_matrix);
+const Matrix costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
+const double distribution(const int num_neurons_in);
+	  void   randomizeMatrix(Matrix &);
 
-//hadamardProduct utilizes dlib's pointwise_multiply() to compute the element-by-element product.
+//---------------------------------------------------------------------------------------------------
+
+
 inline const Matrix Network::hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
 {
 	return pointwise_multiply(input_matrix_L, input_matrix_R);
@@ -166,6 +180,19 @@ std::vector<T> Network::Strtok(const string& str, char Separator[])
 	delete[] p;
 	return v;
 }
+
+template <class T>
+void Network::FYShuffle(std::vector<T>& v)
+{
+	for (int i = v.size() - 1; i > 0; i--)
+	{
+		int randI = std::rand() % i;
+		T temp = v[i];
+		v[i] = v[randI];
+		v[randI] = temp;
+	}
+}
+
 
 template<class T>
 const matrix<T> Network::getM(ifstream& fin, int i)
@@ -216,3 +243,5 @@ std::vector<T> Network::getV(ifstream& fin, int i)
 }
 
 #endif
+
+
