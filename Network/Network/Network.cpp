@@ -743,8 +743,8 @@ bool Network::backProp(int index)
 		sumNablaW[i] += errors[i] * trans(activations[i - 1]);
 	}
 
-	displayActivations(expectedValues);
-	createActivationsFile(expectedValues);
+	/*displayActivations(expectedValues);
+	createActivationsFile(expectedValues);*/
 	return correct;
 }
 

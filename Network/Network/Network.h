@@ -6,8 +6,8 @@
 #include <fstream>
 #include <dlib\matrix.h>
 #include <string>
-#include<ctype.h>
-#include<time.h>
+#include <ctype.h>
+#include <time.h>
 #include <vector>
 #include <dlib\matrix\matrix_math_functions.h>
 
