@@ -25,6 +25,7 @@ const double		distribution(const int num_neurons_in);
 void				FYShuffle(Vector&);
 void				randomizeMatrix(Matrix &);
 
+
 class Network
 {
 public:
@@ -73,6 +74,8 @@ private:
 	int 								numLayers;
 	struct layerReport				 	{ bool isAmbiguous; Matrix cleanOutput; };
 	std::vector<string>					wrongInputs;
+	std::vector<double>					trainingData;
+	std::vector<double>					truthValues;
 
 	VMatrix								weights;
 	VMatrix								sumNablaW;
@@ -215,4 +218,9 @@ std::vector<T> Network::getV(ifstream& fin, int i)
 	}
 }
 
+//******************************
+//
+//MY CHANGES - YONATAN!!!!
+//
+//******************************
 #endif
