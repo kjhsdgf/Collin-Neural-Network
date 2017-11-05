@@ -1,4 +1,4 @@
-﻿#include <math.h>
+#include <math.h>
 #include "Network.h"
 
 std::vector<int> strings;
@@ -52,6 +52,7 @@ void Network :: Switch(unsigned char e, int index)
 	default:
 		{
 			cout << "Unknown input..Try again";
+			strings[index] = 0;
 			takeInput(index);
 		}
 	}
