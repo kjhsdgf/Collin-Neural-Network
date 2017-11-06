@@ -295,7 +295,11 @@ Network::Network()
 		getline(cin, expectedValuesFilename);
 		expectedValuesInfile.open(expectedValuesFilename);
 	}
+
+
+
 	initStateTable();
+	initTrainingData();
 
 	//resize the VMatrix's to match input
 	weights.resize(numLayers);
@@ -416,6 +420,7 @@ bool  Network::writeToFile() const
 Network::Network(const string& networkFilename, const string& validationDataFilename)
 {
 	readInit(networkFilename);
+	initTrainingData();
 	classify(validationDataFilename);
 }
 //lr_highest can be decided by us later and till then the default value is set to 1 (-Ami)
@@ -657,6 +662,7 @@ Network::Network(const string& previous_network_filename)
 			cout << "\nServer Error 407: Could not open the requested expected values file" << endl;
 		else;
 	}
+	initTrainingData();
 	char c;
 	string str;
 	cout << "\nWould you like to change the values of hyperparameters? Press Y/N:-> ";
@@ -704,7 +710,7 @@ int Network::SGD()
 void Network::forwardProp(const int batchIndex, ifstream& infile)
 {
 	//extract data point from training data file at input indice into first layer of activations
-	activations[0] = getM<double>(infile, batchIndex);
+	activations[0] = getM<double>(false, batchIndex);
 	for (int i = 1; i < numLayers; i++)
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
 		//activations[i] = activationFunction(weightedInputs[i]); 
@@ -726,7 +732,7 @@ bool Network::backProp(int index)
 {
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
-	Matrix expectedValues = getM<double>(expectedValuesInfile, index);
+	Matrix expectedValues = getM<double>(true, index);
 
 	bool correct = compareOutput(expectedValues);
 
@@ -790,6 +796,41 @@ bool Network::compareOutput(const Matrix& expectedValues)
 		return false;
 }
 
+std::vector<double> Network::tokenize(const string& line, char delims[])
+{
+	char* cStrLine = new char[line.size() + 1];
+	strcpy(cStrLine, line.c_str());
+	std::vector<double> tokens;
+	for (char *p = strtok(cStrLine, delims); p != NULL; p = strtok(NULL, delims))
+		tokens.push_back(atof(p));
+	delete[] cStrLine;
+	return tokens;
+}
+
+bool Network::getNext(std::vector<double>& nextData, std::vector<double>& nextTruth)
+{
+	if (!trainingDataInfile.is_open() || !expectedValuesInfile.is_open())
+		return false;
+	string dataLine, truthLine;
+	getline(trainingDataInfile, dataLine); getline(expectedValuesInfile, truthLine);
+	if (dataLine.length() == 0 || truthLine.length() == 0)
+		return false;
+	nextData = tokenize(dataLine);
+	nextTruth = tokenize(truthLine);
+	return true;
+}
+
+void Network::initTrainingData()
+{
+	std::vector<double> nextData;
+	std::vector<double> nextTruth;
+	while (getNext(nextData, nextTruth))
+	{
+		trainingData.push_back(nextData);
+		expectedValues.push_back(nextTruth);
+	}
+}
+
 void Network::readInit() // reading from console
 {
 	cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
@@ -836,7 +877,8 @@ void Network::readInit() // reading from console
 std::vector<double> Network::train()
 {
 	std::vector<double> efficiency(epochs);
-	int trainingDataSize = filesize(trainingDataInfile);
+	int trainingDataSize = trainingData.size();
+	cout << "trainingdatasize: " << trainingDataSize << "\nexpectedvalssize: " << expectedValues.size() << endl;
 
 	Vector trainingDataIndices(trainingDataSize);
 	for (int i = 0; i < trainingDataSize; i++)
@@ -949,7 +991,7 @@ void Network::classify(const string &validation_data_filename)
 	//Loop through samples
 	while (!validationDataInfile.eof())
 	{
-		currentSample = getM<double>(validationDataInfile, i);
+		currentSample = getM<double>(true, i);//CHHAAAAAAAAAANGE!!!!!
 		forwardProp(i, validationDataInfile);
 		report = outputLayerReport();
 		isAmbiguous = report.isAmbiguous;
@@ -959,12 +1001,12 @@ void Network::classify(const string &validation_data_filename)
 			numAmbiguousData++;
 
 		//print out the classification into a file
-		classificationOutput << "Network Input:  " << dlib::trans(getM<double>(validationDataInfile, i));
+		classificationOutput << "Network Input:  " << dlib::trans(getM<double>(true, i));//CHHAAAAAAAAAANGE!!!!!
 		classificationOutput << "Network Output: " << dlib::trans(activations[numLayers - 1]);
 		classificationOutput << "Classification: " << dlib::trans(cleanedOutput) << '\n';
 
 		//print out classification into cmd prompt
-		std::cout << "Network Input:  " << dlib::trans(getM<double>(validationDataInfile, i++));	//NOTICE, the i++ is in this line!
+		std::cout << "Network Input:  " << dlib::trans(getM<double>(true, i++));	//NOTICE, the i++ is in this line! //CHHAAAAAAAAAANGE!!!!!
 		std::cout << "Network Output: " << dlib::trans(activations[numLayers - 1]);
 		std::cout << "Classification: " << dlib::trans(cleanedOutput) << '\n';
 	}
