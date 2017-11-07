@@ -1,4 +1,3 @@
-#include <math.h>
 #include "Network.h"
 
 std::vector<int> strings;
@@ -58,7 +57,7 @@ void Network :: Switch(unsigned char e, int index)
 	}
 }
 
-void	Network::initStateTable()
+void Network::initStateTable()
 {
 	cout << "-------------Here's the list of all the valid activation functions that can be used for the network---------------";
 	cout << "\n1) Linear Function" << endl;
@@ -325,7 +324,7 @@ Network::Network()
 	miniBatchIndices.resize(batchSize);
 }
 
-Network:: ~Network()
+Network::~Network()
 {
 	
 	trainingDataInfile.close();
@@ -333,8 +332,7 @@ Network:: ~Network()
 	//destructor of dlib and vector class called
 }
 
-
-bool  Network::writeToFile() const
+bool Network::writeToFile() const
 {
 	/*This method creates a file named "Previous_Network_[Day][Time(hhmin)].txt" and
 	writes all the required parameters of the class network in the file.
@@ -394,11 +392,13 @@ bool  Network::writeToFile() const
 		return false;
 	}
 }
+
 Network::Network(const string& networkFilename, const string& validationDataFilename)
 {
 	readInit(networkFilename);
 	classify(validationDataFilename);
 }
+
 //lr_highest can be decided by us later and till then the default value is set to 1 (-Ami)
 void Network::checkLearningRate(int lr_highest)
 {
@@ -429,6 +429,7 @@ void Network::checkLearningRate(int lr_highest)
 	}
 
 }
+
 void Network::checkEpochs()
 {
 	//--------------------------------------------------------------------------------------------------------
@@ -469,6 +470,7 @@ void Network::checkBatchSize()
 			continue;
 	}
 }
+
 void Network::checkLayersString(string& layer_string)
 {
 	//checks the string of layer sizes
@@ -960,7 +962,7 @@ void Network::classify(const string &validation_data_filename)
 	validationDataInfile.close();
 }
 
-void	Network::displayActivations(const Matrix& expectedValues, ostream& out)
+void Network::displayActivations(const Matrix& expectedValues, ostream& out)
 {
 	out << "--------------------------------------------------" << endl;
 	out << "Input: " << trans(activations[0]) << endl;
@@ -972,14 +974,14 @@ void	Network::displayActivations(const Matrix& expectedValues, ostream& out)
 	out << "--------------------------------------------------" << endl;
 }
 
-void	Network::displayActivationPrimes(ostream& out)
+void Network::displayActivationPrimes(ostream& out)
 {
 	for (int i = 1; i < (numLayers - 1); i++)
 		out << "Activation prime value at Hidden Layer " << i << ":" << trans(activationPrime[i]) << endl;
 	out << "Activation prime value at Output: " << trans(activationPrime[numLayers - 1]) << endl;
 }
 
-void	Network::createActivationsFile(const Matrix& expectedValues)
+void Network::createActivationsFile(const Matrix& expectedValues)
 {
 	ofstream outfile;
 	string a("Activations");
@@ -993,4 +995,3 @@ void	Network::createActivationsFile(const Matrix& expectedValues)
 	displayActivations(expectedValues, outfile);
 	outfile.close();
 }
-

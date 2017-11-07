@@ -1,8 +1,8 @@
 #ifndef NETWORK_H
-
 #define NETWORK_H
 
 #include <iostream>
+#include <math.h>
 #include <fstream>
 #include <dlib\matrix.h>
 #include <string>
@@ -11,46 +11,49 @@
 #include <vector>
 #include <dlib\matrix\matrix_math_functions.h>
 
-
 using namespace std;
 using namespace dlib;
 
-typedef matrix<double> Matrix;
-typedef std::vector<Matrix> VMatrix;
-typedef std::vector<int> Vector;
+typedef matrix<double>		Matrix;
+typedef std::vector<Matrix>	VMatrix;
+typedef std::vector<int>	Vector;
+
+	//---------Functions outside the class (Auxiliary functions):->
+const Matrix	activationFunction(const Matrix& weighted_inputs);
+const Matrix	activationPrime(const Matrix &input_matrix);
+const Matrix	costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
+const double	distribution(const int num_neurons_in);
+void			randomizeMatrix(Matrix &);
 
 class Network
 {
 public:
 
-	//**********Constructors and Destructors*******************
+	//---------Constructors and Destructors:->
 						Network();
 						Network(const string&, const string&);
 						Network(const string&);
 						~Network();
 
-	//**********Public Accessible Methods**********************
+	//---------Publicly Accessible Methods:->
 	std::vector<double>	train();
 	void				classify(const string&);
-
-	//***********Methods that read size of each layer, number of epochs, learning rate and the batch size for the network*********
-	//---------------------------Also, the number of layers is calculated in these methods----------------------------------------
 	bool				readInit(const string&);
 	void				readInit();
 
-	//---------------------Methods to check the typo errors by the users--------------------
+	//---------Setter/Mutator methods (input validation done here as well):->
 	void				checkLearningRate(int = 1);		//the highest value for the learning rate is set by default to 1 but can be changed while calling the function
 	void				checkEpochs();
 	void				checkBatchSize();
 	void				checkLayersString(string&);
 	void				checkNumLayers();
 
-	//---------------------Methods to output the patterns generated--------------------------
+	//---------Methods to output activation values to a txt file:->
 	void				displayActivations(const Matrix& , ostream&  = cout);
 	void				displayActivationPrimes(ostream& = cout);
 	void				createActivationsFile(const Matrix&);
 
-	//----Enums
+	//---------Enums:->
 	enum Inputs {
 		inputLinear,
 		inputSigmoid,
@@ -72,7 +75,7 @@ public:
 
 private:
 
-	//Private Data Members:->
+	//---------Private Data Members:->
 	double				learningRate;
 	int					batchSize;
 	int					epochs;
@@ -98,7 +101,7 @@ private:
 	struct 				layerReport { bool isAmbiguous; Matrix cleanOutput; };
 
 
-	//Private Functions:->
+	//---------Private Functions:->
 	bool				writeToFile() const;
 	bool				backProp(int);
 	void				forwardProp(int, ifstream &);
@@ -113,51 +116,41 @@ private:
 	void				FYShuffle(std::vector<T>& v);
 
 	template<class T>
-	const matrix<T>			getM(ifstream&, int);	//A function to return a column matrix at any position i in the given file
+	const matrix<T>		getM(ifstream&, int);	//A function to return a column matrix at any position i in the given file
 
 	template<class T>
-	std::vector<T>			getV(ifstream&, int);
+	std::vector<T>		getV(ifstream&, int);
 
 	template <class T>
-	std::vector<T>			Strtok(const string&, char[]);
+	std::vector<T>		Strtok(const string&, char[]);
 
-	//Activation Methods:
-	 void		linear(int);
-	 void		Sigmoid(int);
-	 void		logLog(int);
-	 void		bipolarSigmoid(int);
-	 void		Tanh(int);
-	 void		LeCun_stanh(int);
-	 void		rectifier(int);
-	 void		smoothRectifier(int);
-	 void		logit(int);
-	 void		softmax(int);
-	 void		radialGaussian(int);
-	 void		maxout(int);
-	 void		leakyRelu(int);
-	 void		cosine(int);
+	//---------Activation Methods:->
+	 void				linear(int);
+	 void				Sigmoid(int);
+	 void				logLog(int);
+	 void				bipolarSigmoid(int);
+	 void				Tanh(int);
+	 void				LeCun_stanh(int);
+	 void				rectifier(int);
+	 void				smoothRectifier(int);
+	 void				logit(int);
+	 void				softmax(int);
+	 void				radialGaussian(int);
+	 void				maxout(int);
+	 void				leakyRelu(int);
+	 void				cosine(int);
 
-	//--------------------Declarations related to state table------------------------------------
+	//---------Declarations related to state table:->
 
-	//Required Attritubes ->
+		//Required Attributes:->
 	matrix<unsigned char>	stateTable;
 	std::vector<string>		setActivations;
 
-	//Required Methods ->
+		//Required Methods:->
 	void				Switch(unsigned char, int);
 	void				initStateTable();
 	void				takeInput(int);
 };
-
-//---------Functions outside the class (Auxiliary functions)----------------------------------------
-const Matrix activationFunction(const Matrix& weighted_inputs);
-const Matrix activationPrime(const Matrix &input_matrix);
-const Matrix costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
-const double distribution(const int num_neurons_in);
-	  void   randomizeMatrix(Matrix &);
-
-//---------------------------------------------------------------------------------------------------
-
 
 inline const Matrix Network::hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
 {
@@ -243,5 +236,3 @@ std::vector<T> Network::getV(ifstream& fin, int i)
 }
 
 #endif
-
-
