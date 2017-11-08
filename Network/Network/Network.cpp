@@ -3,7 +3,7 @@
 
 std::vector<int> strings;
 
-void Network :: Switch(unsigned char e, int index)
+void Network::Switch(unsigned char e, int index)
 {
 	switch (e)
 	{
@@ -12,7 +12,7 @@ void Network :: Switch(unsigned char e, int index)
 		break;
 	case inputSigmoid:
 		Sigmoid(index);
-		break; 
+		break;
 	case inputComplementaryLog_Log:
 		logLog(index);
 		break;
@@ -50,10 +50,11 @@ void Network :: Switch(unsigned char e, int index)
 		cosine(index);
 		break;
 	default:
-		{
-			cout << "Unknown input..Try again";
-			takeInput(index);
-		}
+	{
+		cout << "Unknown input..Try again";
+		strings[0];
+		takeInput(index);
+	}
 	}
 }
 
@@ -74,7 +75,7 @@ void	Network::initStateTable()
 	cout << "\n12) Maxout Function " << endl;
 	cout << "\n13) Leaky Rectifier Linear Function" << endl;
 	cout << "\n14) Cosine Function " << endl;
-	
+
 	stateTable.set_size(numActivations + 1, numLayers);
 	int i = 0, j = 0;
 	while (i < stateTable.nr())
@@ -95,7 +96,7 @@ void	Network::initStateTable()
 //-----------------------------------------------------	~ AN EXAMPLE ~ ----------------------------------------------------------
 //unsigned char	Network::StateTable[numActivations + 1][(if numLayers =) 5] = {
 
-							//Layers:	0		1		2		3		4		
+//Layers:	0		1		2		3		4		
 /* inputLinear				 	{		0,		0,		0,		0,		0,		},	*/
 /* inputSigmoid				 	{		1,		1,		1,		1,		1,		},	*/
 /* inputComplementaryLog_Log 	{		2,		2,		2, 		2, 		2, 		},	*/
@@ -282,7 +283,6 @@ Network::Network()
 		getline(cin, trainingDataFilename);
 		trainingDataInfile.open(trainingDataFilename);
 	}
-	checkBatchSize();
 	//Ask for expected values filename and open it
 	cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:" << endl;
 	cin >> expectedValuesFilename;
@@ -295,8 +295,12 @@ Network::Network()
 		getline(cin, expectedValuesFilename);
 		expectedValuesInfile.open(expectedValuesFilename);
 	}
-	initStateTable();
 
+
+
+	initStateTable();
+	initTrainingData();
+	checkBatchSize();
 	//resize the VMatrix's to match input
 	weights.resize(numLayers);
 	biases.resize(numLayers);
@@ -346,7 +350,7 @@ Network::Network()
 
 Network:: ~Network()
 {
-	
+
 	trainingDataInfile.close();
 	expectedValuesInfile.close();
 	//destructor of dlib and vector class called
@@ -416,6 +420,7 @@ bool  Network::writeToFile() const
 Network::Network(const string& networkFilename, const string& validationDataFilename)
 {
 	readInit(networkFilename);
+	initTrainingData();
 	classify(validationDataFilename);
 }
 //lr_highest can be decided by us later and till then the default value is set to 1 (-Ami)
@@ -479,7 +484,7 @@ void Network::checkBatchSize()
 	//checks if the batchSize is not greater than the size of file
 	//use this piece of code only if training data file is opened before you call this function
 	//------------------------------------------------------------------------------------------------------
-	int end_of_file = filesize(trainingDataInfile);
+	int end_of_file = trainingData.size();
 	while ((batchSize > end_of_file) || (batchSize < 0))
 	{
 		cout << "\nInvalid batch size..";
@@ -646,7 +651,6 @@ Network::Network(const string& previous_network_filename)
 			cout << "\nServer Error 406: Could not open the requested training data file" << endl;
 		else;
 	}
-	checkBatchSize();
 	expectedValuesInfile.open(expectedValuesFilename);
 	if (!expectedValuesInfile.is_open())
 	{
@@ -657,6 +661,7 @@ Network::Network(const string& previous_network_filename)
 			cout << "\nServer Error 407: Could not open the requested expected values file" << endl;
 		else;
 	}
+	initTrainingData();
 	char c;
 	string str;
 	cout << "\nWould you like to change the values of hyperparameters? Press Y/N:-> ";
@@ -668,7 +673,6 @@ Network::Network(const string& previous_network_filename)
 		checkLearningRate();
 		cout << "\nEnter a value for batch size (x > 1): ";
 		cin >> batchSize;
-		checkBatchSize();
 		cout << "\nEnter a value for epochs (x > 1): ";
 		cin >> epochs;
 		checkEpochs();
@@ -679,6 +683,7 @@ Network::Network(const string& previous_network_filename)
 		cout << "\nNumber of epochs: " << epochs << endl;
 	}
 	else;
+	checkBatchSize();
 }
 
 int Network::SGD()
@@ -686,7 +691,7 @@ int Network::SGD()
 	int numCorrect = 0;
 	for (int i = 0; i < miniBatchIndices.size(); i++)
 	{
-		forwardProp(miniBatchIndices[i], trainingDataInfile);
+		forwardProp(miniBatchIndices[i]);
 		if (backProp(miniBatchIndices[i]))
 			numCorrect++;
 	}
@@ -701,13 +706,13 @@ int Network::SGD()
 	return numCorrect;
 }
 
-void Network::forwardProp(const int batchIndex, ifstream& infile)
+void Network::forwardProp(const int batchIndex)
 {
 	//extract data point from training data file at input indice into first layer of activations
-	activations[0] = getM<double>(infile, batchIndex);
+	activations[0] = getM<double>(false, batchIndex);
 	for (int i = 1; i < numLayers; i++)
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
-		//activations[i] = activationFunction(weightedInputs[i]); 
+	//activations[i] = activationFunction(weightedInputs[i]); 
 	for (int i = 1; i < numLayers; i++)
 		takeInput(i);
 }
@@ -726,7 +731,7 @@ bool Network::backProp(int index)
 {
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
-	Matrix expectedValues = getM<double>(expectedValuesInfile, index);
+	Matrix expectedValues = getM<double>(true, index);
 
 	bool correct = compareOutput(expectedValues);
 
@@ -790,6 +795,41 @@ bool Network::compareOutput(const Matrix& expectedValues)
 		return false;
 }
 
+std::vector<double> Network::tokenize(const string& line, char delims[])
+{
+	char* cStrLine = new char[line.size() + 1];
+	strcpy(cStrLine, line.c_str());
+	std::vector<double> tokens;
+	for (char *p = strtok(cStrLine, delims); p != NULL; p = strtok(NULL, delims))
+		tokens.push_back(atof(p));
+	delete[] cStrLine;
+	return tokens;
+}
+
+bool Network::getNext(std::vector<double>& nextData, std::vector<double>& nextTruth)
+{
+	if (!trainingDataInfile.is_open() || !expectedValuesInfile.is_open())
+		return false;
+	string dataLine, truthLine;
+	getline(trainingDataInfile, dataLine); getline(expectedValuesInfile, truthLine);
+	if (dataLine.length() == 0 || truthLine.length() == 0)
+		return false;
+	nextData = tokenize(dataLine);
+	nextTruth = tokenize(truthLine);
+	return true;
+}
+
+void Network::initTrainingData()
+{
+	std::vector<double> nextData;
+	std::vector<double> nextTruth;
+	while (getNext(nextData, nextTruth))
+	{
+		trainingData.push_back(nextData);
+		expectedValues.push_back(nextTruth);
+	}
+}
+
 void Network::readInit() // reading from console
 {
 	cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
@@ -836,7 +876,8 @@ void Network::readInit() // reading from console
 std::vector<double> Network::train()
 {
 	std::vector<double> efficiency(epochs);
-	int trainingDataSize = filesize(trainingDataInfile);
+	int trainingDataSize = trainingData.size();
+	cout << "trainingdatasize: " << trainingDataSize << "\nexpectedvaluesize: " << expectedValues.size() << endl;
 
 	Vector trainingDataIndices(trainingDataSize);
 	for (int i = 0; i < trainingDataSize; i++)
@@ -866,7 +907,7 @@ std::vector<double> Network::train()
 	return efficiency;
 }
 
-int Network::filesize(istream& in)
+/*int Network::filesize(istream& in)
 
 {
 	int count(0);
@@ -878,7 +919,7 @@ int Network::filesize(istream& in)
 	}
 	in.seekg(0, ios::beg);
 	return count;
-}
+}*/
 
 Network::layerReport Network::outputLayerReport()
 {
@@ -942,15 +983,15 @@ void Network::classify(const string &validation_data_filename)
 	bool isAmbiguous = report.isAmbiguous;								//stores state of ambiguity in network output
 	Matrix cleanedOutput = report.cleanOutput;							//stores "cleaned" output of network
 	int numAmbiguousData = 0;											//counts number of data in an ambiguous state
-	int numClassifications = filesize(validationDataInfile);			//counts number of data in validation data file
+	int numClassifications = expectedValues.size();			//counts number of data in validation data file
 	Matrix currentSample(layerSizes[numLayers - 1], 1);
 
 	//CLASSIFY
 	//Loop through samples
 	while (!validationDataInfile.eof())
 	{
-		currentSample = getM<double>(validationDataInfile, i);
-		forwardProp(i, validationDataInfile);
+		currentSample = getM<double>(true, i);//CHHAAAAAAAAAANGE!!!!!
+		forwardProp(i);
 		report = outputLayerReport();
 		isAmbiguous = report.isAmbiguous;
 		cleanedOutput = report.cleanOutput;
@@ -959,12 +1000,12 @@ void Network::classify(const string &validation_data_filename)
 			numAmbiguousData++;
 
 		//print out the classification into a file
-		classificationOutput << "Network Input:  " << dlib::trans(getM<double>(validationDataInfile, i));
+		classificationOutput << "Network Input:  " << dlib::trans(getM<double>(true, i));//CHHAAAAAAAAAANGE!!!!!
 		classificationOutput << "Network Output: " << dlib::trans(activations[numLayers - 1]);
 		classificationOutput << "Classification: " << dlib::trans(cleanedOutput) << '\n';
 
 		//print out classification into cmd prompt
-		std::cout << "Network Input:  " << dlib::trans(getM<double>(validationDataInfile, i++));	//NOTICE, the i++ is in this line!
+		std::cout << "Network Input:  " << dlib::trans(getM<double>(true, i++));	//NOTICE, the i++ is in this line! //CHHAAAAAAAAAANGE!!!!!
 		std::cout << "Network Output: " << dlib::trans(activations[numLayers - 1]);
 		std::cout << "Classification: " << dlib::trans(cleanedOutput) << '\n';
 	}
@@ -1002,10 +1043,10 @@ void	Network::createActivationsFile(const Matrix& expectedValues)
 {
 	ofstream outfile;
 	string a("Activations");
-	time_t currentTime = time(NULL);									
-	struct tm * t = localtime(&currentTime);				
-	char Time[8];										
-	strftime(Time, 8, "%a%H%M", t);		
+	time_t currentTime = time(NULL);
+	struct tm * t = localtime(&currentTime);
+	char Time[8];
+	strftime(Time, 8, "%a%H%M", t);
 	a += Time;
 	a += ".txt";
 	outfile.open(a, ios_base::out | ios_base::app);

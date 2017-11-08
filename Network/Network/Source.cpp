@@ -5,7 +5,7 @@ using namespace std;
 
 void main()
 {
-	Network N ("Previous_Network_Fri1005.txt");
+	Network N ("Previous_Network_Tue2316.txt");
 	//Network N;
 	std::vector<double> v = N.train();
 	ofstream outfile;
