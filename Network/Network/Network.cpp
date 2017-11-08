@@ -620,6 +620,7 @@ bool Network::readInit(const string & file)
 Network::Network(const string& previous_network_filename)
 {
 	readInit(previous_network_filename);
+	srand(time(0));
 	initStateTable();
 	trainingDataInfile.open(trainingDataFilename);
 	if (!trainingDataInfile.is_open())
@@ -877,12 +878,12 @@ std::vector<double> Network::train()
 			numCorrect += SGD();
 		}
 
-		efficiency[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
+		efficiency[i] = 100 * ((double)numCorrect) / (trainingDataSize);
 		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
 	}
 
-	if (!writeToFile())
-		cout << "\n Server error 405: Could not write network to file." << endl;
+	//if (!writeToFile())
+		//cout << "\n Server error 405: Could not write network to file." << endl;
 
 	return efficiency;
 }
