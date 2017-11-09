@@ -8,11 +8,11 @@ void main()
 {
 	try
 	{
-		Data<int> d;
+		Data<float> d;
 		d.CreateDataFile();
 		d.CreateTruthFile();
 		d.Display();
-		cout << d.GetTruth(0) << endl; //Shows truth value for the first 4-pixel image generated in the file
+		//cout << d.GetTruth(0) << endl; //Shows truth value for the first 4-pixel image generated in the file
 		cout << d[1];
 	}
 	catch (Data<int> ::Exceptions e)

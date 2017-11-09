@@ -5,8 +5,8 @@ using namespace std;
 
 void main()
 {
-	//Network N ("Previous_Network_Wed0022.txt");
-	Network N;
+	Network N ("Previous_Network_Wed1839.txt");
+	//Network N;
 	std::vector<double> v = N.train();
 	ofstream outfile;
 	outfile.open("Efficiency.txt", ios_base::out);
