@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1B7B4449-FDE0-4171-8C92-2F6B197C28A0}</ProjectGuid>
+    <ProjectGuid>{BD2F59A4-CAF9-4345-A132-DA83D98CF755}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Network</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
