@@ -3,10 +3,10 @@
 
 int main()
 {
-	//Network brain;
-	string prevNetwork = "C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Network\\Network\\Previous_Network_Fri0301.txt";
+	Network brain;
+	//string prevNetwork = "C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Network\\Network\\Previous_Network_Fri0301.txt";
 	//string valFile = "C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Data\\D100.txt";
-	Network brain(prevNetwork);
+	//Network brain(prevNetwork);
 	brain.train();
 	
 	//brain.classify(valFile);

@@ -3,6 +3,7 @@
 //#define DEBUG_ELI
 
 #include <iostream>
+#include <graphviz\gvc.h>
 #include <math.h>
 #include <fstream>
 #include <dlib\matrix.h>
