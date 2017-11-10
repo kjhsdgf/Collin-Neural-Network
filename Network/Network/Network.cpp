@@ -2,7 +2,7 @@
 
 std::vector<int> strings;
 
-void Network :: Switch(unsigned char e, int index)
+void Network :: activationFuncSwitch(unsigned char e, int index)
 {
 	switch (e)
 	{
@@ -52,7 +52,7 @@ void Network :: Switch(unsigned char e, int index)
 		{
 			cout << "Unknown input..Try again";
 			strings[index] = 0;
-			takeInput(index);
+			activationFuncSelect(index);
 		}
 	}
 }
@@ -92,17 +92,20 @@ void Network::initStateTable()
 		strings[i] = -1;
 }
 
-void Network::takeInput(int index)
+//Sets state table entry for the index'th layer if -1 is in "strings" data member (which holds ints, as it turns out).
+//If strings[index] is any number but -1, simply calls state table's switch statement (named "activationFuncSwitch") and that calls the appropriate
+//activation function. The activation functions will then set both activations[index] and activationsPrime[index].
+void Network::activationFuncSelect(int index)
 {
 	int j;
 	if (strings[index] != -1)
-		Switch(stateTable(strings[index], index), index);
+		activationFuncSwitch(stateTable(strings[index], index), index);
 	else
 	{
 		cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
 		cin >> j;
 		strings[index] = (static_cast<int>(j) - (1));
-		Switch(stateTable(strings[index], index), index);
+		//activationFuncSwitch(stateTable(strings[index], index), index);					<-- not sure why we are populating activations in this case.
 	}
 }
 
@@ -344,7 +347,6 @@ bool Network::writeToFile() const
 	std::vector<int>::const_iterator i1;
 	int i;
 	int j(0);
-	int k;
 	string a("Previous_Network_");
 	time_t _tm = time(NULL);
 	struct tm * curtime = localtime(&_tm);
@@ -689,10 +691,10 @@ void Network::forwardProp(const int batchIndex, ifstream& infile)
 	//extract data point from training data file at input indice into first layer of activations
 	activations[0] = getM<double>(infile, batchIndex);
 	for (int i = 1; i < numLayers; i++)
+	{
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
-		//activations[i] = activationFunction(weightedInputs[i]); 
-	for (int i = 1; i < numLayers; i++)
-		takeInput(i);
+		activationFuncSelect(i);
+	}
 }
 
 void Network::updateWeightsAndBiases()
@@ -710,9 +712,7 @@ bool Network::backProp(int index)
 	int lastInd = numLayers - 1;
 	int lastSize = layerSizes[lastInd];
 	Matrix expectedValues = getM<double>(expectedValuesInfile, index);
-
 	bool correct = compareOutput(expectedValues);
-
 
 	errors[lastInd] = hadamardProduct(costPrime(activations[lastInd], expectedValues), activationPrime[lastInd]);
 	sumNablaB[lastInd] += errors[lastInd];
@@ -738,7 +738,10 @@ bool Network::compareOutput(const Matrix& expectedValues)
 	int biggestI = -1; int expectedI = -1;
 	double biggest = 0;	int numBiggest = 0;
 	if (expectedValues.size() != lastSize)
+	{
+		cout << "Error in compareOutput: expected value matrix size is incompatible with output layer size.\n";
 		return 0;
+	}
 
 	for (int i = 0; i < lastSize; i++)
 	{
@@ -756,12 +759,12 @@ bool Network::compareOutput(const Matrix& expectedValues)
 		{
 			if (expectedI == -1) // if it's not been set before..
 				expectedI = i;
-			else				 // it it has it's bad data
+			else				 // if it has, then expectedValues has multiple 1's, so it's bad data
 				expectedI = -2;
 		}
 	}
 
-	if (biggestI == -1 || expectedI <= -1) // everything was smaller than 0 or expected is bad data (probably should throw excpetion instead actually)
+	if (biggestI == -1 || expectedI <= -1) // everything was smaller than 0 or expected is bad data (probably should throw exception instead actually)
 		return 0;
 
 	if (numBiggest > 0) // if there's more than 1 biggest, ambiguous data. don't even care if the indices match

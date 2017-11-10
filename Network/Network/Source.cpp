@@ -1,18 +1,13 @@
 #include<iostream>
-#include "Network.h"
 
 using namespace std;
 
-void main()
+int main()
 {
-	//Network N ("Previous_Network_Fri1005.txt");
-	Network N;
-	std::vector<double> v = N.train();
-	ofstream outfile;
-	outfile.open("Efficiency.txt", ios_base::out);
-	std::vector<double> ::const_iterator i1;
-	i1 = v.begin();
-	for (; i1 != v.end(); i1++)
-		outfile << (*i1) << '\n';
-	outfile.close();
+	int test;
+	//Network brain;
+	//brain.train();
+	//Network brain("C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Network\\Network\\Previous_Network_Fri0020.txt", "C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Data\\T100.txt");
+	
+	return 0;
 }

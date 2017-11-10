@@ -19,8 +19,8 @@ typedef std::vector<Matrix>	VMatrix;
 typedef std::vector<int>	Vector;
 
 	//---------Functions outside the class (Auxiliary functions):->
-const Matrix	activationFunction(const Matrix& weighted_inputs);
-const Matrix	activationPrime(const Matrix &input_matrix);
+//const Matrix	activationFunction(const Matrix& weighted_inputs);
+//const Matrix	activationPrime(const Matrix &input_matrix);
 const Matrix	costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
 const double	distribution(const int num_neurons_in);
 void			randomizeMatrix(Matrix &);
@@ -147,9 +147,9 @@ private:
 	std::vector<string>		setActivations;
 
 		//Required Methods:->
-	void				Switch(unsigned char, int);
+	void				activationFuncSwitch(unsigned char, int);
 	void				initStateTable();
-	void				takeInput(int);
+	void				activationFuncSelect(int);
 };
 
 inline const Matrix Network::hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
