@@ -9,7 +9,7 @@
 
 using namespace std;
 
-const long int DataSet(100);
+const long int DataSet(50000);
 
 template <class DATA>
 class Data
@@ -41,7 +41,7 @@ class Data
 		void			CreateTruthFile();
 
 	//Functions to count the things and generate the truth values
-		void			Count();					//generates truth values
+		void			Count(DATA [][4]);					//generates truth values
 		void			Display() const;
 
 	//Functions to get the Truth Value
@@ -73,7 +73,7 @@ Data <DATA>::Data()
 	Vertical = 0;
 	Diagonal = 0;
 	GenerateArrays();
-	Count();
+	Count(data);
 }
 
 template <class DATA>
@@ -86,8 +86,8 @@ template <class DATA>
 const DATA & Data <DATA> ::GenerateValue()
 {
 	DATA  value;
-	value = rand();
-	value = static_cast<float>(value + 1) / RAND_MAX;		//value = value % 2;
+	value = static_cast<DATA> (rand());
+	/*value = static_cast<float>(value + 1) / RAND_MAX;*/		value = value % 2;
 	return value;
 }
 
@@ -107,28 +107,28 @@ void Data <DATA> ::GenerateArrays()
 			sum += data[i][j];  //sum = sum + data[i][j];
 			j++;
 		} while (j < 4);
-		/*if (sum != 2)
-			i--;*/
+		if (sum != 2)
+			i--;
 	}
 }
 
 template <class DATA>
-void Data <DATA> ::Count()
+void Data <DATA> ::Count(DATA d[DataSet][4])
 {
 	int k;
-	vector<DATA> v;
-	v.resize(4);
+	//vector<DATA> v;
+	//v.resize(4);
 	for (int i = 0; i < DataSet; i++)
 	{
-		v = cleanOutput(i);
-		if (((v[0] == 1) && (v[1] == 1)) || ((v[2] == 1) && (v[3] == 1)))
+		//v = cleanOutput(i);
+		if (((d[i][0] == 1) && (d[i][1] == 1)) || ((d[i][2] == 1) && (d[i][3] == 1)))
 		{
 			Horizontal++;
 			truth[i][0] = 1;
 			truth[i][1] = 0;
 			truth[i][2] = 0;
 		}
-		else if (((v[0] == 1) && (v[2] == 1)) || ((v[1] == 1) && (v[3] == 1)))
+		else if (((d[i][0] == 1) && (d[i][2] == 1)) || ((d[i][1] == 1) && (d[i][3] == 1)))
 		{
 			Vertical++;
 			truth[i][0] = 0;
@@ -145,7 +145,7 @@ void Data <DATA> ::Count()
 	}
 }
 
-template <class DATA>
+/*template <class DATA>
 vector<DATA> Data <DATA> ::cleanOutput(int index)
 {
 	vector<DATA> v;
@@ -181,7 +181,7 @@ vector<DATA> Data <DATA> ::cleanOutput(int index)
 	}
 	v[currBiggestIndex2] = 1;
 	return v;
-}
+}*/
 
 template <class DATA>
 void Data <DATA> ::Display() const
@@ -198,7 +198,7 @@ void Data <DATA> ::CreateUnsortedFile(int k)
 	int i, j;
 	if (k == 4)
 	{
-		_file.open("Df100.txt", ios_base::out | ios_base::trunc);
+		_file.open("D50000.txt", ios_base::out | ios_base::trunc);
 		if (_file.is_open())
 		{
 
@@ -216,7 +216,7 @@ void Data <DATA> ::CreateUnsortedFile(int k)
 	}
 	else if (k == 3)
 	{
-		_file.open("Tf100.txt", ios_base::out | ios_base::trunc);
+		_file.open("T50000.txt", ios_base::out | ios_base::trunc);
 		if (_file.is_open())
 		{
 

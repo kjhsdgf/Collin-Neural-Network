@@ -882,8 +882,8 @@ std::vector<double> Network::train()
 		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
 	}
 
-	//if (!writeToFile())
-		//cout << "\n Server error 405: Could not write network to file." << endl;
+	if (!writeToFile())
+		cout << "\n Server error 405: Could not write network to file." << endl;
 
 	return efficiency;
 }

@@ -8,7 +8,7 @@ void main()
 {
 	try
 	{
-		Data<float> d;
+		Data<long int> d;
 		d.CreateDataFile();
 		d.CreateTruthFile();
 		d.Display();
