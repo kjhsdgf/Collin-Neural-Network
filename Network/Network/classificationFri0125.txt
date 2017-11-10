@@ -1,0 +1,401 @@
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  1 0 1 0 
+Network Output: 0.467268 0.205722 0.347971 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  1 0 0 1 
+Network Output: 0.450565   0.2196 0.335823 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  1 1 0 0 
+Network Output: 0.456468 0.219855 0.343216 
+Classification: 1 0 0 
+
+Network Input:  0 0 1 1 
+Network Output: 0.457803 0.218835 0.340128 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  0 1 0 1 
+Network Output: 0.425506 0.250558 0.324612 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+Network Input:  0 1 1 0 
+Network Output: 0.461392 0.219347 0.347648 
+Classification: 1 0 0 
+
+100 out of 100 classified, 100 %

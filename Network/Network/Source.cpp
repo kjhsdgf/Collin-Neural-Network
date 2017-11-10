@@ -1,13 +1,15 @@
-#include<iostream>
-
-using namespace std;
+#include <iostream>
+#include "Network.h"
 
 int main()
 {
-	int test;
 	//Network brain;
-	//brain.train();
-	//Network brain("C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Network\\Network\\Previous_Network_Fri0020.txt", "C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Data\\T100.txt");
+	string prevNetwork = "C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Network\\Network\\Previous_Network_Fri0301.txt";
+	//string valFile = "C:\\Users\\Elijah\\source\\repos\\Collin-Neural-Network\\Data\\D100.txt";
+	Network brain(prevNetwork);
+	brain.train();
 	
+	//brain.classify(valFile);
+
 	return 0;
 }

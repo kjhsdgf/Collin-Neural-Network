@@ -1,5 +1,6 @@
 #ifndef NETWORK_H
 #define NETWORK_H
+//#define DEBUG_ELI
 
 #include <iostream>
 #include <math.h>
@@ -97,7 +98,9 @@ private:
 	string				expectedValuesFilename;
 	ifstream			trainingDataInfile;
 	ifstream			expectedValuesInfile;
-
+#ifdef DEBUG_ELI
+	ofstream			debugOutFile;
+#endif
 	struct 				layerReport { bool isAmbiguous; Matrix cleanOutput; };
 
 

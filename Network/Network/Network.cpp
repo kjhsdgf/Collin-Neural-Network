@@ -94,7 +94,7 @@ void Network::initStateTable()
 
 //Sets state table entry for the index'th layer if -1 is in "strings" data member (which holds ints, as it turns out).
 //If strings[index] is any number but -1, simply calls state table's switch statement (named "activationFuncSwitch") and that calls the appropriate
-//activation function. The activation functions will then set both activations[index] and activationsPrime[index].
+//activation function. The activation functions will then set both activations[index] and activationPrime[index].
 void Network::activationFuncSelect(int index)
 {
 	int j;
@@ -105,7 +105,7 @@ void Network::activationFuncSelect(int index)
 		cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
 		cin >> j;
 		strings[index] = (static_cast<int>(j) - (1));
-		//activationFuncSwitch(stateTable(strings[index], index), index);					<-- not sure why we are populating activations in this case.
+		activationFuncSwitch(stateTable(strings[index], index), index);
 	}
 }
 
@@ -113,12 +113,24 @@ void Network::linear(int index)
 {
 	activations[index] = weightedInputs[index];
 	activationPrime[index] = ones_matrix<double>(layerSizes[index], 1);
+#ifdef DEBUG_ELI
+	cout << "activations[" << index << "]\n" << activations[index];
+	cout << "activationPrime[" << index << "]:\n" << activationPrime[index];
+	debugOutFile << "activations[" << index << "]\n" << activations[index];
+	debugOutFile << "activationPrime[" << index << "]:\n" << activationPrime[index];
+#endif
 }
 
 void Network::Sigmoid(int index)
 {
 	activations[index] = sigmoid(weightedInputs[index]);
 	activationPrime[index] = pointwise_multiply(activations[index], ones_matrix(activations[index]) - activations[index]);
+#ifdef DEBUG_ELI
+	cout << "activations[" << index << "]\n" << activations[index];
+	cout << "activationPrime[" << index << "]:\n" << activationPrime[index];
+	debugOutFile << "activations[" << index << "]\n" << activations[index];
+	debugOutFile << "activationPrime[" << index << "]:\n" << activationPrime[index];
+#endif
 }
 
 void Network::logLog(int index)
@@ -126,6 +138,12 @@ void Network::logLog(int index)
 	//1 − exp(−exp(weightedInputs(i, j)))
 	activations[index] = (ones_matrix<double>(layerSizes[index], 1) - exp(zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index])));
 	activationPrime[index] = pointwise_multiply(activations[index] - ones_matrix(activations[index]), zeros_matrix<double>(layerSizes[index], 1) - exp(weightedInputs[index]));
+#ifdef DEBUG_ELI
+	cout << "activations[" << index << "]\n" << activations[index];
+	cout << "activationPrime[" << index << "]:\n" << activationPrime[index];
+	debugOutFile << "activations[" << index << "]\n" << activations[index];
+	debugOutFile << "activationPrime[" << index << "]:\n" << activationPrime[index];
+#endif
 }
 
 void Network::bipolarSigmoid(int index)
@@ -137,12 +155,24 @@ void Network::bipolarSigmoid(int index)
 		activations[index](i) = (1.00 - exp(0.00 - weightedInputs[index](i))) / (1.00 + exp(0.000 - weightedInputs[index](i)));
 		activationPrime[index](i) = (2.00 * exp(-weightedInputs[index](i))) / (pow(1.00 + exp(-weightedInputs[index](i)), 2));
 	}
+#ifdef DEBUG_ELI
+	cout << "activations[" << index << "]\n" << activations[index];
+	cout << "activationPrime[" << index << "]:\n" << activationPrime[index];
+	debugOutFile << "activations[" << index << "]\n" << activations[index];
+	debugOutFile << "activationPrime[" << index << "]:\n" << activationPrime[index];
+#endif
 }
 
 void Network::Tanh(int index)
 {
 	activations[index] = tanh(weightedInputs[index]);
 	activationPrime[index] = ones_matrix<double>(layerSizes[index], 1) - squared(activations[index]);
+#ifdef DEBUG_ELI
+	cout << "activations[" << index << "]\n" << activations[index];
+	cout << "activationPrime[" << index << "]:\n" << activationPrime[index];
+	debugOutFile << "activations[" << index << "]\n" << activations[index];
+	debugOutFile << "activationPrime[" << index << "]:\n" << activationPrime[index];
+#endif
 }
 
 void Network::LeCun_stanh(int index)
@@ -249,6 +279,18 @@ if the user wants
 
 Network::Network()
 {
+#ifdef DEBUG_ELI
+	string debugFilename = "debug";
+	const int MAX_SIZE(80);
+	time_t currentTime = time(NULL);
+	struct tm * currentTimeInfo = localtime(&currentTime);
+	char debugFileTime[MAX_SIZE];
+	strftime(debugFileTime, MAX_SIZE, "%a%H%M", currentTimeInfo);
+	string filetype = ".txt";
+	debugFilename += debugFileTime + filetype;
+	debugOutFile.open(debugFilename, ios::trunc);
+#endif
+
 	//Call readInit() to fill numLayers, layerSizes[], learningRate, epochs, batchSize
 	readInit();
 
@@ -332,6 +374,9 @@ Network::~Network()
 	
 	trainingDataInfile.close();
 	expectedValuesInfile.close();
+#ifdef DEBUG_ELI
+	debugOutFile.close();
+#endif
 	//destructor of dlib and vector class called
 }
 
@@ -619,6 +664,17 @@ bool Network::readInit(const string & file)
 
 Network::Network(const string& previous_network_filename)
 {
+#ifdef DEBUG_ELI
+	string debugFilename = "debug";
+	const int MAX_SIZE(80);
+	time_t currentTime = time(NULL);
+	struct tm * currentTimeInfo = localtime(&currentTime);
+	char debugFileTime[MAX_SIZE];
+	strftime(debugFileTime, MAX_SIZE, "%a%H%M", currentTimeInfo);
+	string filetype = ".txt";
+	debugFilename += debugFileTime + filetype;
+	debugOutFile.open(debugFilename, ios::trunc);
+#endif
 	readInit(previous_network_filename);
 	initStateTable();
 	trainingDataInfile.open(trainingDataFilename);
@@ -693,7 +749,11 @@ void Network::forwardProp(const int batchIndex, ifstream& infile)
 	for (int i = 1; i < numLayers; i++)
 	{
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
-		activationFuncSelect(i);
+#ifdef DEBUG_ELI
+		cout << "weightedInputs[" << i << "]:\n" << weightedInputs[i];
+		debugOutFile << "weightedInputs[" << i << "]:\n" << weightedInputs[i];
+#endif
+		activationFuncSelect(i); //THIS IS WHERE THE ACTIVATION FUNCTIONS ARE SET, NOT IN THE CONSTRUCTOR...
 	}
 }
 
@@ -717,6 +777,14 @@ bool Network::backProp(int index)
 	errors[lastInd] = hadamardProduct(costPrime(activations[lastInd], expectedValues), activationPrime[lastInd]);
 	sumNablaB[lastInd] += errors[lastInd];
 	sumNablaW[lastInd] += (errors[lastInd]) * trans(activations[lastInd - 1]);
+#ifdef DEBUG_ELI
+	cout << "errors[end]:\n" << errors[lastInd];
+	cout << "sumNablaB[end]:\n" << sumNablaB[lastInd];
+	cout << "sumNablaW[end]:\n" << sumNablaB[lastInd];
+	debugOutFile << "errors[end]:\n" << errors[lastInd];
+	debugOutFile << "sumNablaB[end]:\n" << sumNablaB[lastInd];
+	debugOutFile << "sumNablaW[end]:\n" << sumNablaB[lastInd];
+#endif
 
 	for (int i = lastInd - 1; i > 0; i--)
 	{
@@ -724,6 +792,11 @@ bool Network::backProp(int index)
 			activationPrime[i]);
 		sumNablaB[i] += errors[i];
 		sumNablaW[i] += errors[i] * trans(activations[i - 1]);
+#ifdef DEBUG_ELI
+		cout << "errors[" << i << "]:\n" << errors[i];
+		cout << "sumNablaB[" << i << "]:\n" << sumNablaB[i];
+		cout << "sumNablaW[" << i << "]:\n" << sumNablaB[i];
+#endif
 	}
 
 	/*displayActivations(expectedValues);
