@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <vector>
+#include <math.h>
 #include <dlib\matrix\matrix_math_functions.h>
 
 
@@ -103,7 +104,7 @@ private:
 	//Private Functions:->
 	bool				writeToFile() const;
 	bool				backProp(int);
-	void				forwardProp(int);
+	void				forwardProp(int, ifstream& );
 	int					SGD();
 	layerReport			outputLayerReport();
 	void				updateWeightsAndBiases();
@@ -151,14 +152,14 @@ private:
 	std::vector<string>		setActivations;
 
 	//Required Methods ->
-	void				Switch(unsigned char, int);
+	void				activationFuncSwitch(unsigned char, int);
 	void				initStateTable();
-	void				takeInput(int);
+	void				activationFuncSelect(int);
 };
 
 //---------Functions outside the class (Auxiliary functions)----------------------------------------
-const Matrix	activationFunction(const Matrix& weighted_inputs);
-const Matrix	activationPrime(const Matrix &input_matrix);
+//const Matrix	activationFunction(const Matrix& weighted_inputs);
+//const Matrix	activationPrime(const Matrix &input_matrix);
 const Matrix	costPrime(const Matrix &activations_vector, const Matrix &expected_vals_vector);
 const double	distribution(const int num_neurons_in);
 void			randomizeMatrix(Matrix &);
@@ -169,6 +170,44 @@ void			randomizeMatrix(Matrix &);
 inline const Matrix Network::hadamardProduct(const Matrix &input_matrix_L, const Matrix &input_matrix_R)
 {
 	return pointwise_multiply(input_matrix_L, input_matrix_R);
+}
+
+inline void Network::linear(int index)
+{
+	activations[index] = weightedInputs[index];
+	activationPrime[index] = ones_matrix<double>(layerSizes[index], 1);
+}
+
+inline void Network::Sigmoid(int index)
+{
+	activations[index] = sigmoid(weightedInputs[index]);
+	activationPrime[index] = pointwise_multiply(activations[index], ones_matrix(activations[index]) - activations[index]);
+}
+
+inline void Network::Tanh(int index)
+{
+	activations[index] = tanh(weightedInputs[index]);
+	activationPrime[index] = ones_matrix<double>(layerSizes[index], 1) - squared(activations[index]);
+}
+
+inline void Network::LeCun_stanh(int index)
+{
+	//	1.7159 tanh((2/3) * weightedInputs(i,j)) 
+	activations[index] = (1.7159) * tanh((0.6666667) * weightedInputs[index]);
+	activationPrime[index] = 0.98143 * (ones_matrix<double>(layerSizes[index], 1) - (0.33964 * squared(activations[index])));
+}
+
+inline void Network::radialGaussian(int index)
+{
+	//	exp( -(1/2)*((weightedInputs(i,j)^2))
+	activations[index] = exp((-0.500) * (squared(weightedInputs[index])));
+	activationPrime[index] = pointwise_multiply(zeros_matrix<double>(layerSizes[index], 1) - weightedInputs[index], activations[index]);
+}
+
+inline void Network::cosine(int index)
+{
+	activations[index] = cos(weightedInputs[index]);
+	activationPrime[index] = (zeros_matrix<double>(layerSizes[index], 1) - sin(activations[index]));
 }
 
 template <class T>
