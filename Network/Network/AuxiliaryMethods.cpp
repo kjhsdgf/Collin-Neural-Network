@@ -1,4 +1,4 @@
-#include"Network.h"
+#include "Network.h"
 
 void randomizeMatrix(Matrix &input_matrix)
 {

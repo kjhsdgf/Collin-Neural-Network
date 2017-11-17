@@ -1,4 +1,4 @@
-﻿#include <math.h>
+#include <math.h>
 #include "Network.h"
 
 std::vector<int> strings;
@@ -52,6 +52,7 @@ void Network :: Switch(unsigned char e, int index)
 	default:
 		{
 			cout << "Unknown input..Try again";
+			strings[index] = 0;
 			takeInput(index);
 		}
 	}
@@ -91,26 +92,6 @@ void	Network::initStateTable()
 	for (i = 0; i < numLayers; i++)
 		strings[i] = -1;
 }
-
-//-----------------------------------------------------	~ AN EXAMPLE ~ ----------------------------------------------------------
-//unsigned char	Network::StateTable[numActivations + 1][(if numLayers =) 5] = {
-
-							//Layers:	0		1		2		3		4		
-/* inputLinear				 	{		0,		0,		0,		0,		0,		},	*/
-/* inputSigmoid				 	{		1,		1,		1,		1,		1,		},	*/
-/* inputComplementaryLog_Log 	{		2,		2,		2, 		2, 		2, 		},	*/
-/* inputBipolarSigmoid		 	{		3,		3,		3, 		3, 		3, 		},	*/
-/* inputTanh				 	{		4,		4,		4, 		4, 		4, 		},	*/
-/* inputLeCun_stanh			 	{		5,		5,		5, 		5, 		5, 		},	*/
-/* inputRectifier			 	{		6,		6,		6, 		6, 		6, 		},	*/
-/* inputSmoothRectifier		 	{		7,		7,		7, 		7, 		7, 		},	*/
-/* inputLogit				 	{		8,		8, 		8, 		8, 		8, 		},	*/
-/* inputSoftmax				 	{		9,		9,		9,		9,		9,		},	*/
-/* inputRadialGaussian		 	{		10,		10, 	10,		10,		10,		},	*/
-/* inputMaxout				 	{		11,		11,		11,		11,		11,		},	*/
-/* inputLeakyRelu			 	{		12,		12,		12,		12,		12,		},	*/
-/* inputCosine				 	{		13,		13,		13,		13,		13,		}	*/
-//};
 
 void Network::takeInput(int index)
 {
