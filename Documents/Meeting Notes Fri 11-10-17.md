@@ -9,7 +9,7 @@
 
 # After-meeting ideas
 ## Map a set of activations manually
-- ### Note the method used, as it may inform algorithm (I don't know about using a specific method. I would suggest that networks with small topologies can be done manually to keep a track on how the patterns are changing during training)(-Ami)
+- ### Note the method used, as it may inform algorithm (I don't know about using a specific method. I would suggest that constructing networks with small topologies can be done manually to keep a track on how the patterns are changing during training)(-Ami)
 ## A means to interpret large sets of numbers
 - ### Program GraphViz tool to output
 	- ### [draw a neural network through graphviz - zhu45](http://zhu45.org/posts/2017/May/25/draw-a-neural-network-through-graphviz/)
