@@ -51,6 +51,9 @@ public:
 	void				displayActivationPrimes(ostream& = cout);
 	void				createActivationsFile(const Matrix&);
 
+
+	bool makeGraph(int , const string& = "\0");
+
 	//----Enums
 	enum Inputs {
 		inputLinear,

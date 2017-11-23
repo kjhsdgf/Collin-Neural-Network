@@ -1000,3 +1000,27 @@ void	Network::createActivationsFile(const Matrix& expectedValues)
 	outfile.close();
 }
 
+bool Network :: makeGraph(int index, const string& graphFileName)
+{
+	string str;
+
+	if (graphFileName != "\0")
+		str = graphFileName;
+	else
+	{
+		std::vector<int> digits;
+		string str2;
+		int i;
+		while (index)
+		{
+			digits.push_back(index % 10);
+			index /= 10;
+		}
+		std::reverse(digits.begin(), digits.end());
+		for (i = 0; i < digits.size(); i++)
+			str2[i] = (static_cast<char>(digits[i]) - '0');
+		str2[i] = '\0';
+		str = "graphFile" + str2;
+	}
+	return true;
+}
