@@ -1000,12 +1000,12 @@ void	Network::createActivationsFile(const Matrix& expectedValues)
 	outfile.close();
 }
 
-bool Network :: makeGraph(int index, const string& graphFileName)
+bool Network :: makeGraphFile(int index, const string& graphFileName)
 {
-	string str;
+	string fileName;
 
 	if (graphFileName != "\0")
-		str = graphFileName;
+		fileName = graphFileName;
 	else
 	{
 		std::vector<int> digits;
@@ -1020,7 +1020,104 @@ bool Network :: makeGraph(int index, const string& graphFileName)
 		for (i = 0; i < digits.size(); i++)
 			str2[i] = (static_cast<char>(digits[i]) - '0');
 		str2[i] = '\0';
-		str = "graphFile" + str2;
+		fileName = "graphFile" + str2;
 	}
+
+	string shape; shape = "circle";
+	string style; style = "filled";
+	string rank; rank = "same";
+	std::vector <matrix<string>> color;
+	std::vector<string> label;
+	fstream outfile;
+	int i, j;
+
+	int threshold;
+	threshold = 0.7;
+
+	outfile.open(fileName, ios::out);
+	if (outfile.is_open())
+	{
+		//initialize the colors matrix
+		color[0].set_size(layerSizes[0], 1);
+		for (j = 0; j < layerSizes[0]; j++)
+			if (activations[0](j, 1))
+				color[0](j, 1) = "corall";
+			else
+				color[0](j, 1) = "charteuse";
+
+		for (i = 1; i < (numLayers); i++)
+		{
+			color[i].set_size(layerSizes[i], 1);
+			for (j = 0; j < layerSizes[i]; j++)
+				if (activations[i](j, 1) > threshold)
+					color[i](j, 1) = "black";
+				else
+					color[i](j, 1) = "dodgerblue";
+		}
+		
+		//Writing the commands of graphviz in the file
+		outfile << "digraph G {\n";
+		outfile << "\trankdir = LR;\n";
+		outfile << "\tsplines=false;\n";
+		outfile << "\tedge[style=invis];\n";
+		outfile << "\tranksep= 1.4;\n";
+
+		//Writes the commands for shape, labels and color of nodes
+		i = 0;
+		for (j = 0; j < layerSizes[i]; j++)
+		{
+			outfile << "\t{\n";
+			outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 1) << ", style=" << style << ", fillcolor=" << color[i](j, 1) << "];\n";
+			outfile << "\tx" << j << " [label=<x<sub>" << j << "</sub>>];\n";
+			outfile << "\t}\n";
+		}
+
+		for (i = 1; i < (numLayers-1); i++)
+			for (j = 0; j < layerSizes[i]; j++)
+			{
+				outfile << "\t{\n";
+				outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 1) << ", style=" << style << ", fillcolor=" << color[i](j, 1) << "];\n";
+				outfile << "\ta" << (j) << (i+1) << " [label=<a<sub>" << (j) << "</sub><sup>(" << (i + 1) << ")</sup>>];\n";
+				outfile << "\t}\n";
+			}
+
+		for (j = 0; j < layerSizes[i]; j++)
+		{
+			outfile << "\t{\n";
+			outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 1) << ", style=" << style << ", fillcolor=" << color[i](j, 1) << "];\n";
+			outfile << "\tO" << j+1 << " [label=<O<sub>" << j+1 << "</sub>>];\n";
+			outfile << "\t}\n";
+		}
+
+		//Writes the commands for rank of the nodes
+		i = 0;
+		outfile << "\t{\n";
+		outfile << "\trank=" << rank << ";\n";
+		outfile << "\tx0";
+		for (j = 1; j < layerSizes[i]; j++)
+			outfile << "->x" << j;
+		outfile << ";\n\t}";
+
+		for (i = 1; i < (numLayers - 1); i++)
+		{
+			outfile << "\t{\n";
+			outfile << "\trank=" << rank << ";\n";
+			outfile << "\ta0"<<i+1;
+			for (j = 1; j < layerSizes[i]; j++)
+				outfile << "->a" << j << i + 1;
+			outfile << ";\n\t}";
+		}
+		outfile << "\t{\n";
+		outfile << "\trank=" << rank << ";\n";
+		outfile << "\tO1";
+		for (j = 1; j < layerSizes[i]; j++)
+			outfile << "->O" << j+1;
+		outfile << ";\n\t}";
+
+		//TBD
+	}
+	else
+		cout << "Error 410: Cannot write to the file " << fileName << endl;
+
 	return true;
 }

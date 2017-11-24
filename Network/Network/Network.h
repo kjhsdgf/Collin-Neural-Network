@@ -52,7 +52,7 @@ public:
 	void				createActivationsFile(const Matrix&);
 
 
-	bool makeGraph(int , const string& = "\0");
+	bool makeGraphFile(int , const string& = "\0");
 
 	//----Enums
 	enum Inputs {
