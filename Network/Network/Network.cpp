@@ -1047,7 +1047,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 		color.resize(numLayers);
 		//initialize the colors matrix
 
-		//Input layer with value bigger than threshold will be displayed with black and the remaining will be green in color
+		//Input layer with value bigger than threshold will be displayed with black and remaining will be green in color
 		color[0].set_size(layerSizes[0], 1);
 		for (j = 0; j < layerSizes[0]; j++)
 			if (activations[0](j, 0) > threshold)
@@ -1055,7 +1055,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 			else
 				color[0](j, 0) = "green";
 
-		//Hidden layer with firing nodes will be displayed with yellow color and the remaining in dodger blue
+		//Hidden layer with firing nodes will be displayed with yellow color and remaining in dodger blue
 		for (i = 1; i < (numLayers - 1); i++)
 		{
 			color[i].set_size(layerSizes[i], 1);
