@@ -49,6 +49,9 @@ public:
 	void				displayActivations(const Matrix& , ostream&  = cout);
 	void				displayActivationPrimes(ostream& = cout);
 	void				createActivationsFile(const Matrix&);
+	
+	//Method to create the graph file for desired index:->
+	bool makeGraphFile(int , const string& = "None");
 
 	//----Enums
 	enum Inputs {
