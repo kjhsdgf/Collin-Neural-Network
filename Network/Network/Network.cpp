@@ -978,13 +978,6 @@ void	Network::displayActivations(const Matrix& expectedValues, ostream& out)
 	out << "--------------------------------------------------" << endl;
 }
 
-void	Network::displayActivationPrimes(ostream& out)
-{
-	for (int i = 1; i < (numLayers - 1); i++)
-		out << "Activation prime value at Hidden Layer " << i << ":" << trans(activationPrime[i]) << endl;
-	out << "Activation prime value at Output: " << trans(activationPrime[numLayers - 1]) << endl;
-}
-
 void	Network::createActivationsFile(const Matrix& expectedValues)
 {
 	ofstream outfile;
@@ -1002,25 +995,35 @@ void	Network::createActivationsFile(const Matrix& expectedValues)
 
 bool Network :: makeGraphFile(int index, const string& graphFileName)
 {
-	string fileName;
+	/*******************************************************************************
+	Follow the instructions to create the image:
+	1. Open the Command Prompt
+	2. Go the address- ...\graphviz-2.38\release\bin>
+	3. Give the command: dot.exe -c
+	4. Write the command: dot.exe -Tjpg(can be any other file type) -O graphFile(with index).txt
+	5. This will create the desired graph inside the bin folder of graphviz
+	*******************************************************************************/
 
-	if (graphFileName != "\0")
+	string fileName;
+	int k = index;
+	string str2;
+	int i;
+
+	if (graphFileName != "None")
 		fileName = graphFileName;
 	else
 	{
 		std::vector<int> digits;
-		string str2;
-		int i;
 		while (index)
 		{
 			digits.push_back(index % 10);
 			index /= 10;
 		}
 		std::reverse(digits.begin(), digits.end());
+		str2.resize(digits.size());
 		for (i = 0; i < digits.size(); i++)
-			str2[i] = (static_cast<char>(digits[i]) - '0');
-		str2[i] = '\0';
-		fileName = "graphFile" + str2;
+			str2[i] = digits[i] + '0';
+		fileName = "C:/graphviz-2.38/release/bin/graphFile" + str2 + ".txt"; //Attention!!!! Address here needs to be the path ..../graphviz-2.38/release/bin
 	}
 
 	string shape; shape = "circle";
@@ -1029,45 +1032,64 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 	std::vector <matrix<string>> color;
 	std::vector<string> label;
 	fstream outfile;
-	int i, j;
+	int j;
 
 	int threshold;
-	threshold = 0.7;
+	threshold = 0.7; // can be changed if needed 
 
 	outfile.open(fileName, ios::out);
 	if (outfile.is_open())
 	{
+		cout << "\nCreating graph file " << fileName << endl;
+
+		forwardProp(index, trainingDataInfile);
+
+		color.resize(numLayers);
 		//initialize the colors matrix
+
+		//Input layer with value bigger than threshold will be displayed with black and the remaining will be green in color
 		color[0].set_size(layerSizes[0], 1);
 		for (j = 0; j < layerSizes[0]; j++)
-			if (activations[0](j, 1))
-				color[0](j, 1) = "corall";
+			if (activations[0](j, 0) > threshold)
+				color[0](j, 0) = "black";
 			else
-				color[0](j, 1) = "charteuse";
+				color[0](j, 0) = "green";
 
-		for (i = 1; i < (numLayers); i++)
+		//Hidden layer with firing nodes will be displayed with yellow color and the remaining in dodger blue
+		for (i = 1; i < (numLayers - 1); i++)
 		{
 			color[i].set_size(layerSizes[i], 1);
 			for (j = 0; j < layerSizes[i]; j++)
-				if (activations[i](j, 1) > threshold)
-					color[i](j, 1) = "black";
+				if (activations[i](j, 0) > threshold)
+					color[i](j, 0) = "yellow";
 				else
-					color[i](j, 1) = "dodgerblue";
+					color[i](j, 0) = "dodgerblue";
 		}
+
+		//Output layer will contain the neuron fired in black and other in white
+		activations[i] = outputLayerReport().cleanOutput;
+		color[i].set_size(layerSizes[i], 1);
+		for (j = 0; j < layerSizes[i]; j++)
+			if (activations[i](j, 0))
+				color[i](j, 0) = "black";
+			else
+				color[i](j, 0) = "white";
+
+
 		
-		//Writing the commands of graphviz in the file
+		//Writing the commands required by graphviz in the file
 		outfile << "digraph G {\n";
 		outfile << "\trankdir = LR;\n";
 		outfile << "\tsplines=false;\n";
 		outfile << "\tedge[style=invis];\n";
 		outfile << "\tranksep= 1.4;\n";
 
-		//Writes the commands for shape, labels and color of nodes
+		//the commands for shape, labels and color of nodes
 		i = 0;
 		for (j = 0; j < layerSizes[i]; j++)
 		{
 			outfile << "\t{\n";
-			outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 1) << ", style=" << style << ", fillcolor=" << color[i](j, 1) << "];\n";
+			outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 0) << ", style=" << style << ", fillcolor=" << color[i](j, 0) << "];\n";
 			outfile << "\tx" << j << " [label=<x<sub>" << j << "</sub>>];\n";
 			outfile << "\t}\n";
 		}
@@ -1076,7 +1098,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 			for (j = 0; j < layerSizes[i]; j++)
 			{
 				outfile << "\t{\n";
-				outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 1) << ", style=" << style << ", fillcolor=" << color[i](j, 1) << "];\n";
+				outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 0) << ", style=" << style << ", fillcolor=" << color[i](j, 0) << "];\n";
 				outfile << "\ta" << (j) << (i+1) << " [label=<a<sub>" << (j) << "</sub><sup>(" << (i + 1) << ")</sup>>];\n";
 				outfile << "\t}\n";
 			}
@@ -1084,19 +1106,19 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 		for (j = 0; j < layerSizes[i]; j++)
 		{
 			outfile << "\t{\n";
-			outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 1) << ", style=" << style << ", fillcolor=" << color[i](j, 1) << "];\n";
+			outfile << "\tnode [shape=" << shape << ", color=" << color[i](j, 0) << ", style=" << style << ", fillcolor=" << color[i](j, 0) << "];\n";
 			outfile << "\tO" << j+1 << " [label=<O<sub>" << j+1 << "</sub>>];\n";
 			outfile << "\t}\n";
 		}
 
-		//Writes the commands for rank of the nodes
+		//the commands for rank of the nodes
 		i = 0;
 		outfile << "\t{\n";
 		outfile << "\trank=" << rank << ";\n";
 		outfile << "\tx0";
 		for (j = 1; j < layerSizes[i]; j++)
 			outfile << "->x" << j;
-		outfile << ";\n\t}";
+		outfile << ";\n\t}\n";
 
 		for (i = 1; i < (numLayers - 1); i++)
 		{
@@ -1105,16 +1127,47 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 			outfile << "\ta0"<<i+1;
 			for (j = 1; j < layerSizes[i]; j++)
 				outfile << "->a" << j << i + 1;
-			outfile << ";\n\t}";
+			outfile << ";\n\t}\n";
 		}
 		outfile << "\t{\n";
 		outfile << "\trank=" << rank << ";\n";
 		outfile << "\tO1";
 		for (j = 1; j < layerSizes[i]; j++)
 			outfile << "->O" << j+1;
-		outfile << ";\n\t}";
+		outfile << ";\n\t}\n";
 
-		//TBD
+		//edges
+		style = "solid";
+		outfile << "edge[style=" << style << ", tailport=e, headport=w];\n";
+		i = 0;
+		outfile << "\t{";
+		outfile << "x0";
+		for (j = 1; j < layerSizes[i]; j++)
+			outfile << ";x" << j;
+		outfile << "} -> ";
+
+		for (i = 1; i < (numLayers - 1); i++)
+		{
+			outfile << "{";
+			outfile << "a0" << i + 1 ;
+			for (j = 1; j < layerSizes[i]; j++)
+				outfile << ";a" << j << i + 1;
+			outfile << "};\n";
+
+			outfile << "\t{";
+			outfile << "a0" << i + 1;
+			for (j = 1; j < layerSizes[i]; j++)
+				outfile << ";a" << j << i + 1;
+			outfile << "} -> ";
+
+		}
+		outfile << "{";
+		outfile << "O1";
+		for (j = 1; j < layerSizes[i]; j++)
+			outfile << ",O" << j + 1;
+		outfile << "};\n";
+		outfile << "}";
+		outfile.close();
 	}
 	else
 		cout << "Error 410: Cannot write to the file " << fileName << endl;

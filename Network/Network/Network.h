@@ -48,11 +48,10 @@ public:
 
 	//---------------------Methods to output the patterns generated--------------------------
 	void				displayActivations(const Matrix&, ostream& = cout);
-	void				displayActivationPrimes(ostream& = cout);
 	void				createActivationsFile(const Matrix&);
 
-
-	bool makeGraphFile(int , const string& = "\0");
+	//Method to create the graph file for desired index:->
+	bool makeGraphFile(int , const string& = "None");
 
 	//----Enums
 	enum Inputs {
@@ -111,7 +110,6 @@ private:
 	int					SGD();
 	layerReport			outputLayerReport();
 	void				updateWeightsAndBiases();
-	//int					filesize(istream&);
 	bool				compareOutput(const Matrix&);
 	const Matrix		hadamardProduct(const Matrix&, const Matrix&);
 	void				initTrainingData();
