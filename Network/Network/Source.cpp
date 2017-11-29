@@ -5,8 +5,8 @@ using namespace std;
 
 void main()
 {
-	Network N ("Previous_Network_Fri2217.txt");
-	//Network N;
+	//Network N ("Previous_Network_XXX----.txt");
+	Network N;
 	std::vector<double> v = N.train();
 
 	N.makeGraphFile(1000);
