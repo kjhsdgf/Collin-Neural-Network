@@ -998,7 +998,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 	/*******************************************************************************
 	Follow the instructions to create the image:
 	1. Open the Command Prompt
-	2. Go the address- ...\graphviz-2.38\release\bin>
+	2. Go to the address- ...\graphviz-2.38\release\bin>
 	3. Give the command: dot.exe -c
 	4. Write the command: dot.exe -Tjpg(can be any other file type) -O graphFile(with index).txt
 	5. This will create the desired graph inside the bin folder of graphviz
@@ -1168,9 +1168,11 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 		outfile << "};\n";
 		outfile << "}";
 		outfile.close();
+		return true;
 	}
 	else
+	{
 		cout << "Error 410: Cannot write to the file " << fileName << endl;
-
-	return true;
+		return false;
+	}	
 }
