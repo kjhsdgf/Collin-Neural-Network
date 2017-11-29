@@ -2,6 +2,7 @@
 #include "Network.h"
 
 std::vector<int> strings;
+bool flag (false);
 
 void Network::activationFuncSwitch(unsigned char e, int index)
 {
@@ -60,7 +61,7 @@ void Network::activationFuncSwitch(unsigned char e, int index)
 
 void	Network::initStateTable()
 {
-	cout << "-------------Here's the list of all the valid activation functions that can be used for the network---------------";
+	cout << "-------Here's the list of all the valid activation functions that can be used for the network-------";
 	cout << "\n1) Linear Function" << endl;
 	cout << "\n2) Sigmoid Function" << endl;
 	cout << "\n3) Complementary Log-Log Function" << endl;
@@ -201,11 +202,22 @@ void Network::leakyRelu(int index)
 	}
 }
 
-/*----------------------------------------------------------------------------------------------------------
-TBD:
-- Trying to make a setActivation function by which the user can set an activation function for the complete network
-if the user wants
------------------------------------------------------------------------------------------------------------*/
+bool Network::setActivationFunc(int activationFuncIndex)
+{
+	if ((activationFuncIndex >= 0) && (activationFuncIndex < numActivations) && (!flag))
+	{
+		int i;
+		for (i = 0; i < numLayers; i++)
+			strings[i] = activationFuncIndex;
+		cout << "\nThe activation function set to " << activationFunc[activationFuncIndex] << " function successfully.." << endl;
+		return true;
+	}
+	else
+	{
+		cout << "Error 411: Cannot set the activation function!" << endl;
+		return false;
+	}
+}
 
 Network::Network()
 {
@@ -237,8 +249,6 @@ Network::Network()
 		getline(cin, expectedValuesFilename);
 		expectedValuesInfile.open(expectedValuesFilename);
 	}
-
-
 
 	initStateTable();
 	initTrainingData();
@@ -290,9 +300,17 @@ Network::Network()
 	miniBatchIndices.resize(batchSize);
 }
 
-Network:: ~Network()
+Network:: ~Network()							//CHANGE!!!
 {
-
+	if (wrongInputs.size())
+	{
+		cout << "\tPossible Errors:->" << endl;
+		std::vector<string> ::const_iterator i1;
+		i1 = wrongInputs.begin();
+		for (; i1 != wrongInputs.end(); i1++)
+			cout << (*i1) << '\n';
+	}
+	
 	trainingDataInfile.close();
 	expectedValuesInfile.close();
 	//destructor of dlib and vector class called
@@ -825,6 +843,8 @@ std::vector<double> Network::train()
 	int trainingDataSize = trainingData.size();
 	cout << "trainingdatasize: " << trainingDataSize << "\nexpectedvaluesize: " << expectedValues.size() << endl;
 
+	flag = true;
+
 	Vector trainingDataIndices(trainingDataSize);
 	for (int i = 0; i < trainingDataSize; i++)
 		trainingDataIndices[i] = i;
@@ -993,7 +1013,7 @@ void	Network::createActivationsFile(const Matrix& expectedValues)
 	outfile.close();
 }
 
-bool Network :: makeGraphFile(int index, const string& graphFileName)
+bool Network :: makeGraphFile(int index, const string& graphFileName, int threshold)
 {
 	/*******************************************************************************
 	Follow the instructions to create the image:
@@ -1033,9 +1053,6 @@ bool Network :: makeGraphFile(int index, const string& graphFileName)
 	std::vector<string> label;
 	fstream outfile;
 	int j;
-
-	int threshold;
-	threshold = 0.7; // can be changed if needed 
 
 	outfile.open(fileName, ios::out);
 	if (outfile.is_open())

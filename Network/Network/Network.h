@@ -51,7 +51,8 @@ public:
 	void				createActivationsFile(const Matrix&);
 
 	//Method to create the graph file for desired index:->
-	bool makeGraphFile(int , const string& = "None");
+	bool makeGraphFile(int , const string& = "None", int =0.7);
+	bool setActivationFunc(int);
 
 	//----Enums
 	enum Inputs {
@@ -73,6 +74,22 @@ public:
 		numActivations
 	};
 
+	char activationFunc[numActivations][25] = {
+												"Linear",
+												"Sigmoid",
+												"Complementary Log-Log",
+												"Bipolar Sigmoid",
+												"Tanh",
+												"LeCun's Tanh", 
+												"Rectifier Linear",
+												"Smooth Rectifier",
+												"Logit",
+												"Softmax",
+												"RadialGaussian",
+												"Maxout",
+												"Leaky Rectifier Linear",
+												"Cosine"
+	};
 private:
 
 	//Private Data Members:->
@@ -240,8 +257,6 @@ std::vector<T> Network::Strtok(const string& str, char Separator[])
 	return v;
 }
 
-
-
 template<class T>
 const matrix<T> Network::getM(bool exp, int i)
 {
@@ -260,8 +275,6 @@ std::vector<T> Network::getV(bool exp, int i)
 	else
 		return trainingData[i];
 }
-
-
 
 #endif
 
