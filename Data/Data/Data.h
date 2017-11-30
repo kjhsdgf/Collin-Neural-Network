@@ -9,7 +9,7 @@
 
 using namespace std;
 
-const long int DataSet(50000);
+const long int DataSet(100);
 
 template <class DATA>
 class Data
@@ -198,7 +198,7 @@ void Data <DATA> ::CreateUnsortedFile(int k)
 	int i, j;
 	if (k == 4)
 	{
-		_file.open("D50000.txt", ios_base::out | ios_base::trunc);
+		_file.open("D100.txt", ios_base::out | ios_base::trunc);
 		if (_file.is_open())
 		{
 
@@ -216,7 +216,7 @@ void Data <DATA> ::CreateUnsortedFile(int k)
 	}
 	else if (k == 3)
 	{
-		_file.open("T50000.txt", ios_base::out | ios_base::trunc);
+		_file.open("T100.txt", ios_base::out | ios_base::trunc);
 		if (_file.is_open())
 		{
 
