@@ -1153,6 +1153,21 @@ bool Network :: makeGraphFile(int index, const string& graphFileName, int thresh
 			outfile << "->O" << j+1;
 		outfile << ";\n\t}\n";
 
+		//labels
+		shape = "plaintext";
+		for (i = 1; i < (numLayers - 1); i++)
+		{
+			outfile << "\tl" << i << " [shape=" << shape << ",label=\"" << activationFunc[strings[i]] << "\"];\n";
+			outfile << "\tl" << i << "->a0" << i + 1 << ";\n";
+			outfile << "\t{rank=" << rank << "; l" << i << ";a0" << i + 1;
+			outfile << "};\n";
+		}
+
+		outfile << "\tl" << i << " [shape=" << shape << ",label=\"" << activationFunc[strings[i]] << "\"];\n";
+		outfile << "\tl" << i << "->O1;\n";
+		outfile << "\t{rank=" << rank << "; l" << i << ";O1";
+		outfile << "};\n";
+
 		//edges
 		style = "solid";
 		outfile << "edge[style=" << style << ", tailport=e, headport=w];\n";
@@ -1176,7 +1191,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName, int thresh
 			for (j = 1; j < layerSizes[i]; j++)
 				outfile << ";a" << j << i + 1;
 			outfile << "} -> ";
-
+			\
 		}
 		outfile << "{";
 		outfile << "O1";

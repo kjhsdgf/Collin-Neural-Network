@@ -5,9 +5,9 @@ using namespace std;
 
 void main()
 {
-	//Network N ("Previous_Network_XXX----.txt");
-	Network N;
-	N.setActivationFunc(3);
+	Network N ("Previous_Network_Thu1343.txt");
+	//Network N;
+	//N.setActivationFunc(3);
 	std::vector<double> v = N.train();
 
 	N.makeGraphFile(1000);
