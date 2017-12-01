@@ -51,7 +51,7 @@ public:
 	void				createActivationsFile(const Matrix&);
 
 	//Method to create the graph file for desired index:->
-	bool makeGraphFile(int , const string& = "None", int =0.7);
+	bool makeGraphFile(int , const string& = "None", double = 0.7);
 	bool setActivationFunc(int);
 
 	//----Enums
@@ -64,7 +64,7 @@ public:
 		inputLeCun_stanh,
 		inputRectifier,
 		inputSmoothRectifier,
-		inputLogit,
+		//inputLogit,
 		inputSoftmax,
 		inputRadialGaussian,
 		inputMaxout,
@@ -83,7 +83,7 @@ public:
 												"LeCun's Tanh", 
 												"Rectifier Linear",
 												"Smooth Rectifier",
-												"Logit",
+												//"Logit",
 												"Softmax",
 												"RadialGaussian",
 												"Maxout",
@@ -156,7 +156,7 @@ private:
 	void		LeCun_stanh(int);
 	void		rectifier(int);
 	void		smoothRectifier(int);
-	void		logit(int);
+	//void		logit(int);
 	void		softmax(int);
 	void		radialGaussian(int);
 	void		maxout(int);

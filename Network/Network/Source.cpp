@@ -5,10 +5,10 @@ using namespace std;
 
 void main()
 {
-	Network N ("Previous_Network_Thu1432.txt");
+	Network N ("Previous_Network_Thu2250.txt");
 	//Network N;
 	//N.setActivationFunc(3);
-	std::vector<double> v = N.train();
+	//std::vector<double> v = N.train();
 
 	N.makeGraphFile(2);
 	/*ofstream outfile;

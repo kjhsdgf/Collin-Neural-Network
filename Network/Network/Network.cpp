@@ -32,9 +32,9 @@ void Network::activationFuncSwitch(unsigned char e, int index)
 	case inputRectifier:
 		rectifier(index);
 		break;
-	case inputLogit:
+	/*case inputLogit:
 		logit(index);
-		break;
+		break;*/
 	case inputSoftmax:
 		softmax(index);
 		break;
@@ -70,12 +70,12 @@ void	Network::initStateTable()
 	cout << "\n6) LeCun's Tanh Function " << endl;
 	cout << "\n7) Rectifier Linear Function" << endl;
 	cout << "\n8) Smooth Rectifier Function " << endl;
-	cout << "\n9) Logit Function " << endl;
-	cout << "\n10) Softmax Function" << endl;
-	cout << "\n11) RadialGaussian Function" << endl;
-	cout << "\n12) Maxout Function " << endl;
-	cout << "\n13) Leaky Rectifier Linear Function" << endl;
-	cout << "\n14) Cosine Function " << endl;
+	//cout << "\n9) Logit Function " << endl;
+	cout << "\n9) Softmax Function" << endl;
+	cout << "\n10) RadialGaussian Function" << endl;
+	cout << "\n11) Maxout Function " << endl;
+	cout << "\n12) Leaky Rectifier Linear Function" << endl;
+	cout << "\n13) Cosine Function " << endl;
 
 	stateTable.set_size(numActivations + 1, numLayers);
 	int i = 0, j = 0;
@@ -145,7 +145,7 @@ void Network::smoothRectifier(int index)
 		activationPrime[index](i) = (1.00) / (1.00 + exp(-weightedInputs[index](i)));
 }
 
-void Network::logit(int index)
+/*void Network::logit(int index)
 {
 	//  log(weightedInputs(i,j) / (1 - weightedInputs(i,j)))
 	int i;
@@ -154,7 +154,7 @@ void Network::logit(int index)
 		activations[index](i) = log(weightedInputs[index](i) / (1.00 - weightedInputs[index](i)));
 		activationPrime[index](i) = (1.00) / (weightedInputs[index](i) * (1.00 - weightedInputs[index](i)));
 	}
-}
+}*/
 
 void Network::softmax(int index)
 {
@@ -645,6 +645,7 @@ Network::Network(const string& previous_network_filename)
 	}
 	else;
 	checkBatchSize();
+	miniBatchIndices.resize(batchSize);
 }
 
 int Network::SGD()
@@ -672,11 +673,10 @@ void Network::forwardProp(const int batchIndex, ifstream& infile)
 	//extract data point from training data file at input indice into first layer of activations
 	activations[0] = getM<double>(false, batchIndex);
 	for (int i = 1; i < numLayers; i++)
-	{
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
-		//activations[i] = activationFunction(weightedInputs[i]); 
-		activationFuncSelect(i);
-	}
+		//activations[i] = activationFunction(weightedInputs[i]);
+	for (int j = 1; j < numLayers; j++)		//required, especially when we use softmax function
+		activationFuncSelect(j);
 }
 
 void Network::updateWeightsAndBiases()
@@ -1013,7 +1013,7 @@ void	Network::createActivationsFile(const Matrix& expectedValues)
 	outfile.close();
 }
 
-bool Network :: makeGraphFile(int index, const string& graphFileName, int threshold)
+bool Network :: makeGraphFile(int index, const string& graphFileName, double threshold)
 {
 	/*******************************************************************************
 	Follow the instructions to create the image:
@@ -1058,7 +1058,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName, int thresh
 	if (outfile.is_open())
 	{
 		cout << "\nCreating graph file " << fileName << endl;
-
+		cout << threshold;
 		forwardProp(index, trainingDataInfile);
 
 		color.resize(numLayers);
@@ -1078,7 +1078,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName, int thresh
 			color[i].set_size(layerSizes[i], 1);
 			for (j = 0; j < layerSizes[i]; j++)
 				if (activations[i](j, 0) > threshold)
-					color[i](j, 0) = "yellow";
+ 					color[i](j, 0) = "yellow";
 				else
 					color[i](j, 0) = "dodgerblue";
 		}
