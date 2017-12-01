@@ -1059,7 +1059,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName, double thr
 	{
 		cout << "\nCreating graph file " << fileName << endl;
 		cout << threshold;
-		forwardProp(index, trainingDataInfile);
+		forwardProp(k, trainingDataInfile);
 
 		color.resize(numLayers);
 		//initialize the colors matrix
