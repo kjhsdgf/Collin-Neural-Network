@@ -776,6 +776,7 @@ std::vector<double> Network::tokenize(const string& line, char delims[])
 
 bool Network::getNext(std::vector<double>& nextData, std::vector<double>& nextTruth)
 {
+	/* for 'our' data
 	if (!trainingDataInfile.is_open() || !expectedValuesInfile.is_open())
 		return false;
 	string dataLine, truthLine;
@@ -784,6 +785,21 @@ bool Network::getNext(std::vector<double>& nextData, std::vector<double>& nextTr
 		return false;
 	nextData = tokenize(dataLine);
 	nextTruth = tokenize(truthLine);
+	return true;
+	*/
+
+	//for mnist data
+	if (!trainingDataInfile.is_open())
+		return false;
+	string line;
+	getline(trainingDataInfile, line);
+	if (line.length() == 0)
+		return false;
+	nextData.resize(784); nextTruth.resize(10);
+	nextData = tokenize(line.substr(2, line.length()));
+	for (int i = 0; i < nextTruth.size(); i++)
+		nextTruth[i] = 0;
+	nextTruth[(int)line[0] - 48] = 1; cout << line[0];
 	return true;
 }
 
@@ -842,6 +858,9 @@ void Network::readInit() // reading from console
 
 std::vector<double> Network::train()
 {
+	if (!writeToFile())
+		cout << "\n Server error 405: Could not write network to file." << endl;
+
 	std::vector<double> efficiency(epochs);
 	int trainingDataSize = trainingData.size();
 	cout << "trainingdatasize: " << trainingDataSize << "\nexpectedvaluesize: " << expectedValues.size() << endl;
@@ -870,8 +889,7 @@ std::vector<double> Network::train()
 		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
 	}
 
-	if (!writeToFile())
-		cout << "\n Server error 405: Could not write network to file." << endl;
+	
 
 	return efficiency;
 }
@@ -969,7 +987,7 @@ void Network::classify(const string &validation_data_filename)
 			numAmbiguousData++;
 
 		//print out the classification into a file
-		classificationOutput << "Network Input:  " << dlib::trans(getM<double>(true, i));//CHHAAAAAAAAAANGE!!!!!
+		classificationOutput << "Network Input:  \"" << dlib::trans(getM<double>(true, i));//CHHAAAAAAAAAANGE!!!!!
 		classificationOutput << "Network Output: " << dlib::trans(activations[numLayers - 1]);
 		classificationOutput << "Classification: " << dlib::trans(cleanedOutput) << '\n';
 
