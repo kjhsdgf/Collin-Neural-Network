@@ -1,0 +1,107 @@
+digraph G {
+	rankdir = LR;
+	splines=false;
+	edge[style=invis];
+	ranksep= 1.4;
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	x0 [label=<x<sub>0</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.0, 1.0", style=filled, fillcolor="0.1667, 1.0, 1.0"];
+	x1 [label=<x<sub>1</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	x2 [label=<x<sub>2</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.0, 1.0", style=filled, fillcolor="0.1667, 1.0, 1.0"];
+	x3 [label=<x<sub>3</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.076302, 0.538151", style=filled, fillcolor="0.1667, 0.076302, 0.538151"];
+	a02 [label=<a<sub>0</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.254610, 1.127305", style=filled, fillcolor="0.1667, 1.254610, 1.127305"];
+	a12 [label=<a<sub>1</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.090799, 1.045399", style=filled, fillcolor="0.1667, 1.090799, 1.045399"];
+	a22 [label=<a<sub>2</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.773977, 0.886988", style=filled, fillcolor="0.1667, 0.773977, 0.886988"];
+	a32 [label=<a<sub>3</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.639541, 0.819770", style=filled, fillcolor="0.1667, 0.639541, 0.819770"];
+	a42 [label=<a<sub>4</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.044558, 0.522279", style=filled, fillcolor="0.1667, 0.044558, 0.522279"];
+	a52 [label=<a<sub>5</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.063537, 1.031769", style=filled, fillcolor="0.1667, 1.063537, 1.031769"];
+	a62 [label=<a<sub>6</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.059270, 1.029635", style=filled, fillcolor="0.1667, 1.059270, 1.029635"];
+	a72 [label=<a<sub>7</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.009970, 0.504985", style=filled, fillcolor="0.1667, 0.009970, 0.504985"];
+	a03 [label=<a<sub>0</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.014727, 0.507363", style=filled, fillcolor="0.1667, 0.014727, 0.507363"];
+	a13 [label=<a<sub>1</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.511238, 0.755619", style=filled, fillcolor="0.1667, 0.511238, 0.755619"];
+	a23 [label=<a<sub>2</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	O1 [label=<O<sub>1</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.0, 1.0", style=filled, fillcolor="0.1667, 1.0, 1.0"];
+	O2 [label=<O<sub>2</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	O3 [label=<O<sub>3</sub>>];
+	}
+	{
+	rank=same;
+	x0->x1->x2->x3;
+	}
+	{
+	rank=same;
+	a02->a12->a22->a32->a42->a52->a62->a72;
+	}
+	{
+	rank=same;
+	a03->a13->a23;
+	}
+	{
+	rank=same;
+	O1->O2->O3;
+	}
+	l1 [shape=plaintext,label="Linear"];
+	l1->a02;
+	{rank=same; l1;a02};
+	l2 [shape=plaintext,label="Sigmoid"];
+	l2->a03;
+	{rank=same; l2;a03};
+	l3 [shape=plaintext,label="Leaky Rectifier Linear"];
+	l3->O1;
+	{rank=same; l3;O1};
+edge[style=solid, tailport=e, headport=w];
+	{x0;x1;x2;x3} -> {a02;a12;a22;a32;a42;a52;a62;a72};
+	{a02;a12;a22;a32;a42;a52;a62;a72} -> {a03;a13;a23};
+	{a03;a13;a23} -> {O1,O2,O3};
+}

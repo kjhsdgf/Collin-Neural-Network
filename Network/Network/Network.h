@@ -23,6 +23,11 @@ typedef std::vector<int> Vector;
 class Network
 {
 public:
+	
+	//Static members to help automate activation function selection algorithm
+	static int actFxnCounter;	//declared in Network.cpp, top of the page
+	static void AFC_increment() { actFxnCounter++; }
+	static int get_AFC() { return actFxnCounter; }
 
 	//**********Constructors and Destructors*******************
 	Network();

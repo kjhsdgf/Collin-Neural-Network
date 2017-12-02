@@ -1,0 +1,107 @@
+digraph G {
+	rankdir = LR;
+	splines=false;
+	edge[style=invis];
+	ranksep= 1.4;
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	x0 [label=<x<sub>0</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.0, 1.0", style=filled, fillcolor="0.1667, 1.0, 1.0"];
+	x1 [label=<x<sub>1</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	x2 [label=<x<sub>2</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.0, 1.0", style=filled, fillcolor="0.1667, 1.0, 1.0"];
+	x3 [label=<x<sub>3</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.978054, 0.989027", style=filled, fillcolor="0.1667, 0.978054, 0.989027"];
+	a02 [label=<a<sub>0</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.412913, 0.706456", style=filled, fillcolor="0.1667, 0.412913, 0.706456"];
+	a12 [label=<a<sub>1</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.755518, 0.877759", style=filled, fillcolor="0.1667, 0.755518, 0.877759"];
+	a22 [label=<a<sub>2</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.891825, 0.945912", style=filled, fillcolor="0.1667, 0.891825, 0.945912"];
+	a32 [label=<a<sub>3</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.937565, 0.968783", style=filled, fillcolor="0.1667, 0.937565, 0.968783"];
+	a42 [label=<a<sub>4</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.387344, 0.693672", style=filled, fillcolor="0.1667, 0.387344, 0.693672"];
+	a52 [label=<a<sub>5</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.779404, 0.889702", style=filled, fillcolor="0.1667, 0.779404, 0.889702"];
+	a62 [label=<a<sub>6</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.839684, 0.919842", style=filled, fillcolor="0.1667, 0.839684, 0.919842"];
+	a72 [label=<a<sub>7</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.105639, 0.552820", style=filled, fillcolor="0.1667, 0.105639, 0.552820"];
+	a03 [label=<a<sub>0</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.327579, 0.663790", style=filled, fillcolor="0.1667, 0.327579, 0.663790"];
+	a13 [label=<a<sub>1</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.566781, 0.783391", style=filled, fillcolor="0.1667, 0.566781, 0.783391"];
+	a23 [label=<a<sub>2</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	O1 [label=<O<sub>1</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.0, 1.0", style=filled, fillcolor="0.1667, 1.0, 1.0"];
+	O2 [label=<O<sub>2</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	O3 [label=<O<sub>3</sub>>];
+	}
+	{
+	rank=same;
+	x0->x1->x2->x3;
+	}
+	{
+	rank=same;
+	a02->a12->a22->a32->a42->a52->a62->a72;
+	}
+	{
+	rank=same;
+	a03->a13->a23;
+	}
+	{
+	rank=same;
+	O1->O2->O3;
+	}
+	l1 [shape=plaintext,label="Bipolar Sigmoid"];
+	l1->a02;
+	{rank=same; l1;a02};
+	l2 [shape=plaintext,label="Softmax"];
+	l2->a03;
+	{rank=same; l2;a03};
+	l3 [shape=plaintext,label="LeCun's Tanh"];
+	l3->O1;
+	{rank=same; l3;O1};
+edge[style=solid, tailport=e, headport=w];
+	{x0;x1;x2;x3} -> {a02;a12;a22;a32;a42;a52;a62;a72};
+	{a02;a12;a22;a32;a42;a52;a62;a72} -> {a03;a13;a23};
+	{a03;a13;a23} -> {O1,O2,O3};
+}

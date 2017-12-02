@@ -1,6 +1,8 @@
 ﻿#include <math.h>
 #include "Network.h"
 
+int Network::actFxnCounter = 0;		//initialized static member for activation function selection algorithm
+
 std::vector<int> strings;
 bool flag (false);
 
@@ -94,18 +96,39 @@ void	Network::initStateTable()
 		strings[i] = -1;
 }
 
+//Changes made here to automate selections of activation functions! ~[Eli]
 void Network::activationFuncSelect(int index)
 {
-	int j;
+	//int j;
 	if (strings[index] != -1)
 		activationFuncSwitch(stateTable(strings[index], index), index);
 	else
 	{
+		cout << "index = " << index << endl;
+		cout << "strings = " << strings[index] << endl;
+		cout << "AFC = " << get_AFC() << endl;
 		cout << "Enter the number of the activation function to be used for layer " << index << " -> ";
-		cin >> j;
-		strings[index] = (static_cast<int>(j) - (1));
-		activationFuncSwitch(stateTable(strings[index], index), index);
+		if (index == 1)
+		{
+			cout << (get_AFC() / 432) % 12 << "\n";
+			strings[index] = (get_AFC() / 432) % 12;
+			activationFuncSwitch(stateTable(strings[index], index), index);
+		}
+		else if (index == 2)
+		{
+			cout << ((get_AFC() - 1) / 36) % 12 << "\n";
+			strings[index] = ((get_AFC() - 1) / 36) % 12;
+			activationFuncSwitch(stateTable(strings[index], index), index);
+		}
+		else if (index == 3)
+		{
+			cout << ((get_AFC() - 2) / 3) % 12 << "\n";
+			strings[index] = ((get_AFC() - 2) / 3) % 12;
+			activationFuncSwitch(stateTable(strings[index], index), index);
+		}
+		AFC_increment();
 	}
+
 }
 
 void Network::logLog(int index)
@@ -219,15 +242,17 @@ bool Network::setActivationFunc(int activationFuncIndex)
 	}
 }
 
+//Note that I hardcoded filenames! ~[Eli]
 Network::Network()
 {
 	//Call readInit() to fill numLayers, layerSizes[], learningRate, epochs, batchSize
 	readInit();
 
 	//Ask for training data filename, then open it
-	cout << "Please enter the location of your training file [C:\\...\\TrainingDataFilename.txt:";
+	/*cout << "Please enter the location of your training file [C:\\...\\TrainingDataFilename.txt:";
 	cin >> trainingDataFilename;
-	cout << endl;
+	cout << endl;*/
+	///trainingDataFilename = "tinyData.txt";
 	trainingDataInfile.open(trainingDataFilename, ios_base::in);
 	while (trainingDataInfile.fail())
 	{
@@ -238,8 +263,9 @@ Network::Network()
 		trainingDataInfile.open(trainingDataFilename);
 	}
 	//Ask for expected values filename and open it
-	cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:" << endl;
-	cin >> expectedValuesFilename;
+	/*cout << "Please enter the location of your truth data file [C:\\...\\ExpectedValuesFilename.txt:" << endl;
+	cin >> expectedValuesFilename;*/
+	///expectedValuesFilename = "tinyExp.txt";
 	expectedValuesInfile.open(expectedValuesFilename);
 	while (expectedValuesInfile.fail())
 	{
@@ -798,11 +824,13 @@ void Network::initTrainingData()
 	}
 }
 
+//Note that I hardcoded hyperameters here! ~[Eli]
 void Network::readInit() // reading from console
 {
-	cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
-	cout << "Enter a string of integers that correspond to the layers and desired nodes in each layer of your network:" << endl;
-	string layers;  getline(cin, layers);
+	//cout << "Welcome! Please follow the prompts to initialize and begin training your network." << endl;
+	//cout << "Enter a string of integers that correspond to the layers and desired nodes in each layer of your network:" << endl;
+	//string layers;  getline(cin, layers);
+	///string layers = "4 8 3 3";
 	checkLayersString(layers);
 	char* cStrLayers = new char[layers.size() + 1];
 	strcpy(cStrLayers, layers.c_str());
@@ -812,16 +840,19 @@ void Network::readInit() // reading from console
 
 	numLayers = layerSizes.size();
 
-	cout << "\nPlease enter a double for the learning rate (usually in the range [x-y]):" << endl;
-	cin >> learningRate;
+	//cout << "\nPlease enter a double for the learning rate (usually in the range [x-y]):" << endl;
+	//cin >> learningRate;
+	///learningRate = 0.5;
 	checkLearningRate();
 
-	cout << "\nPlease enter an integer for the number of epochs (number of times to parse through test data):" << endl;
-	cin >> epochs;
+	//cout << "\nPlease enter an integer for the number of epochs (number of times to parse through test data):" << endl;
+	//cin >> epochs;
+	///epochs = 3000;
 	checkEpochs();
 
-	cout << "\nPlease enter an integer for the mini batch size:" << endl;
-	cin >> batchSize;
+	//cout << "\nPlease enter an integer for the mini batch size:" << endl;
+	//cin >> batchSize;
+	///batchSize = 2;
 
 	cout << "\nThank you! You have created a network with these values:" << endl;
 
@@ -867,11 +898,11 @@ std::vector<double> Network::train()
 		}
 
 		efficiency[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
-		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
+		//cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
 	}
 
-	if (!writeToFile())
-		cout << "\n Server error 405: Could not write network to file." << endl;
+	//if (!writeToFile())
+		//cout << "\n Server error 405: Could not write network to file." << endl;
 
 	return efficiency;
 }
@@ -1016,6 +1047,7 @@ void	Network::createActivationsFile(const Matrix& expectedValues)
 	outfile.close();
 }
 
+//Things changed here as well ~[Eli]
 bool Network :: makeGraphFile(int index, const string& graphFileName, double threshold)
 {
 	/*******************************************************************************
@@ -1031,22 +1063,14 @@ bool Network :: makeGraphFile(int index, const string& graphFileName, double thr
 	int k = index;
 	string str2;
 	int i;
+	double temp;
 
 	if (graphFileName != "None")
 		fileName = graphFileName;
 	else
 	{
-		std::vector<int> digits;
-		while (index)
-		{
-			digits.push_back(index % 10);
-			index /= 10;
-		}
-		std::reverse(digits.begin(), digits.end());
-		str2.resize(digits.size());
-		for (i = 0; i < digits.size(); i++)
-			str2[i] = digits[i] + '0';
-		fileName = "C:/graphviz-2.38/release/bin/graphFile" + str2 + ".txt"; //Attention!!!! Address here needs to be the path ..../graphviz-2.38/release/bin
+		str2 = to_string(int(get_AFC() / 3));
+		///fileName = "C:\\Users\\Elijah\\Documents\\Visual Studio 2015\\External Libraries\\GraphViz-2.38\\My Graphs\\By Activation Function\\graph" + str2 + ".gv"; //Attention!!!! Address here needs to be the path ..../graphviz-2.38/release/bin
 	}
 
 	string shape; shape = "circle";
@@ -1061,7 +1085,7 @@ bool Network :: makeGraphFile(int index, const string& graphFileName, double thr
 	if (outfile.is_open())
 	{
 		cout << "\nCreating graph file " << fileName << endl;
-		cout << threshold;
+		cout << "threshold: " << threshold << endl;
 		forwardProp(k, trainingDataInfile);
 
 		color.resize(numLayers);
@@ -1070,30 +1094,29 @@ bool Network :: makeGraphFile(int index, const string& graphFileName, double thr
 		//Input layer with value bigger than threshold will be displayed with black and remaining will be green in color
 		color[0].set_size(layerSizes[0], 1);
 		for (j = 0; j < layerSizes[0]; j++)
-			if (activations[0](j, 0) > threshold)
-				color[0](j, 0) = "black";
+			if (activations[0](j, 0))
+				color[0](j, 0) = "\"0.1667, 1.0, 1.0\"";
 			else
-				color[0](j, 0) = "green";
+				color[0](j, 0) = "\"0.1667, 0.0, 0.5\"";
 
 		//Hidden layer with firing nodes will be displayed with yellow color and remaining in dodger blue
 		for (i = 1; i < (numLayers - 1); i++)
 		{
 			color[i].set_size(layerSizes[i], 1);
 			for (j = 0; j < layerSizes[i]; j++)
-				if (activations[i](j, 0) > threshold)
- 					color[i](j, 0) = "yellow";
-				else
-					color[i](j, 0) = "dodgerblue";
+					color[i](j, 0) = "\"0.1667, " + to_string(abs(activations[i](j, 0))) + ", " + to_string(0.5 + 0.5 * abs(activations[i](j, 0))) + "\"";
 		}
 
 		//Output layer will contain the neuron fired in black and other in white
 		activations[i] = outputLayerReport().cleanOutput;
 		color[i].set_size(layerSizes[i], 1);
 		for (j = 0; j < layerSizes[i]; j++)
-			if (activations[i](j, 0))
-				color[i](j, 0) = "black";
+			if (outputLayerReport().isAmbiguous)
+				color[i](j, 0) = "\"0.9667, 0.83, 1.0\"";
+			else if (activations[i](j, 0))
+				color[i](j, 0) = "\"0.1667, 1.0, 1.0\"";
 			else
-				color[i](j, 0) = "white";
+				color[i](j, 0) = "\"0.1667, 0.0, 0.5\"";
 
 
 		

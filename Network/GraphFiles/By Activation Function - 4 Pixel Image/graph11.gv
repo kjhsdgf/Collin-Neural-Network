@@ -1,0 +1,107 @@
+digraph G {
+	rankdir = LR;
+	splines=false;
+	edge[style=invis];
+	ranksep= 1.4;
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	x0 [label=<x<sub>0</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.0, 1.0", style=filled, fillcolor="0.1667, 1.0, 1.0"];
+	x1 [label=<x<sub>1</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 0.0, 0.5", style=filled, fillcolor="0.1667, 0.0, 0.5"];
+	x2 [label=<x<sub>2</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 1.0, 1.0", style=filled, fillcolor="0.1667, 1.0, 1.0"];
+	x3 [label=<x<sub>3</sub>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 19184212844999319552.000000, 9592106422499659776.000000", style=filled, fillcolor="0.1667, 19184212844999319552.000000, 9592106422499659776.000000"];
+	a02 [label=<a<sub>0</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 27383582711458889728.000000, 13691791355729444864.000000", style=filled, fillcolor="0.1667, 27383582711458889728.000000, 13691791355729444864.000000"];
+	a12 [label=<a<sub>1</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 60482413553588142080.000000, 30241206776794071040.000000", style=filled, fillcolor="0.1667, 60482413553588142080.000000, 30241206776794071040.000000"];
+	a22 [label=<a<sub>2</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 22140608962365259776.000000, 11070304481182629888.000000", style=filled, fillcolor="0.1667, 22140608962365259776.000000, 11070304481182629888.000000"];
+	a32 [label=<a<sub>3</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 143761017701158567936.000000, 71880508850579283968.000000", style=filled, fillcolor="0.1667, 143761017701158567936.000000, 71880508850579283968.000000"];
+	a42 [label=<a<sub>4</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 51892667399047938048.000000, 25946333699523969024.000000", style=filled, fillcolor="0.1667, 51892667399047938048.000000, 25946333699523969024.000000"];
+	a52 [label=<a<sub>5</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 5983934814302380032.000000, 2991967407151190016.000000", style=filled, fillcolor="0.1667, 5983934814302380032.000000, 2991967407151190016.000000"];
+	a62 [label=<a<sub>6</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 334497375019378933760.000000, 167248687509689466880.000000", style=filled, fillcolor="0.1667, 334497375019378933760.000000, 167248687509689466880.000000"];
+	a72 [label=<a<sub>7</sub><sup>(2)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 17958177357734800161060285724890637533184.000000, 8979088678867400080530142862445318766592.000000", style=filled, fillcolor="0.1667, 17958177357734800161060285724890637533184.000000, 8979088678867400080530142862445318766592.000000"];
+	a03 [label=<a<sub>0</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 79197959521018474489500255140436930199552.000000, 39598979760509237244750127570218465099776.000000", style=filled, fillcolor="0.1667, 79197959521018474489500255140436930199552.000000, 39598979760509237244750127570218465099776.000000"];
+	a13 [label=<a<sub>1</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.1667, 51820947524458464798876902350017481670656.000000, 25910473762229232399438451175008740835328.000000", style=filled, fillcolor="0.1667, 51820947524458464798876902350017481670656.000000, 25910473762229232399438451175008740835328.000000"];
+	a23 [label=<a<sub>2</sub><sup>(3)</sup>>];
+	}
+	{
+	node [shape=circle, color="0.9667, 0.83, 1.0", style=filled, fillcolor="0.9667, 0.83, 1.0"];
+	O1 [label=<O<sub>1</sub>>];
+	}
+	{
+	node [shape=circle, color="0.9667, 0.83, 1.0", style=filled, fillcolor="0.9667, 0.83, 1.0"];
+	O2 [label=<O<sub>2</sub>>];
+	}
+	{
+	node [shape=circle, color="0.9667, 0.83, 1.0", style=filled, fillcolor="0.9667, 0.83, 1.0"];
+	O3 [label=<O<sub>3</sub>>];
+	}
+	{
+	rank=same;
+	x0->x1->x2->x3;
+	}
+	{
+	rank=same;
+	a02->a12->a22->a32->a42->a52->a62->a72;
+	}
+	{
+	rank=same;
+	a03->a13->a23;
+	}
+	{
+	rank=same;
+	O1->O2->O3;
+	}
+	l1 [shape=plaintext,label="Linear"];
+	l1->a02;
+	{rank=same; l1;a02};
+	l2 [shape=plaintext,label="Linear"];
+	l2->a03;
+	{rank=same; l2;a03};
+	l3 [shape=plaintext,label="Maxout"];
+	l3->O1;
+	{rank=same; l3;O1};
+edge[style=solid, tailport=e, headport=w];
+	{x0;x1;x2;x3} -> {a02;a12;a22;a32;a42;a52;a62;a72};
+	{a02;a12;a22;a32;a42;a52;a62;a72} -> {a03;a13;a23};
+	{a03;a13;a23} -> {O1,O2,O3};
+}
