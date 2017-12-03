@@ -673,10 +673,13 @@ void Network::forwardProp(const int batchIndex, ifstream& infile)
 	//extract data point from training data file at input indice into first layer of activations
 	activations[0] = getM<double>(false, batchIndex);
 	for (int i = 1; i < numLayers; i++)
+	{
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
+		activationFuncSelect(i);
+	}
 		//activations[i] = activationFunction(weightedInputs[i]);
-	for (int j = 1; j < numLayers; j++)		//required, especially when we use softmax function
-		activationFuncSelect(j);
+	//for (int j = 1; j < numLayers; j++)		//required, especially when we use softmax function
+		//activationFuncSelect(j);
 }
 
 void Network::updateWeightsAndBiases()

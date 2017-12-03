@@ -7,10 +7,10 @@ void main()
 {
 	//Network N ("Previous_Network_Thu2353.txt");
 	Network N;
-	//N.setActivationFunc(3);
-	std::vector<double> v = N.train();
+	N.setActivationFunc(8);
+	N.train();
 
-	N.makeGraphFile(3);
+	//N.makeGraphFile(3);
 	/*ofstream outfile;
 	outfile.open("Efficiency.txt", ios_base::out);
 	std::vector<double> ::const_iterator i1;
@@ -18,4 +18,5 @@ void main()
 	for (; i1 != v.end(); i1++)
 		outfile << (*i1) << '\n';
 	outfile.close();*/
+	cout << "done." << endl;
 }
