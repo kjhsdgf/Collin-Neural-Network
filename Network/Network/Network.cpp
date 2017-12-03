@@ -400,7 +400,7 @@ void Network::checkLearningRate(int lr_highest)
 		{
 			string wrong_data;
 			wrong_data = "Incorrect learning rate: ";
-			wrong_data += static_cast<double>(learningRate);
+			wrong_data += static_cast<int> (learningRate + '0');
 			wrongInputs.push_back(wrong_data);
 			break;
 		}
@@ -485,6 +485,7 @@ void Network::checkLayersString(string& layer_string)
 		{
 			string s;
 			cout << "\nCannot proceed..Enter at least two layers for the network: " << endl;
+			cin.ignore();
 			getline(cin, s);
 			layer_string.resize(s.size());
 			layer_string = s;
@@ -672,10 +673,10 @@ void Network::forwardProp(const int batchIndex, ifstream& infile)
 	//extract data point from training data file at input indice into first layer of activations
 	activations[0] = getM<double>(false, batchIndex);
 	for (int i = 1; i < numLayers; i++)
-	{
 		weightedInputs[i] = ((weights[i] * activations[i - 1]) + biases[i]);
-		activationFuncSelect(i);
-	}
+		//activations[i] = activationFunction(weightedInputs[i]);
+	for (int j = 1; j < numLayers; j++)		//required, especially when we use softmax function
+		activationFuncSelect(j);
 }
 
 void Network::updateWeightsAndBiases()
@@ -839,8 +840,6 @@ void Network::readInit() // reading from console
 std::vector<double> Network::train()
 {
 	std::vector<double> efficiency(epochs);
-	double maximumEfficiency;
-	int positionMax;
 	int trainingDataSize = trainingData.size();
 	cout << "trainingdatasize: " << trainingDataSize << "\nexpectedvaluesize: " << expectedValues.size() << endl;
 
@@ -852,7 +851,6 @@ std::vector<double> Network::train()
 
 	int sgdCalls = trainingDataSize / batchSize;
 	int numCorrect;
-	maximumEfficiency = 0.0;
 	for (int i = 0; i < epochs; i++)
 	{
 		numCorrect = 0;
@@ -867,16 +865,10 @@ std::vector<double> Network::train()
 
 		efficiency[i] = 100 * ((double)numCorrect) / (sgdCalls * batchSize);
 		cout << "\nEfficiency at epoch: " << i << " = " << efficiency[i] << " %" << endl;
-		if (efficiency[i] > maximumEfficiency)
-		{
-			maximumEfficiency = efficiency[i];
-			positionMax = i;
-		}
 	}
-	cout << "Efficiency was found to be maximum at Epoch " << positionMax << ": " << maximumEfficiency << " %" << endl;
 
-	//if (!writeToFile())
-		//cout << "\n Server error 405: Could not write network to file." << endl;
+	if (!writeToFile())
+		cout << "\n Server error 405: Could not write network to file." << endl;
 
 	return efficiency;
 }
