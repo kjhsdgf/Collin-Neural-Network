@@ -1,6 +1,6 @@
 # Ideas about making the poster:
 ### The general syntax according to Ami, would be:
-								Topic (could be "Classifying Data Using Neural Networks")
+					Topic (could be "Classifying Data Using Neural Networks")
 			Abstract
 			Section 1: Introduction 
 			Section 2: Architecture of a Neural Network
