@@ -15,6 +15,7 @@
 			Section 4: Optimizing the Efficiency of Neural Networks
 			Section 5: Results
 			Section 6: Conclusion
+			Citations
 			
 ### Apart from this, some important stuff to do:
 #### -Cleaning up extra stuff from the Network class
