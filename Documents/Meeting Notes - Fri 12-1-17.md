@@ -1,10 +1,10 @@
 # Ideas about making the poster:
 ### The general syntax according to Ami, would be:
-					Topic (could be "Classifying Data Using Neural Networks")
+					Topic ("Classifying Data Using Neural Networks" -Ami)
 			Abstract
 			Section 1: Introduction 
 			Section 2: Architecture of a Neural Network
-			Section 3: How Neural Network works?
+			Section 3: How a Neural Network works?
 					3.1 Choosing Hyperparamters for training algorithm
 					3.2 Forward Propagation Algorithm
 						3.2.1 Role of Activation Function in a Neural Network
