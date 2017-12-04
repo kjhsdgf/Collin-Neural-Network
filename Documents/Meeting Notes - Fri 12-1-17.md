@@ -5,7 +5,7 @@
 			Section 1: Introduction 
 			Section 2: Architecture of a Neural Network
 			Section 3: How a Neural Network works?
-					3.1 Choosing Hyperparamters for training algorithm
+					3.1 Choosing Hyperparameters for training algorithm
 					3.2 Forward Propagation Algorithm
 						3.2.1 Role of Activation Function in a Neural Network
 					3.3 Cost Function
@@ -19,5 +19,5 @@
 			
 ### Apart from this, some important stuff to do:
 #### -Cleaning up extra stuff from the Network class
-#### -Updating Documentation.md (if all of us agrees)
+#### -Updating Documentation.md (if all of us agree)
 			
